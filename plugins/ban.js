@@ -7,7 +7,6 @@ const MYSQL_URL = process.env.MYSQL_URL;
 const SQLITE_URL = process.env.DB_URL;
 const HAS_DB = !!(MONGO_URL || POSTGRES_URL || MYSQL_URL || SQLITE_URL);
 
-
 const bannedFilePath = './data/banned.json';
 
 async function getBannedUsers() {
@@ -15,9 +14,7 @@ async function getBannedUsers() {
         const banned = await store.getSetting('global', 'banned');
         return banned || [];
     } else {
-        if (fs.existsSync(bannedFilePath)) {
-            return JSON.parse(fs.readFileSync(bannedFilePath));
-        }
+        if (fs.existsSync(bannedFilePath)) return JSON.parse(fs.readFileSync(bannedFilePath));
         return [];
     }
 }
@@ -26,9 +23,7 @@ async function saveBannedUsers(bannedUsers) {
     if (HAS_DB) {
         await store.saveSetting('global', 'banned', bannedUsers);
     } else {
-        if (!fs.existsSync('./data')) {
-            fs.mkdirSync('./data', { recursive: true });
-        }
+        if (!fs.existsSync('./data')) fs.mkdirSync('./data', { recursive: true });
         fs.writeFileSync(bannedFilePath, JSON.stringify(bannedUsers, null, 2));
     }
 }
@@ -39,11 +34,11 @@ async function isUserBanned(userId) {
 }
 
 module.exports = {
-    command: 'ban',
-    aliases: ['block', 'banuser'],
+    command: 'حظر',
+    aliases: ['ban', 'block', 'حظر_شخص'],
     category: 'group',
-    description: 'Ban a user from using the bot',
-    usage: '.ban @user or reply to message',
+    description: 'تحظر شخص من استخدام البوت',
+    usage: '.حظر @اليوزر او الرد على رسالته',
 
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
@@ -53,25 +48,24 @@ module.exports = {
         let userToBan;
         if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid?.length > 0) {
             userToBan = message.message.extendedTextMessage.contextInfo.mentionedJid[0];
-        }
-        else if (message.message?.extendedTextMessage?.contextInfo?.participant) {
+        } else if (message.message?.extendedTextMessage?.contextInfo?.participant) {
             userToBan = message.message.extendedTextMessage.contextInfo.participant;
         }
-        
+
         if (!userToBan) {
-            await sock.sendMessage(chatId, { 
-                text: '❌ *Please mention a user or reply to their message*\n\nUsage: `.ban @user` or reply with `.ban`',
-                ...channelInfo 
+            await sock.sendMessage(chatId, {
+                text: ' لازم تذكر الشخص أو ترد على رسالته\n\nالاستخدام: `.حظر @user` أو الرد بالـ `.حظر` 👀❤️',
+                ...channelInfo
             }, { quoted: message });
             return;
         }
 
         try {
             const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net';
-            if (userToBan === botId || userToBan === botId.replace('@s.whatsapp.net', '@lid')) {
-                await sock.sendMessage(chatId, { 
-                    text: '❌ *Cannot ban the bot account*',
-                    ...channelInfo 
+            if (userToBan === botId) {
+                await sock.sendMessage(chatId, {
+                    text: ' مستحيل تحظر البوت 😊❤️',
+                    ...channelInfo
                 }, { quoted: message });
                 return;
             }
@@ -79,29 +73,30 @@ module.exports = {
 
         try {
             let bannedUsers = await getBannedUsers();
-            
+
             if (!bannedUsers.includes(userToBan)) {
                 bannedUsers.push(userToBan);
                 await saveBannedUsers(bannedUsers);
-                
-                await sock.sendMessage(chatId, { 
-                    text: `🚫 *User Banned Successfully!*\n\n@${userToBan.split('@')[0]} has been banned from using the bot.\n\n` +
-                          `*Storage:* ${HAS_DB ? 'Database' : 'File System'}`,
+
+                await sock.sendMessage(chatId, {
+                    text: ` تم حظر الشخص بنجاح!\n\n@${userToBan.split('@')[0]} اتحظر من استخدام البوت.\n\nالتخزين : ${HAS_DB ? 'Database' : 'ملغات النظام'}`,
                     mentions: [userToBan],
-                    ...channelInfo 
+                    ...channelInfo
                 }, { quoted: message });
+
             } else {
-                await sock.sendMessage(chatId, { 
-                    text: `⚠️ *Already Banned*\n\n@${userToBan.split('@')[0]} is already banned!`,
+                await sock.sendMessage(chatId, {
+                    text: ` الشخص ده اتحظر قبل كده\n\n@${userToBan.split('@')[0]} أصلاً محظور 🙂`,
                     mentions: [userToBan],
-                    ...channelInfo 
+                    ...channelInfo
                 }, { quoted: message });
             }
+
         } catch (error) {
-            console.error('Error in ban command:', error);
-            await sock.sendMessage(chatId, { 
-                text: '❌ *Failed to ban user!*\n\nPlease try again.',
-                ...channelInfo 
+            console.error('حصل خطأ في أمر الحظر:', error);
+            await sock.sendMessage(chatId, {
+                text: ' فشل في حظر الشخص، جرب تاني ❌',
+                ...channelInfo
             }, { quoted: message });
         }
     }

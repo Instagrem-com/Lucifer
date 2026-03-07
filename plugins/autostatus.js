@@ -8,17 +8,11 @@ const MYSQL_URL = process.env.MYSQL_URL;
 const SQLITE_URL = process.env.DB_URL;
 const HAS_DB = !!(MONGO_URL || POSTGRES_URL || MYSQL_URL || SQLITE_URL);
 
-
 const configPath = path.join(__dirname, '../data/autoStatus.json');
 
 if (!HAS_DB && !fs.existsSync(configPath)) {
-    if (!fs.existsSync(path.dirname(configPath))) {
-        fs.mkdirSync(path.dirname(configPath), { recursive: true });
-    }
-    fs.writeFileSync(configPath, JSON.stringify({ 
-        enabled: false, 
-        reactOn: false 
-    }, null, 2));
+    if (!fs.existsSync(path.dirname(configPath))) fs.mkdirSync(path.dirname(configPath), { recursive: true });
+    fs.writeFileSync(configPath, JSON.stringify({ enabled: false, reactOn: false }, null, 2));
 }
 
 const channelInfo = {
@@ -26,8 +20,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363319098372999@newsletter',
-            newsletterName: 'MEGA MD',
+            newsletterJid: '120363425019719202@newsletter',
+            newsletterName: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
             serverMessageId: -1
         }
     }
@@ -40,45 +34,27 @@ async function readConfig() {
             return config || { enabled: false, reactOn: false };
         } else {
             const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-            return {
-                enabled: !!config.enabled,
-                reactOn: !!config.reactOn
-            };
+            return { enabled: !!config.enabled, reactOn: !!config.reactOn };
         }
-    } catch (error) {
-        console.error('Error reading auto status config:', error);
+    } catch {
         return { enabled: false, reactOn: false };
     }
 }
 
 async function writeConfig(config) {
     try {
-        if (HAS_DB) {
-            await store.saveSetting('global', 'autoStatus', config);
-        } else {
-            fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-        }
-    } catch (error) {
-        console.error('Error writing auto status config:', error);
-    }
+        if (HAS_DB) await store.saveSetting('global', 'autoStatus', config);
+        else fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    } catch {}
 }
 
-async function isAutoStatusEnabled() {
-    const config = await readConfig();
-    return config.enabled;
-}
-
-async function isStatusReactionEnabled() {
-    const config = await readConfig();
-    return config.reactOn;
-}
+async function isAutoStatusEnabled() { return (await readConfig()).enabled; }
+async function isStatusReactionEnabled() { return (await readConfig()).reactOn; }
 
 async function reactToStatus(sock, statusKey) {
     try {
         const enabled = await isStatusReactionEnabled();
-        if (!enabled) {
-            return;
-        }
+        if (!enabled) return;
 
         await sock.relayMessage(
             'status@broadcast',
@@ -98,193 +74,117 @@ async function reactToStatus(sock, statusKey) {
                 statusJidList: [statusKey.remoteJid, statusKey.participant || statusKey.remoteJid]
             }
         );
-        
-        console.log('✅ Reacted to status');
+        console.log('ردينا على الحالة 💚');
     } catch (error) {
-        console.error('❌ Error reacting to status:', error.message);
+        console.error('مش قادر ارد على الحالة ❌', error.message);
     }
 }
 
 async function handleStatusUpdate(sock, status) {
     try {
         const enabled = await isAutoStatusEnabled();
-        if (!enabled) {
-            return;
-        }
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (!enabled) return;
+        await new Promise(r => setTimeout(r, 1000));
 
-        if (status.messages && status.messages.length > 0) {
-            const msg = status.messages[0];
-            if (msg.key && msg.key.remoteJid === 'status@broadcast') {
+        const keys = [
+            status.messages?.[0]?.key,
+            status.key,
+            status.reaction?.key
+        ].filter(Boolean);
+
+        for (const k of keys) {
+            if (k.remoteJid === 'status@broadcast') {
                 try {
-                    await sock.readMessages([msg.key]);
-                    console.log('✅ Viewed status from messages');
-                    
-                    await reactToStatus(sock, msg.key);
+                    await sock.readMessages([k]);
+                    console.log('قريت الحالة 👀');
+                    await reactToStatus(sock, k);
                 } catch (err) {
                     if (err.message?.includes('rate-overlimit')) {
-                        console.log('⚠️ Rate limit hit, waiting before retrying...');
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                        await sock.readMessages([msg.key]);
-                    } else {
-                        throw err;
+                        await new Promise(r => setTimeout(r, 2000));
+                        await sock.readMessages([k]);
                     }
                 }
-                return;
             }
         }
-
-        if (status.key && status.key.remoteJid === 'status@broadcast') {
-            try {
-                await sock.readMessages([status.key]);
-                console.log('✅ Viewed status from key');
-                
-                await reactToStatus(sock, status.key);
-            } catch (err) {
-                if (err.message?.includes('rate-overlimit')) {
-                    console.log('⚠️ Rate limit hit, waiting before retrying...');
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    await sock.readMessages([status.key]);
-                } else {
-                    throw err;
-                }
-            }
-            return;
-        }
-        if (status.reaction && status.reaction.key.remoteJid === 'status@broadcast') {
-            try {
-                await sock.readMessages([status.reaction.key]);
-                console.log('✅ Viewed status from reaction');
-                
-                await reactToStatus(sock, status.reaction.key);
-            } catch (err) {
-                if (err.message?.includes('rate-overlimit')) {
-                    console.log('⚠️ Rate limit hit, waiting before retrying...');
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    await sock.readMessages([status.reaction.key]);
-                } else {
-                    throw err;
-                }
-            }
-            return;
-        }
-
     } catch (error) {
-        console.error('❌ Error in auto status view:', error.message);
+        console.error('حصل مشكلة في القراية التلقائية ❌', error.message);
     }
 }
 
 module.exports = {
-    command: 'autostatus',
+    command: 'مشاهده_الحالات',
     aliases: ['autoview', 'statusview'],
     category: 'owner',
-    description: 'Automatically view and react to WhatsApp statuses',
-    usage: '.autostatus <on|off|react on|react off>',
+    description: 'يشوف الحالات ويتفاعل معاها لو مفعل',
+    usage: '.مشاهده_الحالات تشغيل/ايقاف/تفاعل تشغيل/تفاعل ايقاف',
     ownerOnly: true,
-    
+
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
-        
+
         try {
             let config = await readConfig();
             if (!args || args.length === 0) {
-                const viewStatus = config.enabled ? '✅ Enabled' : '❌ Disabled';
-                const reactStatus = config.reactOn ? '✅ Enabled' : '❌ Disabled';
-                
-                await sock.sendMessage(chatId, { 
-                    text: `🔄 *Auto Status Settings*\n\n` +
-                          `📱 *Auto Status View:* ${viewStatus}\n` +
-                          `💫 *Status Reactions:* ${reactStatus}\n` +
-                          `🗄️ *Storage:* ${HAS_DB ? 'Database' : 'File System'}\n\n` +
-                          `*Commands:*\n` +
-                          `• \`.autostatus on\` - Enable auto view\n` +
-                          `• \`.autostatus off\` - Disable auto view\n` +
-                          `• \`.autostatus react on\` - Enable reaction\n` +
-                          `• \`.autostatus react off\` - Disable reaction`,
+                await sock.sendMessage(chatId, {
+                    text: `إعدادات مشاهدة الحالات دلوقتي
+
+مشاهدة الحالات: ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
+تفاعل مع الحالات: ${config.reactOn ? 'شغال 💚' : 'مقفول ❌'}
+طريقة التخزين: ${HAS_DB ? 'Database' : 'ملفات'}
+
+الأوامر:
+.مشاهده_الحالات تشغيل
+.مشاهده_الحالات ايقاف
+.مشاهده_الحالات تفاعل تشغيل
+.مشاهده_الحالات تفاعل ايقاف`,
                     ...channelInfo
                 }, { quoted: message });
                 return;
             }
 
             const command = args[0].toLowerCase();
-            
-            if (command === 'on') {
-                config.enabled = true;
-                await writeConfig(config);
-                
-                await sock.sendMessage(chatId, { 
-                    text: '✅ *Auto status view enabled!*\n\n' +
-                          'Bot will now automatically view all contact statuses.',
-                    ...channelInfo
-                }, { quoted: message });
-                
-            } else if (command === 'off') {
-                config.enabled = false;
-                await writeConfig(config);
-                
-                await sock.sendMessage(chatId, { 
-                    text: '❌ *Auto status view disabled!*\n\n' +
-                          'Bot will no longer automatically view statuses.',
-                    ...channelInfo
-                }, { quoted: message });
-                
-            } else if (command === 'react') {
-                if (!args[1]) {
-                    await sock.sendMessage(chatId, { 
-                        text: '❌ *Please specify on/off for reactions!*\n\n' +
-                              'Usage: `.autostatus react on/off`',
-                        ...channelInfo
-                    }, { quoted: message });
+
+            if (command === 'تشغيل') {
+                if (config.enabled) {
+                    await sock.sendMessage(chatId, { text: 'مشاهدة الحالات شغالة أصلاً ✅' }, { quoted: message });
                     return;
                 }
-                
-                const reactCommand = args[1].toLowerCase();
-                
-                if (reactCommand === 'on') {
+                config.enabled = true;
+                await writeConfig(config);
+                await sock.sendMessage(chatId, { text: 'تم تشغيل مشاهدة الحالات ✅' }, { quoted: message });
+            }
+            else if (command === 'ايقاف') {
+                if (!config.enabled) {
+                    await sock.sendMessage(chatId, { text: 'مشاهدة الحالات مقفولة أصلاً ❌' }, { quoted: message });
+                    return;
+                }
+                config.enabled = false;
+                await writeConfig(config);
+                await sock.sendMessage(chatId, { text: 'تم ايقاف مشاهدة الحالات ❌' }, { quoted: message });
+            }
+            else if (command === 'تفاعل') {
+                if (!args[1]) {
+                    await sock.sendMessage(chatId, { text: 'حدد تشغيل أو ايقاف للتفاعل ❌\nمثال: .مشاهده_الحالات تفاعل تشغيل' }, { quoted: message });
+                    return;
+                }
+                const sub = args[1].toLowerCase();
+                if (sub === 'تشغيل') {
                     config.reactOn = true;
                     await writeConfig(config);
-                    
-                    await sock.sendMessage(chatId, { 
-                        text: '💫 *Status reactions enabled!*\n\n' +
-                              'Bot will now react to status updates with 💚',
-                        ...channelInfo
-                    }, { quoted: message });
-                    
-                } else if (reactCommand === 'off') {
+                    await sock.sendMessage(chatId, { text: 'تم تفعيل التفاعل مع الحالات 💚' }, { quoted: message });
+                } else if (sub === 'ايقاف') {
                     config.reactOn = false;
                     await writeConfig(config);
-                    
-                    await sock.sendMessage(chatId, { 
-                        text: '❌ *Status reactions disabled!*\n\n' +
-                              'Bot will no longer react to status updates.',
-                        ...channelInfo
-                    }, { quoted: message });
-                    
+                    await sock.sendMessage(chatId, { text: 'تم ايقاف التفاعل مع الحالات ❌' }, { quoted: message });
                 } else {
-                    await sock.sendMessage(chatId, { 
-                        text: '❌ *Invalid reaction command!*\n\n' +
-                              'Usage: `.autostatus react on/off`',
-                        ...channelInfo
-                    }, { quoted: message });
+                    await sock.sendMessage(chatId, { text: 'الأمر ده مش صح ❌\nاستخدم تشغيل أو ايقاف', ...channelInfo }, { quoted: message });
                 }
-                
             } else {
-                await sock.sendMessage(chatId, { 
-                    text: '❌ *Invalid command!*\n\n' +
-                          '*Usage:*\n' +
-                          '• `.autostatus on/off` - Enable/disable auto view\n' +
-                          '• `.autostatus react on/off` - Enable/disable reactions',
-                    ...channelInfo
-                }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'الأمر ده مش موجود ❌\nجرب الأوامر الصح من قائمة البوت', ...channelInfo }, { quoted: message });
             }
-
         } catch (error) {
-            console.error('Error in autostatus command:', error);
-            await sock.sendMessage(chatId, { 
-                text: '❌ *Error occurred while managing auto status!*\n\n' +
-                      `Error: ${error.message}`,
-                ...channelInfo
-            }, { quoted: message });
+            console.error('حصل خطأ في الأمر ❌', error);
+            await sock.sendMessage(chatId, { text: `حصل خطأ أثناء التعامل مع الأمر ❌\n${error.message}`, ...channelInfo }, { quoted: message });
         }
     },
 

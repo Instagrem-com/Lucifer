@@ -102,7 +102,7 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
 
         if (action === 'تحذير' || action === 'حذف') {
             await sock.sendMessage(chatId, {
-                text: `⚠️ تحذير من مانع اللينكات\n\n@${senderId.split('@')[0]}, متبعتش ${linkType} تاني!`,
+                text: `انت ياض 🙂\n\n@${senderId.split('@')[0]}, متبعتش لينك تاني 🙂 ${linkType} `,
                 mentions: [senderId]
             });
         }
@@ -111,13 +111,13 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
             try {
                 await sock.groupParticipantsUpdate(chatId, [senderId], 'remove');
                 await sock.sendMessage(chatId, {
-                    text: `🚫 @${senderId.split('@')[0]} اتشال من الجروب علشان بعث ${linkType}!`,
+                    text: `نطرتو من الروم عشان بعت لينك 😂❤️ @${senderId.split('@')[0]} ${linkType}!`,
                     mentions: [senderId]
                 });
             } catch (error) {
                 console.error('Failed to kick user:', error);
                 await sock.sendMessage(chatId, {
-                    text: '⚠️ فشلنا نشيل المستخدم. اتأكد إن البوت أدمن في الجروب'
+                    text: ' ف مشكله ف مانع اللينكات المستخدم اتأكد إن البوت أدمن في الجروب 👀❤️'
                 });
             }
         }
@@ -167,7 +167,7 @@ module.exports = {
                 const existingConfig = await getAntilink(chatId, 'تفعيل');
                 if (existingConfig?.enabled) {
                     await sock.sendMessage(chatId, {
-                        text: '⚠️ مانع اللينكات شغال من قبل 😂❤️'
+                        text: ' مانع اللينكات شغال من بدري ياعم 😂❤️'
                     }, { quoted: message });
                     return;
                 }
@@ -189,7 +189,7 @@ module.exports = {
             case 'ضبط':
                 if (args.length < 2) {
                     await sock.sendMessage(chatId, {
-                        text: 'استنى يا معلم، لازم تحدد الإجراء ❌\nطريقة الاستخدام: `.ممنوع_اللينكات ضبط حذف|طرد|تحذير`'
+                        text: 'استنى يا معلم، لازم تحدد الإجراء 🙂\nطريقة الاستخدام : `.ممنوع_اللينكات ضبط حذف|طرد|تحذير 👀❤️`'
                     }, { quoted: message });
                     return;
                 }

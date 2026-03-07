@@ -8,8 +8,7 @@ const MYSQL_URL = process.env.MYSQL_URL;
 const SQLITE_URL = process.env.DB_URL;
 const HAS_DB = !!(MONGO_URL || POSTGRES_URL || MYSQL_URL || SQLITE_URL);
 
-
-const configPath = path.join(__dirname, '..', 'data', 'autotyping.json');
+const configPath = path.join(__dirname, '../data/autotyping.json');
 
 async function initConfig() {
     if (HAS_DB) {
@@ -17,10 +16,7 @@ async function initConfig() {
         return config || { enabled: false };
     } else {
         if (!fs.existsSync(configPath)) {
-            const dataDir = path.dirname(configPath);
-            if (!fs.existsSync(dataDir)) {
-                fs.mkdirSync(dataDir, { recursive: true });
-            }
+            if (!fs.existsSync(path.dirname(configPath))) fs.mkdirSync(path.dirname(configPath), { recursive: true });
             fs.writeFileSync(configPath, JSON.stringify({ enabled: false }, null, 2));
         }
         return JSON.parse(fs.readFileSync(configPath));
@@ -28,56 +24,37 @@ async function initConfig() {
 }
 
 async function saveConfig(config) {
-    if (HAS_DB) {
-        await store.saveSetting('global', 'autotyping', config);
-    } else {
-        fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-    }
+    if (HAS_DB) await store.saveSetting('global', 'autotyping', config);
+    else fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 }
 
-async function isAutotypingEnabled() {
-    try {
-        const config = await initConfig();
-        return config.enabled;
-    } catch (error) {
-        console.error('Error checking autotyping status:', error);
-        return false;
-    }
-}
+async function isAutotypingEnabled() { return (await initConfig()).enabled; }
 
 async function isGhostModeActive() {
     try {
         const ghostMode = await store.getSetting('global', 'stealthMode');
         return ghostMode && ghostMode.enabled;
-    } catch (error) {
-        return false;
-    }
+    } catch { return false; }
 }
 
 async function handleAutotypingForMessage(sock, chatId, userMessage) {
-    const ghostActive = await isGhostModeActive();
-    if (ghostActive) {
-        return false;
-    }
-
-    const enabled = await isAutotypingEnabled();
-    if (enabled) {
+    if (await isGhostModeActive()) return false;
+    if (await isAutotypingEnabled()) {
         try {
             await sock.presenceSubscribe(chatId);
             await sock.sendPresenceUpdate('available', chatId);
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
+            await new Promise(r => setTimeout(r, 500));
+
             await sock.sendPresenceUpdate('composing', chatId);
             const typingDelay = Math.max(3000, Math.min(8000, userMessage.length * 150));
-            await new Promise(resolve => setTimeout(resolve, typingDelay));
-            
+            await new Promise(r => setTimeout(r, typingDelay));
+
             await sock.sendPresenceUpdate('composing', chatId);
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise(r => setTimeout(r, 1500));
             await sock.sendPresenceUpdate('paused', chatId);
-            
             return true;
-        } catch (error) {
-            console.error('Error sending typing indicator:', error);
+        } catch (err) {
+            console.error('مش قادر يكتب...', err);
             return false;
         }
     }
@@ -85,29 +62,22 @@ async function handleAutotypingForMessage(sock, chatId, userMessage) {
 }
 
 async function handleAutotypingForCommand(sock, chatId) {
-    const ghostActive = await isGhostModeActive();
-    if (ghostActive) {
-        return false;
-    }
-
-    const enabled = await isAutotypingEnabled();
-    if (enabled) {
+    if (await isGhostModeActive()) return false;
+    if (await isAutotypingEnabled()) {
         try {
             await sock.presenceSubscribe(chatId);
             await sock.sendPresenceUpdate('available', chatId);
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
+            await new Promise(r => setTimeout(r, 500));
+
             await sock.sendPresenceUpdate('composing', chatId);
-            const commandTypingDelay = 3000;
-            await new Promise(resolve => setTimeout(resolve, commandTypingDelay));
-            
+            await new Promise(r => setTimeout(r, 3000));
+
             await sock.sendPresenceUpdate('composing', chatId);
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise(r => setTimeout(r, 1500));
             await sock.sendPresenceUpdate('paused', chatId);
-            
             return true;
-        } catch (error) {
-            console.error('Error sending command typing indicator:', error);
+        } catch (err) {
+            console.error('مش قادر يكتب للأمر...', err);
             return false;
         }
     }
@@ -115,21 +85,16 @@ async function handleAutotypingForCommand(sock, chatId) {
 }
 
 async function showTypingAfterCommand(sock, chatId) {
-    const ghostActive = await isGhostModeActive();
-    if (ghostActive) {
-        return false;
-    }
-
-    const enabled = await isAutotypingEnabled();
-    if (enabled) {
+    if (await isGhostModeActive()) return false;
+    if (await isAutotypingEnabled()) {
         try {
             await sock.presenceSubscribe(chatId);
             await sock.sendPresenceUpdate('composing', chatId);
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(r => setTimeout(r, 1000));
             await sock.sendPresenceUpdate('paused', chatId);
             return true;
-        } catch (error) {
-            console.error('Error sending post-command typing indicator:', error);
+        } catch (err) {
+            console.error('مش قادر يظهر الكتابة بعد الأمر...', err);
             return false;
         }
     }
@@ -137,85 +102,54 @@ async function showTypingAfterCommand(sock, chatId) {
 }
 
 module.exports = {
-    command: 'autotyping',
+    command: 'الكتابه_التلقائيه',
     aliases: ['typing', 'autotype'],
     category: 'owner',
-    description: 'Toggle auto-typing indicator when bot is processing messages',
-    usage: '.autotyping <on|off>',
+    description: 'يشغل مؤشر الكتابة التلقائي للبوت',
+    usage: '.الكتابه_التلقائيه تشغيل/ايقاف',
     ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
-        const channelInfo = context.channelInfo || {};
-        
         try {
             const config = await initConfig();
             const action = args[0]?.toLowerCase();
-            
+
             if (!action) {
                 const ghostActive = await isGhostModeActive();
                 await sock.sendMessage(chatId, {
-                    text: `*⌨️ AUTOTYPING STATUS*\n\n` +
-                          `*Current Status:* ${config.enabled ? '✅ Enabled' : '❌ Disabled'}\n` +
-                          `*Ghost Mode:* ${ghostActive ? '👻 Active (blocks typing)' : '❌ Inactive'}\n` +
-                          `*Storage:* ${HAS_DB ? 'Database' : 'File System'}\n\n` +
-                          `*Commands:*\n` +
-                          `• \`.autotyping on\` - Enable auto-typing\n` +
-                          `• \`.autotyping off\` - Disable auto-typing\n\n` +
-                          `*What it does:*\n` +
-                          `When enabled, the bot will show "typing..." indicator while processing messages and commands.\n\n` +
-                          `*Note:* Ghost mode overrides autotyping to maintain stealth.`,
-                    ...channelInfo
+                    text: `إعدادات الكتابة التلقائية دلوقتي
+
+حالة الكتابة: ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
+حالة وضع التخفي: ${ghostActive ? 'شغال 👻 (بيمنع الكتابة)' : 'مقفول ❌'}
+طريقة التخزين: ${HAS_DB ? 'Database' : 'ملفات'}
+
+الأوامر:
+.الكتابه_التلقائيه تشغيل
+.الكتابه_التلقائيه ايقاف`,
                 }, { quoted: message });
                 return;
             }
 
-            if (action === 'on' || action === 'enable') {
-                if (config.enabled) {
-                    await sock.sendMessage(chatId, {
-                        text: '⚠️ *Autotyping is already enabled*',
-                        ...channelInfo
-                    }, { quoted: message });
-                    return;
-                }
+            if (action === 'تشغيل') {
+                if (config.enabled) return await sock.sendMessage(chatId, { text: 'الكتابة التلقائية شغالة أصلاً ✅' }, { quoted: message });
                 config.enabled = true;
                 await saveConfig(config);
-                
-                const ghostActive = await isGhostModeActive();
-                await sock.sendMessage(chatId, {
-                    text: `✅ *Auto-typing enabled!*\n\nThe bot will now show typing indicator while processing.${ghostActive ? '\n\n⚠️ *Ghost mode is active* - typing indicators are currently blocked.' : ''}`,
-                    ...channelInfo
-                }, { quoted: message });
-                
-            } else if (action === 'off' || action === 'disable') {
-                if (!config.enabled) {
-                    await sock.sendMessage(chatId, {
-                        text: '⚠️ *Autotyping is already disabled*',
-                        ...channelInfo
-                    }, { quoted: message });
-                    return;
-                }
+                await sock.sendMessage(chatId, { text: 'تم تشغيل الكتابة التلقائية ✅' }, { quoted: message });
+
+            } else if (action === 'ايقاف') {
+                if (!config.enabled) return await sock.sendMessage(chatId, { text: 'الكتابة التلقائية مقفولة أصلاً ❌' }, { quoted: message });
                 config.enabled = false;
                 await saveConfig(config);
-                
-                await sock.sendMessage(chatId, {
-                    text: '❌ *Auto-typing disabled!*\n\nThe bot will no longer show typing indicator.',
-                    ...channelInfo
-                }, { quoted: message });
-                
+                await sock.sendMessage(chatId, { text: 'تم ايقاف الكتابة التلقائية ❌' }, { quoted: message });
+
             } else {
-                await sock.sendMessage(chatId, {
-                    text: '❌ *Invalid option!*\n\nUse: `.autotyping on/off`',
-                    ...channelInfo
-                }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'الأمر ده مش صح ❌\nاستخدم تشغيل أو ايقاف' }, { quoted: message });
             }
-            
+
         } catch (error) {
-            console.error('Error in autotyping command:', error);
-            await sock.sendMessage(chatId, {
-                text: '❌ *Error processing command!*',
-                ...channelInfo
-            }, { quoted: message });
+            console.error('حصل خطأ في الكتابة التلقائية ❌', error);
+            await sock.sendMessage(chatId, { text: `حصل مشكلة أثناء تشغيل الأمر ❌\n${error.message}` }, { quoted: message });
         }
     },
 
@@ -224,4 +158,3 @@ module.exports = {
     handleAutotypingForCommand,
     showTypingAfterCommand
 };
-

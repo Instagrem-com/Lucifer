@@ -228,15 +228,15 @@ async function handleMessageRevocation(sock, revocationMessage) {
 });
 
         let text = `*🔰 تـقـريـر مـنـع الحـذف 🔰*\n\n` +
-            `*🗑️ مـسـحـهـا :* @${deletedBy.split('@')[0]}\n` +
-            `* المـرسـل 👤 :* @${senderName}\n` +
-            `* الرقم 📱:* ${sender}\n` +
-            `* الـوقـت 🕒 :* ${time}\n`;
+            `*🗑️ مـسـحـهـا : @${deletedBy.split('@')[0]}\n` +
+            `* المـرسـل 👤 : @${senderName}\n` +
+            `* ايدي 📱: ${sender}\n` +
+            `* الـوقـت 🕒 : ${time}\n`;
 
-        if (groupName) text += `* الـجـروب 👥 :* ${groupName}\n`;
+        if (groupName) text += `* الـجـروب 👥 : ${groupName}\n`;
 
         if (original.content) {
-            text += `\n* الرسالة الممسوحة 💬 :*\n${original.content}`;
+            text += `\n* الرسالة الممسوحة 💬 : \n${original.content}`;
         }
 
         await sock.sendMessage(ownerNumber, {
@@ -315,7 +315,7 @@ module.exports = {
         if (!action) {
             await sock.sendMessage(chatId, {
                 text: `*🔰 إعدادات مانع حذف الرسائل 🔰*\n\n` +
-                      `*الحالة الحالي ة:* ${config.enabled ? '✅ مـفـعـل' : '❌ مـعـطـل'}\n` +
+                      `*الحالة الحالية :* ${config.enabled ? ' مـفـعـل ✅' : ' مـعـطـل ❌'}\n` +
                       `*نظام التخزين:* ${HAS_DB ? 'Database' : 'نظام الملفات'}\n\n` +
                       `*الأوامر:*\n` +
                       `• \`.ممنوع_مسح_الرسايل تفعيل\` - تفعيل\n` +
@@ -324,7 +324,7 @@ module.exports = {
                       `• متابعة الرسائل المحذوفة\n` +
                       `• حفظ الوسائط المحذوفة\n` +
                       `• حفظ وسائط ViewOnce تلقائياً\n` +
-                      `• إرسال التقارير لصاحب البوت`
+                      `• إرسال التقارير لرقم الـبوت`
             }, { quoted: message });
             return;
         }
@@ -333,24 +333,24 @@ module.exports = {
             config.enabled = true;
             await saveAntideleteConfig(config);
             await sock.sendMessage(chatId, {
-                text: `✅ *تم تفعيل مانع حذف الرسائل*\n\n` +
+                text: ` *تم تفعيل مانع حذف الرسائل ✅*\n\n` +
                       `نظام التخزين: ${HAS_DB ? 'Database' : 'نظام الملفات'}\n\n` +
-                      `الـبـوت سـيـفـعـل الآن:\n` +
+                      `الـبـوت سـيـفـعـل الآن :\n` +
                       `• متابعة كل الرسائل\n` +
                       `• مراقبة الرسائل المحذوفة\n` +
                       `• حفظ وسائط ViewOnce\n` +
-                      `• إرسال تقارير الحذف لصاحب البوت`
+                      `• إرسال تقارير الحذف لرقم البوت`
             }, { quoted: message });
         } else if (action === 'تعطيل') {
             config.enabled = false;
             await saveAntideleteConfig(config);
             await sock.sendMessage(chatId, {
-                text: `❌ *تم تعطيل AntiDelete!*\n\n` +
-                      `الـبـوت لن يقوم بمتابعة الرسائل المحذوفة بعد الآن.`
+                text: ` *تم تعطيل مانع حذف الرسائل ✅*\n\n` +
+                      `الـبـوت لن يقوم بمتابعة الرسائل المحذوفة بعد الآن ❌`
             }, { quoted: message });
         } else {
             await sock.sendMessage(chatId, {
-                text: '❌ *أمر غير صحيح*\n\nاستخدم: `.antidelete on/off`'
+                text: ' *أمر غير صحيح ❌*\n\nاستخدم: `.ممنوع_مسح_الرسايل تفعيل/تعطيل`'
             }, { quoted: message });
         }
     },
