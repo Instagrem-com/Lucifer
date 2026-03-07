@@ -42,7 +42,7 @@ async function removeAntilink(chatId, type) {
 
 async function handleLinkDetection(sock, chatId, message, userMessage, senderId) {
     try {
-        const config = await getAntilink(chatId, 'on');
+        const config = await getAntilink(chatId, 'تفعيل');
         if (!config?.enabled) return;
 
         // Check if sender is owner or sudo
@@ -55,7 +55,7 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
             if (isSenderAdmin) return;
         } catch (e) {}
 
-        const action = config.action || 'delete';
+        const action = config.action || 'حذف';
         let shouldAct = false;
         let linkType = '';
 
@@ -68,16 +68,16 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
 
         if (linkPatterns.whatsappGroup.test(userMessage)) {
             shouldAct = true;
-            linkType = 'WhatsApp Group';
+            linkType = 'جروب واتساب';
         } else if (linkPatterns.whatsappChannel.test(userMessage)) {
             shouldAct = true;
-            linkType = 'WhatsApp Channel';
+            linkType = 'قناة واتساب';
         } else if (linkPatterns.telegram.test(userMessage)) {
             shouldAct = true;
-            linkType = 'Telegram';
+            linkType = 'تليجرام';
         } else if (linkPatterns.allLinks.test(userMessage)) {
             shouldAct = true;
-            linkType = 'Link';
+            linkType = 'لينك';
         }
 
         if (!shouldAct) return;
@@ -85,7 +85,7 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
         const messageId = message.key.id;
         const participant = message.key.participant || senderId;
 
-        if (action === 'delete' || action === 'kick') {
+        if (action === 'حذف' || action === 'طرد') {
             try {
                 await sock.sendMessage(chatId, {
                     delete: { 
@@ -100,24 +100,24 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
             }
         }
 
-        if (action === 'warn' || action === 'delete') {
+        if (action === 'تحذير' || action === 'حذف') {
             await sock.sendMessage(chatId, {
-                text: `⚠️ *Antilink Warning*\n\n@${senderId.split('@')[0]}, posting ${linkType} links is not allowed!`,
+                text: `⚠️ تحذير من مانع اللينكات\n\n@${senderId.split('@')[0]}, متبعتش ${linkType} تاني!`,
                 mentions: [senderId]
             });
         }
 
-        if (action === 'kick') {
+        if (action === 'طرد') {
             try {
                 await sock.groupParticipantsUpdate(chatId, [senderId], 'remove');
                 await sock.sendMessage(chatId, {
-                    text: `🚫 @${senderId.split('@')[0]} has been removed for posting ${linkType} links.`,
+                    text: `🚫 @${senderId.split('@')[0]} اتشال من الجروب علشان بعث ${linkType}!`,
                     mentions: [senderId]
                 });
             } catch (error) {
                 console.error('Failed to kick user:', error);
                 await sock.sendMessage(chatId, {
-                    text: `⚠️ Failed to remove user. Make sure the bot is an admin.`
+                    text: '⚠️ فشلنا نشيل المستخدم. اتأكد إن البوت أدمن في الجروب'
                 });
             }
         }
@@ -128,11 +128,11 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
 }
 
 module.exports = {
-    command: 'antilink',
-    aliases: ['alink', 'linkblock'],
+    command: 'ممنوع_اللينكات',
+    aliases: ['ممنوع_اللينك'],
     category: 'admin',
-    description: 'Prevent users from sending links in the group',
-    usage: '.antilink <on|off|set>',
+    description: 'مانع اللينكات في الجروب',
+    usage: '.ممنوع_اللينكات <تفعيل|تعطيل|ضبط|عرض>',
     groupOnly: true,
     adminOnly: true,
 
@@ -141,96 +141,95 @@ module.exports = {
         const action = args[0]?.toLowerCase();
 
         if (!action) {
-            const config = await getAntilink(chatId, 'on');
+            const config = await getAntilink(chatId, 'تفعيل');
             await sock.sendMessage(chatId, {
-                text: `*🔗 ANTILINK SETUP*\n\n` +
-                      `*Current Status:* ${config?.enabled ? '✅ Enabled' : '❌ Disabled'}\n` +
-                      `*Current Action:* ${config?.action || 'Not set'}\n\n` +
-                      `*Commands:*\n` +
-                      `• \`.antilink on\` - Enable antilink\n` +
-                      `• \`.antilink off\` - Disable antilink\n` +
-                      `• \`.antilink set delete\` - Delete link messages\n` +
-                      `• \`.antilink set kick\` - Kick users who send links\n` +
-                      `• \`.antilink set warn\` - Warn users only\n\n` +
-                      `*Protected Links:*\n` +
-                      `• WhatsApp Groups\n` +
-                      `• WhatsApp Channels\n` +
-                      `• Telegram\n` +
-                      `• All other links\n\n` +
-                      `*Note:* Admins, Owner, and Sudo users are exempt.`
+                text: `*إعداد مانع اللينكات*\n\n` +
+      `*الحالة دلوقتي:* ${config?.enabled ? 'شغال ✅' : 'واقف ❌'}\n` +
+      `*الإجراء الحالي:* ${config?.action || 'مفيش حاجة متضبطة'}\n\n` +
+      `*الأوامر:*\n` +
+      `• \`.ممنوع_اللينكات تفعيل\` - شغّل مانع اللينكات ✅\n` +
+      `• \`.ممنوع_اللينكات تعطيل\` - وقف مانع اللينكات ❌\n` +
+      `• \`.ممنوع_اللينكات ضبط حذف\` - امسح أي رسالة فيها لينك 🗑️\n` +
+      `• \`.ممنوع_اللينكات ضبط طرد\` - اطرد أي حد يبعث لينك 👢\n` +
+      `• \`.ممنوع_اللينكات ضبط تحذير\` - حبّر اللي يبعث لينك ⚠️\n\n` +
+      `*اللينكات اللي متأمّنة:*\n` +
+      `• جروبات واتساب 🌐\n` +
+      `• قنوات واتساب 📢\n` +
+      `• تليجرام ✈️\n` +
+      `• أي لينكات تانية 🔗\n\n` +
+      `*ملاحظة:* الأدمن، صاحب الجروب والمطورين على مهلكم 😉`
             }, { quoted: message });
             return;
         }
 
         switch (action) {
-            case 'on':
-                const existingConfig = await getAntilink(chatId, 'on');
+            case 'تفعيل':
+                const existingConfig = await getAntilink(chatId, 'تفعيل');
                 if (existingConfig?.enabled) {
                     await sock.sendMessage(chatId, {
-                        text: '⚠️ *Antilink is already enabled*'
+                        text: '⚠️ مانع اللينكات شغال من قبل 😂❤️'
                     }, { quoted: message });
                     return;
                 }
-                const result = await setAntilink(chatId, 'on', 'delete');
+                const result = await setAntilink(chatId, 'تفعيل', 'حذف');
                 await sock.sendMessage(chatId, {
-                    text: result ? '✅ *Antilink enabled successfully!*\n\nDefault action: Delete messages\n\n*Exempt:* Admins, Owner, Sudo users' : '❌ *Failed to enable antilink*'
+                    text: result 
+      ? 'مانع اللينكات اتفعل 👀❤️\nالإجراء الافتراضي: حذف الرسائل 🗑️\nالمعفيين: الأدمن صاحب الجروب والمطور 😉❤️' 
+      : 'في مشكلة ف تفعيل مانع اللينكات 🙂'
                 }, { quoted: message });
                 break;
 
-            case 'off':
-                await removeAntilink(chatId, 'on');
+            case 'تعطيل':
+                await removeAntilink(chatId, 'تفعيل');
                 await sock.sendMessage(chatId, {
-                    text: '❌ *Antilink disabled*\n\nUsers can now send links freely.'
+                    text: 'مانع اللينكات توقف 👀❤️\nدلوقتي الناس تقدر تبعت لينكات على راحتهم 😉❤️'
                 }, { quoted: message });
                 break;
 
-            case 'set':
+            case 'ضبط':
                 if (args.length < 2) {
                     await sock.sendMessage(chatId, {
-                        text: '❌ *Please specify an action*\n\nUsage: `.antilink set delete | kick | warn`'
+                        text: 'استنى يا معلم، لازم تحدد الإجراء ❌\nطريقة الاستخدام: `.ممنوع_اللينكات ضبط حذف|طرد|تحذير`'
                     }, { quoted: message });
                     return;
                 }
                 const setAction = args[1].toLowerCase();
-                if (!['delete', 'kick', 'warn'].includes(setAction)) {
+                if (!['حذف','طرد','تحذير'].includes(setAction)) {
                     await sock.sendMessage(chatId, {
-                        text: '❌ *Invalid action*\n\nChoose: delete, kick, or warn'
+                        text: 'الإجراء اللي اخترته مش صح 🙂\nاختار واحد من دول: حذف, طرد, أو تحذير 👀❤️'
                     }, { quoted: message });
                     return;
                 }
-                const setResult = await setAntilink(chatId, 'on', setAction);
-                
+                const setResult = await setAntilink(chatId, 'تفعيل', setAction);
                 const actionDescriptions = {
-                    delete: 'Delete link messages and warn users',
-                    kick: 'Delete messages and remove users',
-                    warn: 'Only send warning messages'
+                    حذف: 'امسح الرسائل وابعث تحذير للمستخدمين',
+                    طرد: 'امسح الرسائل واطرد الشخص من الجروب',
+                    تحذير: 'ابعت تحذير للمستخدم بس'
                 };
-                
                 await sock.sendMessage(chatId, {
                     text: setResult 
-                        ? `✅ *Antilink action set to: ${setAction}*\n\n${actionDescriptions[setAction]}\n\n*Exempt:* Admins, Owner, Sudo users`
-                        : '❌ *Failed to set antilink action*'
+      ? `خلاص اتظبط الإجراء 👀❤️\n${setAction} - ${actionDescriptions[setAction]}\nالمعفيين: الأدمن صاحب الجروب والمطور 😉❤️` 
+      : 'في مشكلة ف ضبط الإجراء ❌'
                 }, { quoted: message });
                 break;
 
-            case 'status':
-            case 'get':
-                const status = await getAntilink(chatId, 'on');
+            case 'عرض':
+                const status = await getAntilink(chatId, 'تفعيل');
                 await sock.sendMessage(chatId, {
-                    text: `*🔗 ANTILINK STATUS*\n\n` +
-                          `*Status:* ${status?.enabled ? '✅ Enabled' : '❌ Disabled'}\n` +
-                          `*Action:* ${status?.action || 'Not set'}\n\n` +
-                          `*What happens when links are detected:*\n` +
-                          `${status?.action === 'delete' ? '• Message is deleted\n• User gets warning' : ''}` +
-                          `${status?.action === 'kick' ? '• Message is deleted\n• User is removed from group' : ''}` +
-                          `${status?.action === 'warn' ? '• User gets warning\n• Message stays' : ''}\n\n` +
-                          `*Exempt:* Admins, Owner, Sudo users`
+                    text: `*حالة مانع اللينكات*\n\n` +
+      `*الحالة دلوقتي:* ${status?.enabled ? 'شغال ✅' : 'واقف ❌'}\n` +
+      `*الإجراء الحالي:* ${status?.action || 'مفيش حاجة متضبطة'}\n\n` +
+      `*اللي بيحصل لو حد بعث لينك:*\n` +
+      `${status?.action === 'حذف' ? '• الرسالة هتمسح 🗑️\n• المستخدم هيتبعتلو تحذير ⚠️' : ''}` +
+      `${status?.action === 'طرد' ? '• الرسالة هتمسح 🗑️\n• المستخدم هيتشال من الجروب 👢' : ''}` +
+      `${status?.action === 'تحذير' ? '• المستخدم هيتبعتلو تحذير ⚠️\n• الرسالة هتفضل موجودة 📌' : ''}\n\n` +
+      `*المعفيين:* الأدمن، صاحب الجروب والمطور 😉❤️`
                 }, { quoted: message });
                 break;
 
             default:
                 await sock.sendMessage(chatId, {
-                    text: '❌ *Invalid command*\n\nUse `.antilink` to see available options.'
+                    text: 'الأمر اللي كتبته مش صحيح ❌\nاستخدم `.ممنوع_اللينكات` عشان تشوف كل الاختيارات 😎'
                 }, { quoted: message });
         }
     },
@@ -240,5 +239,3 @@ module.exports = {
     getAntilink,
     removeAntilink
 };
-
-
