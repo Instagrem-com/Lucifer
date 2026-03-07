@@ -22,40 +22,18 @@ const effectsMenu =
 '*.بيس*';
 
 function getFilter(cmd) {
-
-  if (/بيس|bass/i.test(cmd))
-    return 'equalizer=f=94:width_type=o:width=2:g=30';
-
-  if (/تفجير|blown/i.test(cmd))
-    return 'acrusher=.1:1:64:0:log';
-
-  if (/عميق|deep/i.test(cmd))
-    return 'atempo=1,asetrate=44500*2/3';
-
-  if (/عالي|earrape/i.test(cmd))
-    return 'volume=12';
-
-  if (/سريع|fast/i.test(cmd))
-    return 'atempo=1.63';
-
-  if (/ثقيل|fat/i.test(cmd))
-    return 'atempo=1.6';
-
-  if (/نايتكور|nightcore/i.test(cmd))
-    return 'atempo=1.06';
-
-  if (/عكس|reverse/i.test(cmd))
-    return 'areverse';
-
-  if (/روبوت|robot/i.test(cmd))
+  if (/bass/i.test(cmd)) return 'equalizer=f=94:width_type=o:width=2:g=30';
+  if (/blown/i.test(cmd)) return 'acrusher=.1:1:64:0:log';
+  if (/deep/i.test(cmd)) return 'atempo=1,asetrate=44500*2/3';
+  if (/earrape/i.test(cmd)) return 'volume=12';
+  if (/fast/i.test(cmd)) return 'atempo=1.63';
+  if (/fat/i.test(cmd)) return 'atempo=1.6';
+  if (/nightcore/i.test(cmd)) return 'atempo=1.06';
+  if (/reverse/i.test(cmd)) return 'areverse';
+  if (/robot/i.test(cmd))
     return "afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)'";
-
-  if (/بطيء|slow/i.test(cmd))
-    return 'atempo=0.7';
-
-  if (/سنجاب|chipmunk/i.test(cmd))
-    return 'atempo=0.5';
-
+  if (/slow/i.test(cmd)) return 'atempo=0.7';
+  if (/tupai|squirrel|chipmunk/i.test(cmd)) return 'atempo=0.5';
   return null;
 }
 
@@ -67,42 +45,35 @@ async function getAudio(message) {
 
   const stream = await downloadContentFromMessage(audio, 'audio');
   const chunks = [];
-
   for await (const c of stream) chunks.push(c);
-
   return Buffer.concat(chunks);
 }
 
 module.exports = {
-  command: 'صوت',
+  command: 'تغيير_الصوت',
   aliases: [
     'بيس','تفجير','عميق','عالي','سريع','ثقيل',
     'نايتكور','عكس','روبوت','بطيء','سنجاب'
   ],
-
-  category: 'الصوتيات',
-  description: 'إضافة مؤثرات على الصوت',
+  category: 'menu',
+  description: 'تغييؤ صوت فويس 👀❤️',
+  usage: '.روبوت او .عكس (اعمل ربلاي ع ريكورد او اغنيه)',
 
   async handler(sock, message, args, context = {}) {
-
     const chatId = context.chatId || message.key.remoteJid;
     const cmd = message.body || args.join(' ');
     const filter = getFilter(cmd);
 
     const audioBuffer = await getAudio(message);
-
     if (!audioBuffer || !filter) {
-
       return await sock.sendMessage(
         chatId,
         { text: effectsMenu },
         { quoted: message }
       );
-
     }
 
     try {
-
       const tmp = path.join(__dirname, '../temp');
       if (!fs.existsSync(tmp)) fs.mkdirSync(tmp, { recursive: true });
 
@@ -114,30 +85,17 @@ module.exports = {
       exec(
         `ffmpeg -y -i "${input}" -af "${filter},aresample=48000,asetpts=N/SR" -c:a libopus -b:a 64k -ac 1 "${output}"`,
         async () => {
-
           const out = fs.readFileSync(output);
-
           await sock.sendMessage(
             chatId,
             { audio: out, mimetype: 'audio/ogg; codecs=opus', ptt: true },
             { quoted: message }
           );
-
           try { fs.unlinkSync(input); } catch {}
           try { fs.unlinkSync(output); } catch {}
-
         }
       );
-
     } catch {
-
-      await sock.sendMessage(
-        chatId,
-        { text: '❌ حصل خطأ في معالجة الصوت.\nتأكد أن ffmpeg متثبت على السيرفر.' },
-        { quoted: message }
-      );
-
-    }
-
-  }
+      await sock.sendMessage(chatId, { text: 'ف مشكله وانا بغير الصوت 🙂' }, { quoted: message });
+    }}
 };

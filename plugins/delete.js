@@ -1,7 +1,7 @@
 const store = require('../lib/lightweight_store');
 
 module.exports = {
-    command: 'مسح_الريآكت',
+    command: 'مسح',
     aliases: ['delreact', 'rmreact'],
     category: 'admin',
     description: 'يمسح أي رسالة عملت عليها Reaction',
@@ -16,7 +16,7 @@ module.exports = {
 
         if (!isBotAdmin) {
             await sock.sendMessage(chatId, { 
-                text: '❌ *البوت لازم يكون أدمن عشان يمسح الرسائل*' 
+                text: '*البوت لازم يكون أدمن عشان يمسح الرسائل* 😊❤️' 
             }, { quoted: message });
             return;
         }
@@ -28,7 +28,7 @@ module.exports = {
 
         if (!repliedMsgId) {
             await sock.sendMessage(chatId, { 
-                text: '❌ *من فضلك رد على الرسالة اللي عايز تمسحها*' 
+                text: '*من فضلك رد على الرسالة اللي عايز تمسحها* 😄❤️' 
             }, { quoted: message });
             return;
         }
@@ -45,7 +45,7 @@ module.exports = {
         } catch (e) {
             console.error('Error deleting reacted message:', e);
             await sock.sendMessage(chatId, { 
-                text: '❌ *فشل مسح الرسالة!*' 
+                text: ' *فشل مسح الرسالة* 😄' 
             }, { quoted: message });
         }
     }

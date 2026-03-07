@@ -39,7 +39,7 @@ module.exports = {
       const nodeVersion = process.version;
 
       const text =
-        `*🤖 بـوت ${settings.botName} شـغال يـحب 🥂❤️*\n\n` +
+        `*بـوت ${settings.botName} شـغال يـحب 🥂❤️*\n\n` +
         `*اصداࢪ ⚙️ :* ${settings.version}\n` +
         `*الـوقـت ⏱️⚡:* ${uptimeText}\n` +
         `*الـࢪمـات 👀💻 :* ${usedMem} MB / ${totalMem} MB\n` +

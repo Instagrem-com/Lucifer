@@ -1,25 +1,9 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
-
 module.exports = {
-    command: 'add',
-    aliases: ['invite', 'gcadd', 'addgc'],
+    command: 'اضافه',
+    aliases: ['دخلو', 'ادد', 'ضيف'],
     category: 'group',
-    description: 'Add a user to the group',
-    usage: '.add <number> or reply to vcard/message',
+    description: 'إضافة عضو للجروب',
+    usage: '.اضف <رقم> ',
     groupOnly: 'true',
     adminOnly: 'true',
 
@@ -64,14 +48,12 @@ module.exports = {
 
         if (!targetNumber) {
             return await sock.sendMessage(chatId, {
-                text: `❌ *Please provide a number to add!*
+                text: ` 📝 *من فضلك أدخل رقم للإضافة!* 📝
 
-*Usage:*
-• \`.add 923051234567\`
-• \`.add +923051234567\`
-• \`.add 92 305 1234567\`
-• Reply to a vcard with \`.add\`
-• Reply to a message with \`.add\``,
+ 💻 *طريقة الاستخدام* 💻 
+• \`.اضافه 923051234567\`
+• \`.اضافه +923051234567\`
+• \`.اضافه 92 305 1234567\``,
                 ...channelInfo
             }, { quoted: message });
         }
@@ -80,7 +62,7 @@ module.exports = {
             !targetNumber.startsWith('4') && !targetNumber.startsWith('5') && !targetNumber.startsWith('6') && 
             !targetNumber.startsWith('7') && !targetNumber.startsWith('8') && !targetNumber.startsWith('9')) {
             return await sock.sendMessage(chatId, {
-                text: '❌ *Invalid number format!*\n\nPlease include the country code.\nExample: 923051234567',
+                text: '*تنسيق الرقم مش صح 😄*\n\nيرجى إضافة كود الدولة 👀❤️.\nمثال 📝 : 201501728150',
                 ...channelInfo
             }, { quoted: message });
         }
@@ -93,7 +75,7 @@ module.exports = {
             
             if (participants.includes(targetJid)) {
                 return await sock.sendMessage(chatId, {
-                    text: `⚠️ *User is already in the group!*\n\n${targetNumber}`,
+                    text: `*المستخدم موجود بالفعل في الجروب 👀❤️*\n\n${targetNumber}`,
                     ...channelInfo
                 }, { quoted: message });
             }
@@ -106,23 +88,23 @@ module.exports = {
 
             if (result[0].status === '200') {
                 await sock.sendMessage(chatId, {
-                    text: `✅ *Successfully added!*\n\n@${targetNumber}`,
+                    text: `*تم الإضافة بنجاح* 👀❤️\n\n@${targetNumber}`,
                     mentions: [targetJid],
                     ...channelInfo
                 }, { quoted: message });
             } else if (result[0].status === '403') {
                 await sock.sendMessage(chatId, {
-                    text: `❌ *Failed to add user!*\n\n*Reason:* User has privacy settings that prevent being added to groups.\n\n*Solution:* Send them the group invite link.`,
+                    text: `*فشل في إضافة المستخدم 🙃*\n\n*السبب 👇🏼*\n إعدادات الخصوصية تمنع إضافته للجروبات 😄❤️\n\n*الحل 👀❤️*\n ابعت له رابط دعوة الجروب 😊❤️`,
                     ...channelInfo
                 }, { quoted: message });
             } else if (result[0].status === '408') {
                 await sock.sendMessage(chatId, {
-                    text: `⚠️ *Invite sent!*\n\nUser needs to accept the invitation to join.`,
+                    text: ` *تم إرسال الدعوة 👀❤️*\n\nالمستخدم بحاجة لقبول الدعوة للانضمام 😁👀`,
                     ...channelInfo
                 }, { quoted: message });
             } else {
                 await sock.sendMessage(chatId, {
-                    text: `❌ *Failed to add user!*\n\n*Status:* ${result[0].status}\n\nThe user may have blocked the bot or changed their privacy settings.`,
+                    text: `*فشل في إضافة المستخدم 🙃*\n\n*الحالة 📝 :${result[0].status}\n\nربما المستخدم قام بحظر أو غير إعدادات الخصوصية 👀❤️`,
                     ...channelInfo
                 }, { quoted: message });
             }
@@ -130,26 +112,9 @@ module.exports = {
         } catch (error) {
             console.error('Add command error:', error);
             await sock.sendMessage(chatId, {
-                text: `❌ *Error adding user!*\n\n${error.message}`,
+                text: ` *حدث خطأ أثناء إضافة المستخدم* 🙃\n\n${error.message}`,
                 ...channelInfo
             }, { quoted: message });
         }
     }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
-

@@ -1,25 +1,9 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
-
 module.exports = {
-  command: 'forwarded',
+  command: 'رساله_معاد_توجيها',
   aliases: ['viral', 'fakeforward'],
   category: 'tools',
-  description: 'Send text with a fake "Frequently Forwarded" tag',
-  usage: '.viral <text> OR reply to a message',
+  description: 'إرسال رسالة بعلامة "تم إعادة توجيهها كثيرًا" مزيفة',
+  usage: '.رساله_معاد_توجيها <نص> أو الرد على رسالة',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -42,7 +26,7 @@ module.exports = {
 
       if (!txt || txt.trim() === "") {
         return await sock.sendMessage(chatId, { 
-          text: 'Please provide text or reply to a message to forward.' 
+          text: 'من فضلك اكتب نص أو قم بالرد على رسالة لإعادة توجيهها 👀❤️' 
         }, { quoted: message });
       }
 
@@ -56,23 +40,7 @@ module.exports = {
 
     } catch (err) {
       console.error('Forwarding Spoof Error:', err);
-      await sock.sendMessage(chatId, { text: '❌ Failed to spoof forwarding.' });
+      await sock.sendMessage(chatId, { text: ' فشل في تزوير إعادة التوجيه 😄' });
     }
   }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-

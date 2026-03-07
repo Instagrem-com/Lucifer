@@ -74,9 +74,9 @@ async function reactToStatus(sock, statusKey) {
                 statusJidList: [statusKey.remoteJid, statusKey.participant || statusKey.remoteJid]
             }
         );
-        console.log('ردينا على الحالة 💚');
+        console.log('رديت ع الحاله 😉❤️');
     } catch (error) {
-        console.error('مش قادر ارد على الحالة ❌', error.message);
+        console.error('مش قادر ارد ع الحاله 🙂', error.message);
     }
 }
 
@@ -96,7 +96,7 @@ async function handleStatusUpdate(sock, status) {
             if (k.remoteJid === 'status@broadcast') {
                 try {
                     await sock.readMessages([k]);
-                    console.log('قريت الحالة 👀');
+                    console.log('شوفت الاستوري 👀❤️');
                     await reactToStatus(sock, k);
                 } catch (err) {
                     if (err.message?.includes('rate-overlimit')) {
@@ -107,16 +107,16 @@ async function handleStatusUpdate(sock, status) {
             }
         }
     } catch (error) {
-        console.error('حصل مشكلة في القراية التلقائية ❌', error.message);
+        console.error('حصل مشكلة 🙂', error.message);
     }
 }
 
 module.exports = {
-    command: 'مشاهده_الحالات',
-    aliases: ['autoview', 'statusview'],
+    command: 'مشاهده_استيت',
+    aliases: ['autoview', 'مشاهده_استوري'],
     category: 'owner',
     description: 'يشوف الحالات ويتفاعل معاها لو مفعل',
-    usage: '.مشاهده_الحالات تشغيل/ايقاف/تفاعل تشغيل/تفاعل ايقاف',
+    usage: '.مشاهده_الحالات تشغيل/تعطيل/تفاعل تشغيل/تفاعل تعطيل',
     ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
@@ -126,17 +126,17 @@ module.exports = {
             let config = await readConfig();
             if (!args || args.length === 0) {
                 await sock.sendMessage(chatId, {
-                    text: `إعدادات مشاهدة الحالات دلوقتي
+                    text: ` ⚙️ إعدادات مشاهدة الحالات دلوقتي ⚙️
 
-مشاهدة الحالات: ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
-تفاعل مع الحالات: ${config.reactOn ? 'شغال 💚' : 'مقفول ❌'}
-طريقة التخزين: ${HAS_DB ? 'Database' : 'ملفات'}
+مشاهدة الحالات 📝: ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
+تفاعل مع الحالات ⚙️: ${config.reactOn ? 'شغال 💚' : 'مقفول ❌'}
+طريقة التخزين 💻 : ${HAS_DB ? 'Database' : 'ملفات النظام 📝'}
 
-الأوامر:
-.مشاهده_الحالات تشغيل
-.مشاهده_الحالات ايقاف
-.مشاهده_الحالات تفاعل تشغيل
-.مشاهده_الحالات تفاعل ايقاف`,
+الأوامر 💻📝:
+.مشاهده_الحالات تشغيل 👀❤️
+.مشاهده_الحالات تعطيل 👀❤️
+.مشاهده_الحالات تفاعل تشغيل 👀❤️
+.مشاهده_الحالات تفاعل تعطيل 👀❤️`,
                     ...channelInfo
                 }, { quoted: message });
                 return;
@@ -146,25 +146,25 @@ module.exports = {
 
             if (command === 'تشغيل') {
                 if (config.enabled) {
-                    await sock.sendMessage(chatId, { text: 'مشاهدة الحالات شغالة أصلاً ✅' }, { quoted: message });
+                    await sock.sendMessage(chatId, { text: 'مشاهدة الحالات شغالة أصلا 😂❤️' }, { quoted: message });
                     return;
                 }
                 config.enabled = true;
                 await writeConfig(config);
-                await sock.sendMessage(chatId, { text: 'تم تشغيل مشاهدة الحالات ✅' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'تم تشغيل مشاهدة الحالات 👀❤️' }, { quoted: message });
             }
-            else if (command === 'ايقاف') {
+            else if (command === 'تعطيل') {
                 if (!config.enabled) {
-                    await sock.sendMessage(chatId, { text: 'مشاهدة الحالات مقفولة أصلاً ❌' }, { quoted: message });
+                    await sock.sendMessage(chatId, { text: 'مشاهدة الحالات مقفولة أصلا 😂❤️' }, { quoted: message });
                     return;
                 }
                 config.enabled = false;
                 await writeConfig(config);
-                await sock.sendMessage(chatId, { text: 'تم ايقاف مشاهدة الحالات ❌' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'تم ايقاف مشاهدة الحالات 👀❤️' }, { quoted: message });
             }
             else if (command === 'تفاعل') {
                 if (!args[1]) {
-                    await sock.sendMessage(chatId, { text: 'حدد تشغيل أو ايقاف للتفاعل ❌\nمثال: .مشاهده_الحالات تفاعل تشغيل' }, { quoted: message });
+                    await sock.sendMessage(chatId, { text: 'حدد تشغيل أو تعطيل للتفاعل 👀❤️\nمثال 📝: \n .مشاهده_الحالات تفاعل تشغيل 👀❤️' }, { quoted: message });
                     return;
                 }
                 const sub = args[1].toLowerCase();
@@ -172,19 +172,19 @@ module.exports = {
                     config.reactOn = true;
                     await writeConfig(config);
                     await sock.sendMessage(chatId, { text: 'تم تفعيل التفاعل مع الحالات 💚' }, { quoted: message });
-                } else if (sub === 'ايقاف') {
+                } else if (sub === 'تعطيل') {
                     config.reactOn = false;
                     await writeConfig(config);
-                    await sock.sendMessage(chatId, { text: 'تم ايقاف التفاعل مع الحالات ❌' }, { quoted: message });
+                    await sock.sendMessage(chatId, { text: 'تم ايقاف التفاعل مع الحالات 👀❤️' }, { quoted: message });
                 } else {
-                    await sock.sendMessage(chatId, { text: 'الأمر ده مش صح ❌\nاستخدم تشغيل أو ايقاف', ...channelInfo }, { quoted: message });
+                    await sock.sendMessage(chatId, { text: 'الأمر ده مش صح 😄\nاستخدم تشغيل أو تعطيل 👀❤️', ...channelInfo }, { quoted: message });
                 }
             } else {
-                await sock.sendMessage(chatId, { text: 'الأمر ده مش موجود ❌\nجرب الأوامر الصح من قائمة البوت', ...channelInfo }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'الأمر ده مش موجود 😄\nجرب الأوامر الصح من قائمة البوت 👀❤️', ...channelInfo }, { quoted: message });
             }
         } catch (error) {
-            console.error('حصل خطأ في الأمر ❌', error);
-            await sock.sendMessage(chatId, { text: `حصل خطأ أثناء التعامل مع الأمر ❌\n${error.message}`, ...channelInfo }, { quoted: message });
+            console.error('حصل خطأ في الأمر 🙂', error);
+            await sock.sendMessage(chatId, { text: `حصل خطأ أثناء التعامل مع الأمر 🙂\n${error.message}`, ...channelInfo }, { quoted: message });
         }
     },
 

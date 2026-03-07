@@ -228,7 +228,7 @@ async function handleMessageRevocation(sock, revocationMessage) {
 });
 
         let text = `*🔰 تـقـريـر مـنـع الحـذف 🔰*\n\n` +
-            `*🗑️ مـسـحـهـا : @${deletedBy.split('@')[0]}\n` +
+            `* مـسـحـهـا 🗑️: @${deletedBy.split('@')[0]}\n` +
             `* المـرسـل 👤 : @${senderName}\n` +
             `* ايدي 📱: ${sender}\n` +
             `* الـوقـت 🕒 : ${time}\n`;
@@ -246,7 +246,7 @@ async function handleMessageRevocation(sock, revocationMessage) {
 
         if (original.mediaType && fs.existsSync(original.mediaPath)) {
             const mediaOptions = {
-                caption: `*تـم حـذف ${original.mediaType}*\nمـن: @${senderName}`,
+                caption: `*تـم حـذف ${original.mediaType}*\nمـن: @${senderName} 👀❤️`,
 mentions: [sender]
             };
 
@@ -315,16 +315,16 @@ module.exports = {
         if (!action) {
             await sock.sendMessage(chatId, {
                 text: `*🔰 إعدادات مانع حذف الرسائل 🔰*\n\n` +
-                      `*الحالة الحالية :* ${config.enabled ? ' مـفـعـل ✅' : ' مـعـطـل ❌'}\n` +
-                      `*نظام التخزين:* ${HAS_DB ? 'Database' : 'نظام الملفات'}\n\n` +
-                      `*الأوامر:*\n` +
-                      `• \`.ممنوع_مسح_الرسايل تفعيل\` - تفعيل\n` +
-                      `• \`.ممنوع_مسح_الرسايل تعطيل\` - تعطيل\n\n` +
-                      `*المميزات:*\n` +
-                      `• متابعة الرسائل المحذوفة\n` +
-                      `• حفظ الوسائط المحذوفة\n` +
-                      `• حفظ وسائط ViewOnce تلقائياً\n` +
-                      `• إرسال التقارير لرقم الـبوت`
+                      `*الحالة الحالية ⚙️❤️:* ${config.enabled ? ' مـفـعـل ✅' : ' مـعـطـل ❌'}\n` +
+                      `*نظام التخزين 📝:* ${HAS_DB ? 'Database' : 'نظام الملفات 💻⚡'}\n\n` +
+                      `*الأوامر 📝:*\n` +
+                      `• \`.ممنوع_مسح_الرسايل تفعيل\` - للتفعيل 👀❤️\n` +
+                      `• \`.ممنوع_مسح_الرسايل تعطيل\` - للتعطيل 👀❤️\n\n` +
+                      `*المميزات 😉❤️:*\n` +
+                      `• متابعة الرسائل المحذوف 🔥❤️ة\n` +
+                      `• حفظ الوسائط المحذوفة 🔥❤️\n` +
+                      `• حفظ الرسائل المحذوفه 🔥❤️ً\n` +
+                      `• إرسال التقارير لرقم الـبوت 🔥❤️`
             }, { quoted: message });
             return;
         }
@@ -333,24 +333,24 @@ module.exports = {
             config.enabled = true;
             await saveAntideleteConfig(config);
             await sock.sendMessage(chatId, {
-                text: ` *تم تفعيل مانع حذف الرسائل ✅*\n\n` +
-                      `نظام التخزين: ${HAS_DB ? 'Database' : 'نظام الملفات'}\n\n` +
-                      `الـبـوت سـيـفـعـل الآن :\n` +
-                      `• متابعة كل الرسائل\n` +
-                      `• مراقبة الرسائل المحذوفة\n` +
-                      `• حفظ وسائط ViewOnce\n` +
-                      `• إرسال تقارير الحذف لرقم البوت`
+                text: ` *تم تفعيل مانع حذف الرسائل 👀❤️*\n\n` +
+                      `نظام التخزين 📝: ${HAS_DB ? 'Database' : 'نظام الملفات 💻'}\n\n` +
+                      `الـبـوت سـيـفـعـل الآن 🔥❤️ :\n` +
+                      `• متابعة كل الرسائل 🔥❤️\n` +
+                      `• مراقبة الرسائل المحذوفة 🔥❤️\n` +
+                      `• حفظ الرسائل المحذوفه 🔥❤️\n` +
+                      `• إرسال تقارير الحذف لرقم البوت 😉❤️`
             }, { quoted: message });
         } else if (action === 'تعطيل') {
             config.enabled = false;
             await saveAntideleteConfig(config);
             await sock.sendMessage(chatId, {
-                text: ` *تم تعطيل مانع حذف الرسائل ✅*\n\n` +
-                      `الـبـوت لن يقوم بمتابعة الرسائل المحذوفة بعد الآن ❌`
+                text: ` *تم تعطيل مانع حذف الرسائل يـا حـب 👀❤️*\n\n` +
+                      `الـبـوت لن يقوم بمتابعة الرسائل المحذوفة بعد الآن 💤`
             }, { quoted: message });
         } else {
             await sock.sendMessage(chatId, {
-                text: ' *أمر غير صحيح ❌*\n\nاستخدم: `.ممنوع_مسح_الرسايل تفعيل/تعطيل`'
+                text: ' *أمر غير صحيح ❌*\n\nاستخدم 📝: `.ممنوع_مسح_الرسايل تفعيل/تعطيل 👀❤️`'
             }, { quoted: message });
         }
     },

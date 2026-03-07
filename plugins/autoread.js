@@ -39,7 +39,7 @@ async function isAutoreadEnabled() {
         const config = await initConfig();
         return config.enabled;
     } catch (error) {
-        console.error('حصل مشكلة في معرفة حالة القراءة:', error);
+        console.error('حصل مشكله وانا بعرف الحاله 🙂', error);
         return false;
     }
 }
@@ -69,7 +69,7 @@ async function handleAutoread(sock, message) {
     try {
         const ghostMode = await store.getSetting('global', 'stealthMode');
         if (ghostMode && ghostMode.enabled) {
-            console.log('وضع الشبح شغال - مش هيبعت علامة قراءة 👻');
+            console.log('وضع الشبح شغال - مش هيبعت علامة قراءة الرسالة 👻');
             return false;
         }
     } catch {}
@@ -91,7 +91,7 @@ async function handleAutoread(sock, message) {
 
         } catch (error) {
 
-            console.error('حصل خطأ في القراءة:', error);
+            console.error('حصل مشكله 🙂', error);
             return false;
 
         }
@@ -123,16 +123,16 @@ if (!action) {
 
 await sock.sendMessage(chatId,{
 text:
-`حالة القراءة التلقائية
+` 📝 حالة القراءة التلقائية 📝<
 
-الحالة دلوقتي: ${config.enabled ? 'شغالة' : 'مقفولة'} ✅❌
+الحالة دلوقتي 👀❤️ : ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'} 
 
-الأوامر:
+الأوامر 💻 :
 
-.قراءه تشغيل
-.قراءه ايقاف
+.قراءه تشغيل 👀❤️
+.قراءه ايقاف 👀❤️
 
-لما تشغلها البوت هيقرأ كل الرسائل لوحده ✓✓`
+لما تشغلها البوت هيقرأ كل الرسائل لوحده 👀❤️`
 },{quoted:message})
 
 return
@@ -143,7 +143,7 @@ if (action === 'تشغيل') {
 if (config.enabled) {
 
 await sock.sendMessage(chatId,{
-text:'القراءة التلقائية شغالة بالفعل ✔️'
+text:'القراءة التلقائية شغاله من بدري ياحب 😂❤️'
 },{quoted:message})
 
 return
@@ -153,7 +153,7 @@ config.enabled = true;
 await saveConfig(config);
 
 await sock.sendMessage(chatId,{
-text:'تم تشغيل القراءة التلقائية ✔️'
+text:'تم تشغيل القراءة ياحب 👀❤️'
 },{quoted:message})
 
 }
@@ -163,7 +163,7 @@ else if (action === 'ايقاف') {
 if (!config.enabled) {
 
 await sock.sendMessage(chatId,{
-text:'القراءة التلقائية مقفولة بالفعل ❌'
+text:'القراءة التلقائية مقفولة اصلا ياحب 😂❤️'
 },{quoted:message})
 
 return
@@ -173,7 +173,7 @@ config.enabled = false;
 await saveConfig(config);
 
 await sock.sendMessage(chatId,{
-text:'تم ايقاف القراءة التلقائية ❌'
+text:'تم ايقاف القراءة التلقائية يا حب 😂❤️'
 },{quoted:message})
 
 }
@@ -182,22 +182,22 @@ else {
 
 await sock.sendMessage(chatId,{
 text:
-`الخيار غلط ❌
+`امر غلط ياشق 👀 ❤️ 
 
-استخدم:
+استخدم 📝 :
 
-.قراءه تشغيل
-.قراءه ايقاف`
+.قراءه تشغيل 👀❤️
+.قراءه ايقاف 👀❤️` 
 },{quoted:message})
 
 }
 
 } catch (error) {
 
-console.error('خطأ في امر القراءة:', error)
+console.error('خطأ في امر القراءة 🙂', error)
 
 await sock.sendMessage(chatId,{
-text:'حصل خطأ في تنفيذ الأمر ❌'
+text:'حصل خطأ في تنفيذ الأمر 🙂'
 },{quoted:message})
 
 }

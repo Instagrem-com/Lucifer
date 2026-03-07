@@ -34,7 +34,7 @@ async function isUserBanned(userId) {
 }
 
 module.exports = {
-    command: 'حظر',
+    command: 'حظر_استخدام_البوت',
     aliases: ['ban', 'block', 'حظر_شخص'],
     category: 'group',
     description: 'تحظر شخص من استخدام البوت',
@@ -54,7 +54,7 @@ module.exports = {
 
         if (!userToBan) {
             await sock.sendMessage(chatId, {
-                text: ' لازم تذكر الشخص أو ترد على رسالته\n\nالاستخدام: `.حظر @user` أو الرد بالـ `.حظر` 👀❤️',
+                text: ' لازم تذكر الشخص أو ترد على رسالته 😊❤️\n\nالاستخدام 📝: `.حظر_استخدام_البوت @user` أو ربلاي ع رساله ب `.حظر_استخدام_البوت` 👀❤️',
                 ...channelInfo
             }, { quoted: message });
             return;
@@ -79,21 +79,21 @@ module.exports = {
                 await saveBannedUsers(bannedUsers);
 
                 await sock.sendMessage(chatId, {
-                    text: ` تم حظر الشخص بنجاح!\n\n@${userToBan.split('@')[0]} اتحظر من استخدام البوت.\n\nالتخزين : ${HAS_DB ? 'Database' : 'ملغات النظام'}`,
+                    text: ` تم حظر الشخص بنجاح 👀❤️\n\n@${userToBan.split('@')[0]} اتحظر من استخدام البوت 😄❤️\n\nالتخزين 📝: ${HAS_DB ? 'Database' : 'ملغات النظام 💻'}`,
                     mentions: [userToBan],
                     ...channelInfo
                 }, { quoted: message });
 
             } else {
                 await sock.sendMessage(chatId, {
-                    text: ` الشخص ده اتحظر قبل كده\n\n@${userToBan.split('@')[0]} أصلاً محظور 🙂`,
+                    text: ` الشخص ده اتحظر قبل كده 👀\n\n@${userToBan.split('@')[0]} أصلاً محظور 🙂`,
                     mentions: [userToBan],
                     ...channelInfo
                 }, { quoted: message });
             }
 
         } catch (error) {
-            console.error('حصل خطأ في أمر الحظر:', error);
+            console.error('حصل خطأ في أمر الحظر 😄', error);
             await sock.sendMessage(chatId, {
                 text: ' فشل في حظر الشخص، جرب تاني ❌',
                 ...channelInfo

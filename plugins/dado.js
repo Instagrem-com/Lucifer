@@ -1,6 +1,6 @@
 module.exports = {
-  command: 'dado',
-  aliases: ['dados', 'dice'],
+  command: 'لعبه_الزهر',
+  aliases: ['زهر', 'dice'],
   category: 'games',
   description: 'Roll a random dice sticker',
   usage: '.dado',
@@ -28,7 +28,7 @@ module.exports = {
       console.error('Dice Plugin Error:', e);
       await sock.sendMessage(chatId, { 
         image: { url: randomDice }, 
-        caption: '🎲 The dice rolled!' 
+        caption: '🎲' 
       }, { quoted: message });
     }
   }

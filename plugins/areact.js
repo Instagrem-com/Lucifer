@@ -25,7 +25,7 @@ module.exports = {
     
     if (!args[0] || !['تفعيل', 'تعطيل'].includes(args[0])) {
       await sock.sendMessage(chatId, {
-        text: '*الاستخدام 👀❤️:*\n.رياكت_تلقائي تفعيل/تعطيل',
+        text: '*الاستخدام* 👀❤️\n.رياكت_تلقائي تفعيل/تعطيل 😊❤️',
         ...channelInfo
       }, { quoted: message });
       return;
@@ -34,7 +34,7 @@ module.exports = {
     AUTO_REACT_MESSAGES = args[0] === 'تفعيل';
 
     await sock.sendMessage(chatId, {
-      text: AUTO_REACT_MESSAGES ? '*رياكت_تلقائي مفعل 👀❤️*' : '*رياكت_تلقائي معطل 👀❤️*',
+      text: AUTO_REACT_MESSAGES ? '*رياكت_تلقائي مفعل* 👀❤️' : '*رياكت_تلقائي معطل* 👀❤️',
       ...channelInfo
     }, { quoted: message });
 

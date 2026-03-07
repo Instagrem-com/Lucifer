@@ -4,11 +4,11 @@ const { exec } = require('child_process');
 const path = require('path');
 
 module.exports = {
-  command: 'emojimix',
+  command: 'مزج_الإيموجي',
   aliases: ['mixemoji', 'emix'],
   category: 'stickers',
-  description: 'Mix two emojis into a sticker',
-  usage: '.emojimix 😎+🥰',
+  description: 'يمزج إيموجيين ويبعتهم على شكل ستكر',
+  usage: '.مزج_الإيموجي 😎+🥰',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -16,14 +16,14 @@ module.exports = {
     try {
       if (!args[0]) {
         await sock.sendMessage(chatId, {
-          text: '🎴 Example: .emojimix 😎+🥰'
+          text: 'مثال 📝 : .مزج_الإيموجي 😎+🥰'
         }, { quoted: message });
         return;
       }
 
       if (!args[0].includes('+')) {
         await sock.sendMessage(chatId, {
-          text: '✳️ Separate the emoji with a *+* sign\n\n📌 Example:\n.emojimix 😎+🥰'
+          text: '✳️ افصل بين الإيموجيين بعلامة *+* ✳️\n\n مثال 📝 :\n.مزج_الإيموجي 😎+🥰'
         }, { quoted: message });
         return;
       }
@@ -42,7 +42,7 @@ module.exports = {
 
       if (!data.results || data.results.length === 0) {
         await sock.sendMessage(chatId, {
-          text: '❌ These emojis cannot be mixed! Try different ones.'
+          text: ' مش قادر يمزج الإيموجيين دول جرب إيموجيين تانيين 😄❤️'
         }, { quoted: message });
         return;
       }
@@ -79,7 +79,7 @@ module.exports = {
       });
 
       if (!fs.existsSync(outputFile)) {
-        throw new Error('Sticker creation failed');
+        throw new Error('فشل إنشاء الستكر');
       }
 
       const stickerBuffer = fs.readFileSync(outputFile);
@@ -88,20 +88,20 @@ module.exports = {
         sticker: stickerBuffer
       }, { quoted: message });
 
-      // Cleanup
+      // تنظيف الملفات المؤقتة
       try {
         fs.unlinkSync(tempFile);
         fs.unlinkSync(outputFile);
       } catch (err) {
-        console.error('Temp cleanup error:', err);
+        console.error('خطأ أثناء تنظيف الملفات المؤقتة 😄', err);
       }
 
     } catch (error) {
-      console.error('Error in emojimix command:', error);
+      console.error('خطأ في أمر مزج الإيموجي 🙂', error);
       await sock.sendMessage(chatId, {
         text:
-          '❌ Failed to mix emojis!\n\n' +
-          '📌 Example:\n.emojimix 😎+🥰'
+          ' فشل في مزج الإيموجيين 😄\n\n' +
+          ' مثال 📝 :\n.مزج_الإيموجي 😎+🥰'
       }, { quoted: message });
     }
   }

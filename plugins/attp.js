@@ -15,7 +15,7 @@ module.exports = {
 
     if (!text) {
       return await sock.sendMessage(chatId, { 
-        text: '✏️ اكتب النص بعد الأمر.\n\nمثال:\n.نص_استيكر >النص< 👀❤️'
+        text: '✏️ اكتب النص بعد الأمر.\n\nمثال 📝 :\n.نص_استيكر >النص< 👀❤️'
       }, { quoted: message });
     }
 
@@ -30,7 +30,7 @@ module.exports = {
 
     } catch {
       await sock.sendMessage(chatId, { 
-        text: '❌ حصل خطأ أثناء إنشاء الاستيكر.' 
+        text: 'حصل مشكله وانا بعمل الاستيكر 🙂' 
       }, { quoted: message });
     }
   }

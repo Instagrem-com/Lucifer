@@ -1,10 +1,10 @@
 
 module.exports = {
-  command: 'channelid',
-  aliases: ['newsletterid'],
+  command: 'ايدي_القناة',
+  aliases: ['CID'],
   category: 'general',
-  description: 'Get the internal JID of a WhatsApp Channel',
-  usage: '.channelid <url>',
+  description: 'تـولـيـد ايـدي لـقـنـاة واتـسـاب 👀❤️',
+  usage: '.ايدي_الـقـنـاة <الرابط>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -17,7 +17,7 @@ module.exports = {
 
     if (!url || !url.includes('whatsapp.com/channel/')) {
       return await sock.sendMessage(chatId, { 
-        text: 'Please provide a valid WhatsApp Channel URL.\n\n*Example:* .channelid https://whatsapp.com/channel/xxxxx' 
+        text: 'ابـعـت لـيـنـك الـقـنـاة يـاحـب 😊❤️.\n\n*مثلا:* .ايدي_القناة https://whatsapp.com/channel/0029VbCKWqiBKfi7Df0m7O1M' 
       }, { quoted: message });
     }
 
@@ -27,8 +27,7 @@ module.exports = {
 
       const metadata = await sock.newsletterMetadata("invite", code);
 
-      const response = `
-🆔 *JID:* ${metadata.id}
+      const response = `*The ID BY" ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪ \n ${metadata.id}
       `.trim();
 
       await sock.sendMessage(chatId, { text: response }, { quoted: message });
@@ -36,7 +35,7 @@ module.exports = {
     } catch (err) {
       console.error('Channel ID Error:', err);
       await sock.sendMessage(chatId, { 
-        text: '❌ *Failed to resolve:* This channel might be private, deleted, or the link is invalid.' 
+        text: 'ف مـشـكـلـة يـا حـب او الـقـنـاة مـش مـوجـودة او الـلـيـنـك غـلـط حـاول تـانـي 👀❤️' 
       }, { quoted: message });
     }
   }

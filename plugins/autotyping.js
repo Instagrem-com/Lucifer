@@ -54,7 +54,7 @@ async function handleAutotypingForMessage(sock, chatId, userMessage) {
             await sock.sendPresenceUpdate('paused', chatId);
             return true;
         } catch (err) {
-            console.error('مش قادر يكتب...', err);
+            console.error('ف مشكله 🙂', err);
             return false;
         }
     }
@@ -77,7 +77,7 @@ async function handleAutotypingForCommand(sock, chatId) {
             await sock.sendPresenceUpdate('paused', chatId);
             return true;
         } catch (err) {
-            console.error('مش قادر يكتب للأمر...', err);
+            console.error('ف مشكله 🙂', err);
             return false;
         }
     }
@@ -94,7 +94,7 @@ async function showTypingAfterCommand(sock, chatId) {
             await sock.sendPresenceUpdate('paused', chatId);
             return true;
         } catch (err) {
-            console.error('مش قادر يظهر الكتابة بعد الأمر...', err);
+            console.error('ف مشكله ياحب 🙂', err);
             return false;
         }
     }
@@ -102,11 +102,11 @@ async function showTypingAfterCommand(sock, chatId) {
 }
 
 module.exports = {
-    command: 'الكتابه_التلقائيه',
+    command: 'الكتابه_التلقائي',
     aliases: ['typing', 'autotype'],
     category: 'owner',
     description: 'يشغل مؤشر الكتابة التلقائي للبوت',
-    usage: '.الكتابه_التلقائيه تشغيل/ايقاف',
+    usage: '.الكتابه_التلقائيه تشغيل/تعطيل',
     ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
@@ -118,38 +118,38 @@ module.exports = {
             if (!action) {
                 const ghostActive = await isGhostModeActive();
                 await sock.sendMessage(chatId, {
-                    text: `إعدادات الكتابة التلقائية دلوقتي
+                    text: ` ⚙️ إعدادات الكتابة التلقائية دلوقتي ⚙️
 
-حالة الكتابة: ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
-حالة وضع التخفي: ${ghostActive ? 'شغال 👻 (بيمنع الكتابة)' : 'مقفول ❌'}
-طريقة التخزين: ${HAS_DB ? 'Database' : 'ملفات'}
+حالة الكتابة 📝: ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
+حالة وضع التخفي 👀❤️: ${ghostActive ? 'شغال 👻 (بيمنع الكتابة)' : 'مقفول ❌'}
+طريقة التخزين 📝: ${HAS_DB ? 'Database' : 'ملفات النظام 💻'}
 
-الأوامر:
-.الكتابه_التلقائيه تشغيل
-.الكتابه_التلقائيه ايقاف`,
+الأوامر 💻📝:
+.الكتابه_التلقائيه تشغيل 👀❤️
+.الكتابه_التلقائيه تعطيل 👀❤️`,
                 }, { quoted: message });
                 return;
             }
 
             if (action === 'تشغيل') {
-                if (config.enabled) return await sock.sendMessage(chatId, { text: 'الكتابة التلقائية شغالة أصلاً ✅' }, { quoted: message });
+                if (config.enabled) return await sock.sendMessage(chatId, { text: 'الكتابة التلقائية شغالة أصلا 😂❤️' }, { quoted: message });
                 config.enabled = true;
                 await saveConfig(config);
-                await sock.sendMessage(chatId, { text: 'تم تشغيل الكتابة التلقائية ✅' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'تم تشغيل الكتابة التلقائية 👀❤️' }, { quoted: message });
 
-            } else if (action === 'ايقاف') {
-                if (!config.enabled) return await sock.sendMessage(chatId, { text: 'الكتابة التلقائية مقفولة أصلاً ❌' }, { quoted: message });
+            } else if (action === 'تعطيل') {
+                if (!config.enabled) return await sock.sendMessage(chatId, { text: 'الكتابة التلقائية مقفولة أصلا 😂❤️' }, { quoted: message });
                 config.enabled = false;
                 await saveConfig(config);
-                await sock.sendMessage(chatId, { text: 'تم ايقاف الكتابة التلقائية ❌' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'تم ايقاف الكتابة التلقائية 👀❤️' }, { quoted: message });
 
             } else {
-                await sock.sendMessage(chatId, { text: 'الأمر ده مش صح ❌\nاستخدم تشغيل أو ايقاف' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: 'الأمر ده مش صح 😄\nاستخدم تشغيل أو تعطيل 👀❤️' }, { quoted: message });
             }
 
         } catch (error) {
-            console.error('حصل خطأ في الكتابة التلقائية ❌', error);
-            await sock.sendMessage(chatId, { text: `حصل مشكلة أثناء تشغيل الأمر ❌\n${error.message}` }, { quoted: message });
+            console.error('حصل مشكله في الكتابة التلقائية 🙂 ', error);
+            await sock.sendMessage(chatId, { text: `حصل مشكلة أثناء تشغيل الأمر 😄\n${error.message}` }, { quoted: message });
         }
     },
 

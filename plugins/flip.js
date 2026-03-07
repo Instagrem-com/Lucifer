@@ -1,25 +1,9 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
-
 module.exports = {
-  command: 'flip',
+  command: 'شقلب_كلمه',
   aliases: ['mirror', 'upside'],
   category: 'tools',
-  description: 'Flip text upside down (supports Uppercase)',
-  usage: '.flip <text> OR reply to a message',
+  description: 'اقلب النص الإنجليزي فوق تحت (يدعم الحروف الكبيرة)',
+  usage: '.شكلب_كلمه <الكلمه> او الرد على رسالة',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -31,7 +15,7 @@ module.exports = {
     }
     txt = txt.replace(/^\.\w+\s*/, '').trim();
 
-    if (!txt) return await sock.sendMessage(chatId, { text: '*What should I flip?*' });
+    if (!txt) return await sock.sendMessage(chatId, { text: '*عايزني اشقلب ايه ياحب 👀❤️*' });
 
     const charMap = {
       'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ',
@@ -50,19 +34,3 @@ module.exports = {
     await sock.sendMessage(chatId, { text: flipped }, { quoted: message });
   }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-        

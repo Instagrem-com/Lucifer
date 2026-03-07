@@ -1,21 +1,21 @@
 module.exports = {
-  command: 'echo',
+  command: 'تكرار_كلمه',
   aliases: [],
   category: 'general',
-  description: 'Repeats your message a specified number of times.',
-  usage: '.echo <text> <count>',
+  description: 'لتكرار كلمه كذا مره تحت بعض',
+  usage: '.تكرار_كلمه <ااكلمه> <العدد>',
   isPrefixless: true,
 
   async handler(sock, message, args) {
     const chatId = message.key.remoteJid;
 
     if (args.length < 2) {
-      return await sock.sendMessage(chatId, { text: 'Usage: .echo <text> <count>' }, { quoted: message });
+      return await sock.sendMessage(chatId, { text: 'الاستخدام 📝 : .تكرار_كلمه <الكلمه> <العدد> 👀❤️' }, { quoted: message });
     }
 
     const count = parseInt(args[args.length - 1]);
     if (isNaN(count) || count <= 0) {
-      return await sock.sendMessage(chatId, { text: 'Count must be a positive number.' }, { quoted: message });
+      return await sock.sendMessage(chatId, { text: '🫪' }, { quoted: message });
     }
 
     args.pop();
