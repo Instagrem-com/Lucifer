@@ -2,7 +2,7 @@ const { setAntitag, getAntitag, removeAntitag } = require('../lib/index');
 
 async function handleTagDetection(sock, chatId, message, senderId) {
     try {
-        const antitagSetting = await getAntitag(chatId, 'on');
+        const antitagSetting = await getAntitag(chatId, 'تفعيل');
         if (!antitagSetting || !antitagSetting.enabled) return;
 
         const mentionedJids = message.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];
@@ -38,9 +38,9 @@ async function handleTagDetection(sock, chatId, message, senderId) {
                                           (numericMentionCount >= 5 && numericMentionCount >= mentionThreshold);
             
             if (totalMentions >= mentionThreshold || hasManyNumericMentions) {
-                const action = antitagSetting.action || 'delete';
+                const action = antitagSetting.action || 'حذف';
                 
-                if (action === 'delete') {
+                if (action === 'حذف') {
                     await sock.sendMessage(chatId, {
                         delete: {
                             remoteJid: chatId,
@@ -51,11 +51,11 @@ async function handleTagDetection(sock, chatId, message, senderId) {
                     });
                     
                     await sock.sendMessage(chatId, {
-                        text: `⚠️ *Tagall Detected!*\n\n@${senderId.split('@')[0]}, tagging all members is not allowed.`,
+                        text: `⚠️ *كشف منشن شامل!*\n\n@${senderId.split('@')[0]}, ممنوع منشن كل الناس!`,
                         mentions: [senderId]
                     });
                     
-                } else if (action === 'kick') {
+                } else if (action === 'طرد') {
                     await sock.sendMessage(chatId, {
                         delete: {
                             remoteJid: chatId,
@@ -68,12 +68,12 @@ async function handleTagDetection(sock, chatId, message, senderId) {
                     try {
                         await sock.groupParticipantsUpdate(chatId, [senderId], "remove");
                         await sock.sendMessage(chatId, {
-                            text: `🚫 *Antitag Action!*\n\n@${senderId.split('@')[0]} has been removed for tagging all members.`,
+                            text: `🚫 *تم طرد المستخدم!*\n\n@${senderId.split('@')[0]} اتشال من الجروب علشان منشن كل الناس.`,
                             mentions: [senderId]
                         });
                     } catch (error) {
                         await sock.sendMessage(chatId, {
-                            text: `⚠️ Failed to remove user. Make sure the bot is an admin.`
+                            text: `⚠️ فشلنا نشيل المستخدم. اتأكد إن البوت أدمن.`
                         });
                     }
                 }
@@ -85,11 +85,11 @@ async function handleTagDetection(sock, chatId, message, senderId) {
 }
 
 module.exports = {
-    command: 'antitag',
-    aliases: ['at', 'tagblock'],
+    command: 'ممنوع_المنشن',
+    aliases: ['ممنوع_المنشنات', 'antiat', 'tagblock'],
     category: 'admin',
-    description: 'Prevent users from tagging all members',
-    usage: '.antitag <on|off|set>',
+    description: 'مانع منشن كل الأعضاء في الجروب',
+    usage: '.ممنوع_المنشن <تفعيل|تعطيل|ضبط|عرض>',
     groupOnly: true,
     adminOnly: true,
 
@@ -98,93 +98,89 @@ module.exports = {
         const action = args[0]?.toLowerCase();
 
         if (!action) {
-            const config = await getAntitag(chatId, 'on');
+            const config = await getAntitag(chatId, 'تفعيل');
             await sock.sendMessage(chatId, {
-                text: `*🏷️ ANTITAG SETUP*\n\n` +
-                      `*Current Status:* ${config?.enabled ? '✅ Enabled' : '❌ Disabled'}\n` +
-                      `*Current Action:* ${config?.action || 'Not set'}\n\n` +
-                      `*Commands:*\n` +
-                      `• \`.antitag on\` - Enable\n` +
-                      `• \`.antitag off\` - Disable\n` +
-                      `• \`.antitag set delete\` - Delete tagall messages\n` +
-                      `• \`.antitag set kick\` - Kick users who tagall\n\n` +
-                      `*Detection:*\n` +
-                      `• Detects mentions of 50%+ members\n` +
-                      `• Catches bot tagall patterns\n` +
-                      `• Protects against spam tagging`
+                text: `*🏷️ إعداد مانع المنشن*\n\n` +
+                      `*الحالة دلوقتي:* ${config?.enabled ? 'شغال ✅' : 'واقف ❌'}\n` +
+                      `*الإجراء الحالي:* ${config?.action || 'مفيش حاجة متضبطة'}\n\n` +
+                      `*الأوامر:*\n` +
+                      `• \`.ممنوع_المنشن تفعيل\` - شغّل المانع ✅\n` +
+                      `• \`.ممنوع_المنشن تعطيل\` - وقف المانع ❌\n` +
+                      `• \`.ممنوع_المنشن ضبط حذف\` - احذف رسائل منشن شامل 🗑️\n` +
+                      `• \`.ممنوع_المنشن ضبط طرد\` - اطرد أي حد يعمل منشن شامل 👢\n\n` +
+                      `*كشف:*\n` +
+                      `• يكتشف منشن أكتر من 50% من الأعضاء\n` +
+                      `• يحمي من سبام المنشن`
             }, { quoted: message });
             return;
         }
 
         switch (action) {
-            case 'on':
-                const existingConfig = await getAntitag(chatId, 'on');
+            case 'تفعيل':
+                const existingConfig = await getAntitag(chatId, 'تفعيل');
                 if (existingConfig?.enabled) {
                     await sock.sendMessage(chatId, {
-                        text: '⚠️ *Antitag is already enabled*'
+                        text: '⚠️ مانع المنشن شغال من قبل 😂❤️'
                     }, { quoted: message });
                     return;
                 }
-                const result = await setAntitag(chatId, 'on', 'delete');
+                const result = await setAntitag(chatId, 'تفعيل', 'حذف');
                 await sock.sendMessage(chatId, {
                     text: result 
-                        ? '✅ *Antitag enabled successfully!*\n\nDefault action: Delete tagall messages' 
-                        : '❌ *Failed to enable antitag*'
+                        ? '✅ مانع المنشن اتفعل 👀❤️\nالإجراء الافتراضي: حذف رسائل منشن شامل 🗑️' 
+                        : '❌ في مشكلة ف تفعيل مانع المنشن 🙂'
                 }, { quoted: message });
                 break;
 
-            case 'off':
-                await removeAntitag(chatId, 'on');
+            case 'تعطيل':
+                await removeAntitag(chatId, 'تفعيل');
                 await sock.sendMessage(chatId, {
-                    text: '❌ *Antitag disabled*\n\nUsers can now tag all members.'
+                    text: '❌ مانع المنشن توقف 👀❤️\nدلوقتي الناس تقدر تعمل منشن شامل على راحتهم 😉❤️'
                 }, { quoted: message });
                 break;
 
-            case 'set':
+            case 'ضبط':
                 if (args.length < 2) {
                     await sock.sendMessage(chatId, {
-                        text: '❌ *Please specify an action*\n\nUsage: `.antitag set delete | kick`'
+                        text: '❌ استنى يا معلم، لازم تحدد الإجراء\nطريقة الاستخدام: `.ممنوع_المنشن ضبط حذف|طرد`'
                     }, { quoted: message });
                     return;
                 }
                 const setAction = args[1].toLowerCase();
-                if (!['delete', 'kick'].includes(setAction)) {
+                if (!['حذف','طرد'].includes(setAction)) {
                     await sock.sendMessage(chatId, {
-                        text: '❌ *Invalid action*\n\nChoose: delete or kick'
+                        text: '❌ الإجراء اللي اخترته مش صح 🙂\nاختار واحد من دول: حذف أو طرد 👀❤️'
                     }, { quoted: message });
                     return;
                 }
-                const setResult = await setAntitag(chatId, 'on', setAction);
-                
+                const setResult = await setAntitag(chatId, 'تفعيل', setAction);
                 const actionDescriptions = {
-                    delete: 'Delete tagall messages and warn users',
-                    kick: 'Delete messages and remove users from group'
+                    حذف: 'احذف رسائل المنشن الشامل وابعث تحذير للمستخدمين',
+                    طرد: 'احذف الرسائل واطرد الشخص من الجروب'
                 };
-                
                 await sock.sendMessage(chatId, {
                     text: setResult 
-                        ? `✅ *Antitag action set to: ${setAction}*\n\n${actionDescriptions[setAction]}`
-                        : '❌ *Failed to set antitag action*'
+                        ? `✅ اتظبط الإجراء 👀❤️\n${setAction} - ${actionDescriptions[setAction]}` 
+                        : '❌ في مشكلة ف ضبط الإجراء'
                 }, { quoted: message });
                 break;
 
-            case 'status':
-            case 'get':
-                const status = await getAntitag(chatId, 'on');
+            case 'عرض':
+                const status = await getAntitag(chatId, 'تفعيل');
                 await sock.sendMessage(chatId, {
-                    text: `*🏷️ ANTITAG STATUS*\n\n` +
-                          `*Status:* ${status?.enabled ? '✅ Enabled' : '❌ Disabled'}\n` +
-                          `*Action:* ${status?.action || 'Not set'}\n\n` +
-                          `*What happens when tagall is detected:*\n` +
-                          `${status?.action === 'delete' ? '• Message is deleted\n• User gets warning' : ''}` +
-                          `${status?.action === 'kick' ? '• Message is deleted\n• User is removed from group' : ''}\n\n` +
-                          `*Detection threshold:* 50% of group members or 10+ mentions`
+                    text: `*🏷️ حالة مانع المنشن*\n\n` +
+                          `*الحالة دلوقتي:* ${status?.enabled ? 'شغال ✅' : 'واقف ❌'}\n` +
+                          `*الإجراء الحالي:* ${status?.action || 'مفيش حاجة متضبطة'}\n\n` +
+                          `*اللي بيحصل لو حد عمل منشن شامل:*\n` +
+                          `${status?.action === 'حذف' ? '• الرسالة هتمسح 🗑️\n• المستخدم هيتبعتلو تحذير ⚠️' : ''}` +
+                          `${status?.action === 'طرد' ? '• الرسالة هتمسح 🗑️\n• المستخدم هيتشال من الجروب 👢' : ''}\n\n` +
+                          `*كشف:* 50% من أعضاء الجروب أو 10+ منشن`
                 }, { quoted: message });
                 break;
 
             default:
                 await sock.sendMessage(chatId, {
-                    text: '❌ *Invalid command*\n\nUse `.antitag` to see available options.'
+                    text: '❌ الأمر اللي كتبته مش صحيح\nاستخدم `.ممنوع_المنشن` عشان تشوف كل الاختيارات 😎'
                 }, { quoted: message });
         }
     },
