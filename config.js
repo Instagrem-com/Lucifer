@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-global.SESSION_ID = process.env.SESSION_ID || "GlobalTechInfo/MEGA-MD_5a0c16c9d6d4f26f7239e947856cefd3" // put your session id here
+global.SESSION_ID = process.env.SESSION_ID || "GlobalTechInfo/MEGA-MD_0807d3279a7a22678d8081a21d0ca586" // put your session id here
 global.PAIRING_NUMBER = process.env.PAIRING_NUMBER || "201226943082" // In Case if you don't have session id get pairing code by putting your number here
 
 global.APIs = {
