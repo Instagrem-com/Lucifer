@@ -1,7 +1,7 @@
 module.exports = {
   command: 'فتح',
-  aliases: ['صمت', 'mute'],
-  category: 'اوامـر_الـجـروبـات',
+  aliases: ['صمت', 'اسكتو'],
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'كتم الجروب لمدة معينة أو تشغيل كتم دائم',
   usage: '.كتم [المدة بالدقايق]',
   groupOnly: true,
@@ -19,7 +19,7 @@ module.exports = {
       if (durationInMinutes !== undefined && durationInMinutes > 0) {
         const durationInMilliseconds = durationInMinutes * 60 * 1000;
         await sock.sendMessage(chatId, { 
-          text: `🔇 الجروب تم كتمه لمدة ${durationInMinutes} دقيقة.`,
+          text: `الروم اتقفل ياشوباب لمدة ${durationInMinutes} دقيقه 👀❤️.`,
           ...channelInfo 
         }, { quoted: message });
         
@@ -28,16 +28,16 @@ module.exports = {
           try {
             await sock.groupSettingUpdate(chatId, 'not_announcement');
             await sock.sendMessage(chatId, { 
-              text: '🔊 الجروب اتفتح والكتم اتشال.',
+              text: 'الروم اتفتح يا شوباب 👀❤️.',
               ...channelInfo 
             });
           } catch (unmuteError) {
-            console.error('خطأ أثناء إزالة الكتم:', unmuteError);
+            console.error('ف مشكله ياحب 😄❤️', unmuteError);
           }
         }, durationInMilliseconds);
       } else {
         await sock.sendMessage(chatId, { 
-          text: '🔇 الجروب تم كتمه (كتم دائم).',
+          text: 'الروم اتقفل يا شوباب 👀❤️',
           ...channelInfo 
         }, { quoted: message });
       }

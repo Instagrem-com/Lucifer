@@ -1,9 +1,9 @@
 module.exports = {
   command: 'بنج',
   aliases: ['p', 'pong'],
-  category: 'عام',
+  category: 'اوامـࢪ الـبـوت',
   description: 'اعرف سرعة استجابة البوت',
-  usage: '.بنغ',
+  usage: '.بنج',
   isPrefixless: true,
   
   async handler(sock, message, args) {
@@ -11,13 +11,13 @@ module.exports = {
     const chatId = message.key.remoteJid;
     
     const sent = await sock.sendMessage(chatId, { 
-      text: '⌛ بستنى البوت...' 
+      text: 'ويـــيــت ⚡' 
     });
     
     const end = Date.now();
     
     await sock.sendMessage(chatId, {
-      text: `🏓 بنغ!\nسرعة الاستجابة: ${end - start}ms`,
+      text: `سرعـه الـبـوت ${end - start}ms\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`,
       edit: sent.key
     });
   }

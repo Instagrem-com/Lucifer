@@ -69,7 +69,7 @@ async function handleAutoread(sock, message) {
     try {
         const ghostMode = await store.getSetting('global', 'stealthMode');
         if (ghostMode && ghostMode.enabled) {
-            console.log('وضع الشبح شغال - مش هيبعت علامة قراءة الرسالة 👻');
+            console.log('👻 وضع الشبح شغال 👻 \n مش هيبعت علامة قراءة الرسالة 👀❤️ ');
             return false;
         }
     } catch {}
@@ -105,9 +105,9 @@ module.exports = {
 
 command: 'سيين_تلقائي',
 aliases: ['قراءه_تلقائيه','قرايه'],
-category: 'owner',
+category: 'اوامـࢪ الـمـطـوࢪ',
 description: 'تشغيل او ايقاف القراءة التلقائية',
-usage: '.قراءه تشغيل / ايقاف',
+usage: '.قراءه تشغيل / تعطيل',
 ownerOnly: true,
 
 async handler(sock, message, args, context = {}) {
@@ -125,7 +125,7 @@ await sock.sendMessage(chatId,{
 text:
 ` 📝 حالة القراءة التلقائية 📝<
 
-الحالة دلوقتي 👀❤️ : ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'} 
+الحالة دلوقتي 👀❤️ : \n ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'} 
 
 الأوامر 💻 :
 
@@ -158,7 +158,7 @@ text:'تم تشغيل القراءة ياحب 👀❤️'
 
 }
 
-else if (action === 'ايقاف') {
+else if (action === 'تعطيل') {
 
 if (!config.enabled) {
 

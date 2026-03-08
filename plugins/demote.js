@@ -24,11 +24,7 @@ async function handleDemotionEvent(sock, groupId, participants, author) {
         }
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const demotionMessage = `*⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠*\n\n` +
-            `*الاعضاء اللي اتشال منهم الادمن:*\n` +
-            `${demotedUsernames.map(name => `• ${name}`).join('\n')} 😈\n\n` +
-            `*بواسطة:* ${demotedBy} 👑\n\n` +
-            `*التاريخ:* ${new Date().toLocaleString()} 📅`;
+        const demotionMessage = `جـاࢪي الـطـرد مـن الادمـن 👀⚡`;
         
         await sock.sendMessage(groupId, {
             text: demotionMessage,
@@ -43,9 +39,9 @@ async function handleDemotionEvent(sock, groupId, participants, author) {
 }
 
 module.exports = {
-    command: 'تنزيل',
-    aliases: ['نزل', 'شيل_ادمن'],
-    category: 'admin',
+    command: 'تنزيل_ادمن',
+    aliases: ['نزل', 'شيل'],
+    category: 'اوامـࢪ الـجـࢪوبـات',
     description: 'تنزيل عضو من ادمن لعضو عادي',
     usage: '.تنزيل @الشخص او رد على رسالته',
     groupOnly: true,
@@ -57,7 +53,7 @@ module.exports = {
 
         if (!isBotAdmin) {
             await sock.sendMessage(chatId, { 
-                text: '*ارفع البوت ادمن الاول يا صاحبي* ❌'
+                text: '*ارفع البوت ادمن الاول يا يـاحـب* 👀❤️'
             }, { quoted: message });
             return;
         }
@@ -74,7 +70,7 @@ module.exports = {
         
         if (userToDemote.length === 0) {
             await sock.sendMessage(chatId, { 
-                text: '*منشن الشخص الاول او اعمل رد على رسالته عشان اعرف انزله*\n\nالاستخدام: `.تنزيل @الشخص` ❌'
+                text: '*منشن الشخص الاول او اعمل رد على رسالته عشان اعرف انزله* 😄❤️\n\nالاستخدام 📝 : `.تنزيل @الشخص` '
             }, { quoted: message });
             return;
         }
@@ -113,7 +109,7 @@ module.exports = {
             } else {
                 try {
                     await sock.sendMessage(chatId, { 
-                        text: '*معرفتش انزله من الادمن يمكن البوت مش اعلى منه* ❌'
+                        text: '*معرفتش انزله من الادمن يمكن البوت مش اعلى منه او صاحب الجروب 😄❤️* '
                     }, { quoted: message });
                 } catch (sendError) {
                     console.error('Error sending error message:', sendError);

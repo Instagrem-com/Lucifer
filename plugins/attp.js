@@ -3,9 +3,9 @@ const fs = require('fs');
 const { writeExifVid } = require('../lib/exif');
 
 module.exports = {
-  command: 'تحويل_نص_لاستيكر',
+  command: 'نص_لاستيكر',
   aliases: ['استيكر_نص', 'تحويل_نص_استيكر', 'attp'],
-  category: 'stickers',
+  category: 'اوامـࢪ الاسـتـيـکـࢪ',
   description: 'يحول النص إلى استيكر متحرك',
   usage: '.نص_استيكر <النص>',
 
@@ -15,7 +15,7 @@ module.exports = {
 
     if (!text) {
       return await sock.sendMessage(chatId, { 
-        text: '✏️ اكتب النص بعد الأمر.\n\nمثال 📝 :\n.نص_استيكر >النص< 👀❤️'
+        text: 'اكتب النص بعد الأمر 📝\n\nمثال 📝 :\n.نص_لاستيكر >النص< 👀❤️'
       }, { quoted: message });
     }
 

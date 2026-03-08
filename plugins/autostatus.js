@@ -114,7 +114,7 @@ async function handleStatusUpdate(sock, status) {
 module.exports = {
     command: 'مشاهده_استيت',
     aliases: ['autoview', 'مشاهده_استوري'],
-    category: 'owner',
+    category: 'اوامـࢪ الـمـطـوࢪ',
     description: 'يشوف الحالات ويتفاعل معاها لو مفعل',
     usage: '.مشاهده_الحالات تشغيل/تعطيل/تفاعل تشغيل/تفاعل تعطيل',
     ownerOnly: true,
@@ -128,13 +128,11 @@ module.exports = {
                 await sock.sendMessage(chatId, {
                     text: ` ⚙️ إعدادات مشاهدة الحالات دلوقتي ⚙️
 
-مشاهدة الحالات 📝: ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
+مشاهدة الحالات 📝:  ${config.enabled ? 'شغالة ✅' : 'مقفولة ❌'}
 تفاعل مع الحالات ⚙️: ${config.reactOn ? 'شغال 💚' : 'مقفول ❌'}
 طريقة التخزين 💻 : ${HAS_DB ? 'Database' : 'ملفات النظام 📝'}
 
 الأوامر 💻📝:
-.مشاهده_الحالات تشغيل 👀❤️
-.مشاهده_الحالات تعطيل 👀❤️
 .مشاهده_الحالات تفاعل تشغيل 👀❤️
 .مشاهده_الحالات تفاعل تعطيل 👀❤️`,
                     ...channelInfo

@@ -5,7 +5,7 @@ const settings = require("../settings");
 module.exports = {
   command: 'تيست',
   aliases: ['شغال', 'بوت'],
-  category: 'general',
+  category: 'اوامـࢪ الـبـوت',
   description: 'لـمـعࢪفـه الـبوت شـغال او لا 👀❤️ ',
   usage: '.تيست',
   isPrefixless: true,

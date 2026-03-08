@@ -13,10 +13,10 @@ function extractUniqueMedia(mediaData = []) {
 
 module.exports = {
   command: 'انستا',
-  aliases: ['ig', 'igdl', 'insta'],
-  category: 'download',
+  aliases: ['ig', 'انستجرام', 'insta'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'حمّل بوستات ورييلز وفيديوهات إنستجرام بسهولة 🔥',
-  usage: '.ig <لينك الانستجرام>',
+  usage: '.انستا <لينك الانستجرام>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -33,7 +33,7 @@ module.exports = {
       if (!text) {
         return await sock.sendMessage(
           chatId,
-          { text: 'حمّل من إنستجرام بسهولة 📸\n\nطريقة الاستخدام:\n.ig <لينك بوست أو ريل>' },
+          { text: 'حمّل من إنستجرام بسهولة 📸\n\nطريقة الاستخدام 📝👇🏼 :\n.انستا <لينك بوست أو ريل>' },
           { quoted: message }
         );
       }
@@ -44,13 +44,13 @@ module.exports = {
       if (!igRegex.test(text)) {
         return await sock.sendMessage(
           chatId,
-          { text: 'اللينك ده مش صحيح 😅 ابعت لينك بوست أو ريل من إنستجرام' },
+          { text: 'اللينك ده مش صحيح 😅\n ابعت لينك بوست أو ريل من إنستجرام ❤️👀' },
           { quoted: message }
         );
       }
 
       await sock.sendMessage(chatId, {
-        react: { text: '🔄', key: message.key }
+        react: { text: '🌀', key: message.key }
       });
 
       const res = await igdl(text);
@@ -58,7 +58,7 @@ module.exports = {
       if (!res?.data?.length) {
         return await sock.sendMessage(
           chatId,
-          { text: 'ملقتش ميديا في اللينك ده 😓 ممكن يكون البوست برايفت أو اتمسح' },
+          { text: 'ملقتش الفيديو ممكن يكون البوست برايفت أو اتمسح جرب غيرو 👀❤️' },
           { quoted: message }
         );
       }
@@ -68,7 +68,7 @@ module.exports = {
       if (!mediaList.length) {
         return await sock.sendMessage(
           chatId,
-          { text: 'ملقتش ميديا قابلة للتحميل من اللينك ده 😢' },
+          { text: 'ملقتش الفيديو ممكن يكون البوست برايفت أو اتمسح جرب غيرو 👀❤️' },
           { quoted: message }
         );
       }
@@ -89,7 +89,7 @@ module.exports = {
             {
               video: { url },
               mimetype: 'video/mp4',
-              caption: 'اتحمل من البوت لوسيفر بنجاح 🔥'
+              caption: 'الـفـديـو اتـحـمـل يـاحـب 👀❤️\n *BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪'
             },
             { quoted: message }
           );
@@ -98,7 +98,7 @@ module.exports = {
             chatId,
             {
               image: { url },
-              caption: 'اتحملت من البوت لوسيفر بنجاح 🔥'
+              caption: 'الـفـديـو اتـحـمـل يـاحـب 👀❤️\n *BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪'
             },
             { quoted: message }
           );
@@ -113,7 +113,7 @@ module.exports = {
       console.error('Instagram plugin error:', err);
       await sock.sendMessage(
         chatId,
-        { text: 'معرفتش أحمل الميديا من إنستجرام دلوقتي 😓 جرب تاني بعد شوية' },
+        { text: 'ملقتش الفيديو ممكن يكون البوست برايفت أو اتمسح جرب غيرو 👀❤️' },
         { quoted: message }
       );
     }

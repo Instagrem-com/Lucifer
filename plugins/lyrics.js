@@ -1,9 +1,9 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-  command: 'كلمات_اغنية',
+  command: 'كلمات_اغنيه',
   aliases: ['كلمات', 'اغنية_كلمات'],
-  category: 'موسيقى',
+  category: 'اوامـࢪ الاداوات',
   description: 'جيبلك كلمات الأغنية مع اسم الفنان والصورة',
   usage: '.كلمات_اغنية <اسم الأغنية>',
 
@@ -13,7 +13,7 @@ module.exports = {
 
     if (!songTitle) {
       await sock.sendMessage(chatId, {
-        text: '💀 يابا! اكتب اسم الأغنية عشان أجيبلك كلماتها 😎\nالاستخدام: `.كلمات_اغنية <اسم الأغنية>`',
+        text: 'اكتب اسم الأغنية عشان أجيبلك كلماتها ياحب 👀❤️\n\nالاستخدام 📝: `.كلمات_اغنية <اسم الأغنية>`',
         quoted: message
       });
       return;
@@ -28,7 +28,7 @@ module.exports = {
 
       if (!messageData?.lyrics) {
         await sock.sendMessage(chatId, {
-          text: `💀 آسف يا معلم، مش لاقي كلمات الأغنية "${songTitle}" 😢`,
+          text: `مش لاقي كلمات الأغنية ياحب  "${songTitle}" 🙃 `,
           quoted: message
         });
         return;
@@ -45,6 +45,8 @@ module.exports = {
 
 📝 *كلمات الأغنية:*
 ${lyricsOutput}
+
+*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪
       `.trim();
 
       if (image) {
@@ -63,7 +65,7 @@ ${lyricsOutput}
     } catch (error) {
       console.error('Lyrics Command Error:', error);
       await sock.sendMessage(chatId, {
-        text: `💀 حصل غلطة يا معلم! مش قادر أجيب كلمات الأغنية "${songTitle}". جرب تاني 😎`,
+        text: `مش قادر أجيب كلمات الأغنية "${songTitle}". جرب تاني او شوف غيرها 🙃❤️`,
         quoted: message
       });
     }

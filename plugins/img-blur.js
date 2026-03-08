@@ -4,9 +4,9 @@ const sharp = require('sharp');
 module.exports = {
   command: 'بلور_للصوره',
   aliases: ['blurimg', 'blurpic'],
-  category: 'tools',
+  category: 'اوامـࢪ الاداوات',
   description: 'اعمل تأثير تمويه للصورة ✨',
-  usage: '.blur (رد على صورة أو ابعتها مع الكابشن)',
+  usage: '.بلور_للصوره (رد على صورة أو ابعتها مع الكابشن)',
   
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -22,7 +22,7 @@ module.exports = {
         imageBuffer = await downloadMediaMessage(message, 'buffer', {}, {});
       } else {
         await sock.sendMessage(chatId, { 
-          text: 'ابعتلي صورة أو رد على صورة مع `.blur` عشان أعملها تمويه 😎', 
+          text: 'ابعتلي صورة أو رد على صورة مع `.بلور_للصوره` عشان أعملها تمويه 👀❤️', 
           quoted: message 
         });
         return;
@@ -39,7 +39,7 @@ module.exports = {
 
       await sock.sendMessage(chatId, {
         image: blurredImage,
-        caption: 'تمويه الصورة خلص ✨',
+        caption: 'تمويه الصورة خلص ياحب 👀❤️\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
         contextInfo: {
           forwardingScore: 1,
           isForwarded: true,

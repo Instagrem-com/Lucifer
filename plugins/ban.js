@@ -36,7 +36,7 @@ async function isUserBanned(userId) {
 module.exports = {
     command: 'حظر_استخدام_البوت',
     aliases: ['ban', 'block', 'حظر_شخص'],
-    category: 'group',
+    category: 'اوامـࢪ الـجـࢪوبـات',
     description: 'تحظر شخص من استخدام البوت',
     usage: '.حظر @اليوزر او الرد على رسالته',
 

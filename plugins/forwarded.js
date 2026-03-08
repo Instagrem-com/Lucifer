@@ -1,7 +1,7 @@
 module.exports = {
   command: 'رساله_معاد_توجيها',
-  aliases: ['viral', 'fakeforward'],
-  category: 'tools',
+  aliases: ['viral', 'اعاده_توجيه'],
+  category: 'اوامـࢪ الاداوات',
   description: 'إرسال رسالة بعلامة "تم إعادة توجيهها كثيرًا" مزيفة',
   usage: '.رساله_معاد_توجيها <نص> أو الرد على رسالة',
 
@@ -26,7 +26,7 @@ module.exports = {
 
       if (!txt || txt.trim() === "") {
         return await sock.sendMessage(chatId, { 
-          text: 'من فضلك اكتب نص أو قم بالرد على رسالة لإعادة توجيهها 👀❤️' 
+          text: 'اكتب نص أو رد على رسالة لإعادة توجيهها 👀❤️' 
         }, { quoted: message });
       }
 

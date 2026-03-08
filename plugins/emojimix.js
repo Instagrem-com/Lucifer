@@ -6,7 +6,7 @@ const path = require('path');
 module.exports = {
   command: 'مزج_الإيموجي',
   aliases: ['mixemoji', 'emix'],
-  category: 'stickers',
+  category: 'اوامـࢪ الاسـتـيـكـࢪ',
   description: 'يمزج إيموجيين ويبعتهم على شكل ستكر',
   usage: '.مزج_الإيموجي 😎+🥰',
 
@@ -16,7 +16,7 @@ module.exports = {
     try {
       if (!args[0]) {
         await sock.sendMessage(chatId, {
-          text: 'مثال 📝 : .مزج_الإيموجي 😎+🥰'
+          text: 'مثال 📝 :\n .مزج_الإيموجي 😎+🥰'
         }, { quoted: message });
         return;
       }

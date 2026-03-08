@@ -5,9 +5,9 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'invert',
-  aliases: ['negative'],
-  category: 'tools',
+  command: 'صوره_نيجاتف',
+  aliases: ['الوان_معكوسه'],
+  category: 'اوامـࢪ الاداوات',
   description: 'حوّل الصورة لنيجاتيف بسهولة 🔥',
   usage: 'رد على صورة واكتب .invert',
 
@@ -21,7 +21,7 @@ module.exports = {
       if (!quoted?.imageMessage) {
         return await sock.sendMessage(
           chatId,
-          { text: 'حوّل الصورة لنيجاتيف بسهولة 🤍\n\nرد على صورة عشان أحولها نيجاتيف\n\nطريقة الاستخدام:\n.invert' },
+          { text: 'حوّل الصورة لنيجاتيف بسهولة 👀❤️\n\nرد على صورة عشان أحولها نيجاتيف 😄❤️\n\nطريقة الاستخدام 📝👇🏼 :\n.صوره_نيجاتف' },
           { quoted: message }
         );
       }
@@ -57,7 +57,7 @@ module.exports = {
         chatId,
         {
           image: { url: grayFile },
-          caption: `الصورة اتحولت لنيجاتيف بنجاح 🤍\n\nتم المعالجة عن طريق لوسيفر 🔥`
+          caption: `الصورة اتحولت لنيجاتيف بنجاح 😊❤️\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
         },
         { quoted: message }
       );
@@ -67,7 +67,7 @@ module.exports = {
       console.error('Invert Plugin Error:', err);
       await sock.sendMessage(
         chatId,
-        { text: 'معرفتش أحول الصورة لنيجاتيف دلوقتي 😓 اتأكد إن الصورة واضحة وجرب تاني' },
+        { text: 'معرفتش أحول الصورة لنيجاتيف دلوقتي اتأكد إن الصورة واضحة وجرب تاني 👀❤️' },
         { quoted: message }
       );
     }

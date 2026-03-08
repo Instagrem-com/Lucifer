@@ -2,7 +2,7 @@
 module.exports = {
   command: 'ايدي_القناة',
   aliases: ['CID'],
-  category: 'general',
+  category: 'اوامـࢪ الـبـوت',
   description: 'تـولـيـد ايـدي لـقـنـاة واتـسـاب 👀❤️',
   usage: '.ايدي_الـقـنـاة <الرابط>',
 
@@ -17,7 +17,7 @@ module.exports = {
 
     if (!url || !url.includes('whatsapp.com/channel/')) {
       return await sock.sendMessage(chatId, { 
-        text: 'ابـعـت لـيـنـك الـقـنـاة يـاحـب 😊❤️.\n\n*مثلا:* .ايدي_القناة https://whatsapp.com/channel/0029VbCKWqiBKfi7Df0m7O1M' 
+        text: 'ابـعـت لـيـنـك الـقـنـاة يـاحـب 😊❤️.\n\n*مثلا* : .ايدي_القناة https://whatsapp.com/channel/0029VbCKWqiBKfi7Df0m7O1M' 
       }, { quoted: message });
     }
 
@@ -27,7 +27,7 @@ module.exports = {
 
       const metadata = await sock.newsletterMetadata("invite", code);
 
-      const response = `*The ID BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪ \n ${metadata.id}
+      const response = `*The ID BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪ \n\n ${metadata.id}
       `.trim();
 
       await sock.sendMessage(chatId, { text: response }, { quoted: message });

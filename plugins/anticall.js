@@ -41,7 +41,7 @@ async function writeState(enabled) {
 module.exports = {
   command: 'ممنوع_المكالمات',
   aliases: ['ممنوع_الكول', 'callblock'],
-  category: 'owner',
+  category: 'اوامـࢪ الـمـطـوࢪ',
   description: 'تـفـعـيـل أو تـعـطـيـل حـجـب الـمـكـالـمـات الـواردة تلقائياً',
 usage: '.ممنوع_المكالمات <تفعيل|تعطيل|عرض>',
 ownerOnly: true,

@@ -1,11 +1,11 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-  command: 'itunes',
-  aliases: ['song', 'music', 'track'],
-  category: 'info',
+  command: 'معلومات_عن_اغنيه',
+  aliases: ['معلومات_اغنيه'],
+  category: 'اوامـࢪ الاداوات',
   description: 'هات معلومات تفصيلية عن أي أغنية من iTunes 🎶',
-  usage: '.itunes <اسم الأغنية>',
+  usage: '.معلومات_عن_اغنيه <اسم الأغنية>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -13,7 +13,7 @@ module.exports = {
 
     if (!text) {
       await sock.sendMessage(chatId, {
-        text: 'اكتب اسم الأغنية عشان أجيبلك تفاصيلها 😎\nمثال: `.itunes Blinding Lights`',
+        text: 'اكتب اسم الأغنية عشان أجيبلك تفاصيلها من موقع iTunes 👀❤️\n\nمثال 📝 : `.معلومات_عن_اغنيه me and davil`',
         quoted: message
       });
       return;
@@ -22,7 +22,7 @@ module.exports = {
     try {
       const url = `https://api.popcat.xyz/itunes?q=${encodeURIComponent(text)}`;
       const res = await fetch(url);
-      if (!res.ok) throw `في مشكلة في السيرفر، الحالة: ${res.status} ❌`;
+      if (!res.ok) throw `في مشكلة في السيرفر، الحالة: ${res.status} 🙂`;
       const json = await res.json();
 
       const songInfo = `
@@ -35,7 +35,7 @@ module.exports = {
 🎼 *النوع:* ${json.genre || 'مش متوفر'}
 🔗 *رابط الأغنية:* ${json.url || 'مش متوفر'}
 
-النتيجة جتلك من لوسيفر 😈
+*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪
       `.trim();
 
       if (json.thumbnail) {
@@ -51,7 +51,7 @@ module.exports = {
     } catch (error) {
       console.error('iTunes Command Error:', error);
       await sock.sendMessage(chatId, {
-        text: '❌ حصلت مشكلة وأنا بجيبلك بيانات الأغنية 😓 حاول تاني بعد شوية',
+        text: 'حصلت مشكلة وأنا بجيبلك بيانات الأغنية حاول تاني بعد شوي 😊❤️ة',
         quoted: message
       });
     }

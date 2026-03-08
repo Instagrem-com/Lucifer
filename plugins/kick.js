@@ -1,9 +1,9 @@
 module.exports = {
     command: 'طرد',
-    aliases: ['انطر', 'fire'],
-    category: 'admin',
+    aliases: ['انطر', 'برا'],
+    category: 'اوامـࢪ الـجـࢪوبـات',
     description: 'طرد عضو أو أكتر من الجروب بسهولة 🔥',
-    usage: '.kick @user أو رد على رسالة العضو',
+    usage: '.طرد @user أو رد على رسالة العضو',
     groupOnly: true,
     adminOnly: true,
 
@@ -13,7 +13,7 @@ module.exports = {
 
         if (!isBotAdmin) {
             await sock.sendMessage(chatId, { 
-                text: 'لازم تخليني أدمن الأول عشان أعرف أطرد حد 😅' 
+                text: 'لازم تخليني أدمن الأول عشان أعرف أطرد حد 👀❤️' 
             }, { quoted: message });
             return;
         }
@@ -30,7 +30,7 @@ module.exports = {
         
         if (usersToKick.length === 0) {
             await sock.sendMessage(chatId, { 
-                text: 'منشن الشخص اللي عايز تطرده أو رد على رسالته 😎\n\nالاستخدام:\n.kick @user أو رد على الرسالة واكتب .kick'
+                text: 'منشن الشخص اللي عايز تطرده أو رد على رسالته 😊❤️\n\nالاستخدام 📝 :\n.طرد @user أو رد على الرسالة واكتب .طرد 👀❤️'
             }, { quoted: message });
             return;
         }
@@ -100,7 +100,7 @@ module.exports = {
 
         if (isTryingToKickBot) {
             await sock.sendMessage(chatId, { 
-                text: "مش هطرد نفسي يعني 😏"
+                text: "مش هطرد نفسي يعني بطل هطل 😂😂"
             }, { quoted: message });
             return;
         }
@@ -113,14 +113,14 @@ module.exports = {
             }));
             
             await sock.sendMessage(chatId, { 
-                text: `العضو${usersToKick.length > 1 ? 'ات' : ''} اترموا برا الجروب بنجاح 🚫\n\n${usernames.join(', ')}`,
+                text: `تم طرد${usersToKick.length > 1 ? 's' : ''} شخص من الروم 👀🗑️*\n\n${usernames.join(', ')} الـعـلـق دا اطـرد مـن الـروم 😂❤️`,
                 mentions: usersToKick
             }, { quoted: message });
 
         } catch (error) {
             console.error('Error in kick command:', error);
             await sock.sendMessage(chatId, { 
-                text: 'معرفتش أطرد العضو دلوقتي 😓 اتأكد إن عندي صلاحيات كفاية'
+                text: 'ف مشكله حصلت او دا صاحب الروم 🙂'
             }, { quoted: message });
         }
     }

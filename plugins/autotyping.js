@@ -104,7 +104,7 @@ async function showTypingAfterCommand(sock, chatId) {
 module.exports = {
     command: 'الكتابه_التلقائي',
     aliases: ['typing', 'autotype'],
-    category: 'owner',
+    category: 'اوامـࢪ الـمـطـوࢪ',
     description: 'يشغل مؤشر الكتابة التلقائي للبوت',
     usage: '.الكتابه_التلقائيه تشغيل/تعطيل',
     ownerOnly: true,

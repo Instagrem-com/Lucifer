@@ -1,9 +1,9 @@
 module.exports = {
     command: 'اضافه',
     aliases: ['دخلو', 'ادد', 'ضيف'],
-    category: 'group',
+    category: 'اوامـࢪ الـجـࢪوبـات',
     description: 'إضافة عضو للجروب',
-    usage: '.اضف <رقم> ',
+    usage: '.اضافه <رقم> ',
     groupOnly: 'true',
     adminOnly: 'true',
 
@@ -48,9 +48,10 @@ module.exports = {
 
         if (!targetNumber) {
             return await sock.sendMessage(chatId, {
-                text: ` 📝 *من فضلك أدخل رقم للإضافة!* 📝
+                text: ` 📝 *اكتب رقم للإضافة* 📝
 
  💻 *طريقة الاستخدام* 💻 
+ 
 • \`.اضافه 923051234567\`
 • \`.اضافه +923051234567\`
 • \`.اضافه 92 305 1234567\``,
@@ -62,7 +63,7 @@ module.exports = {
             !targetNumber.startsWith('4') && !targetNumber.startsWith('5') && !targetNumber.startsWith('6') && 
             !targetNumber.startsWith('7') && !targetNumber.startsWith('8') && !targetNumber.startsWith('9')) {
             return await sock.sendMessage(chatId, {
-                text: '*تنسيق الرقم مش صح 😄*\n\nيرجى إضافة كود الدولة 👀❤️.\nمثال 📝 : 201501728150',
+                text: '*الرقم مش صح 😄*\n\nيرجى إضافة كود الدولة 👀❤️.\nمثال 📝 : 201501728150',
                 ...channelInfo
             }, { quoted: message });
         }

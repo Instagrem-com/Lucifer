@@ -1,7 +1,7 @@
 module.exports = {
   command: 'شقلب_كلمه',
   aliases: ['mirror', 'upside'],
-  category: 'tools',
+  category: 'اوامـࢪ الاداوات',
   description: 'اقلب النص الإنجليزي فوق تحت (يدعم الحروف الكبيرة)',
   usage: '.شكلب_كلمه <الكلمه> او الرد على رسالة',
 
@@ -15,7 +15,7 @@ module.exports = {
     }
     txt = txt.replace(/^\.\w+\s*/, '').trim();
 
-    if (!txt) return await sock.sendMessage(chatId, { text: '*عايزني اشقلب ايه ياحب 👀❤️*' });
+    if (!txt) return await sock.sendMessage(chatId, { text: '*عايزني اشقلب ايه ياحب 👀❤️*\n الاستخدام 📝 : \n .شقلب_كلمه <كلمه انجليزي> ' });
 
     const charMap = {
       'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ',

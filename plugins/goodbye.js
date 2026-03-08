@@ -37,7 +37,7 @@ async function handleLeaveEvent(sock, id, participants) {
                     .replace(/{user}/g, `@${displayName}`)
                     .replace(/{group}/g, groupName);
             } else {
-                finalMessage = `@${displayName} خرج من الجروب ومحدش هيفتقده 😏`;
+                finalMessage = `@${displayName}\n العلق خرج من الروم\n الي غار يجي غيرو 😂❤️`;
             }
             
             try {
@@ -60,9 +60,7 @@ async function handleLeaveEvent(sock, id, participants) {
                     await sock.sendMessage(id, {
                         image: imageBuffer,
                         caption:
-`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
-
-${finalMessage} 👋`,
+`${finalMessage}`,
                         mentions: [participantString]
                     });
                     continue;
@@ -73,9 +71,7 @@ ${finalMessage} 👋`,
             
             await sock.sendMessage(id, {
                 text:
-`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
-
-${finalMessage} 👋`,
+`${finalMessage}`,
                 mentions: [participantString]
             });
         } catch (error) {
@@ -89,14 +85,12 @@ ${finalMessage} 👋`,
                     .replace(/{user}/g, `@${user}`)
                     .replace(/{group}/g, groupName);
             } else {
-                fallbackMessage = `@${user} خرج من الجروب خلاص 👋`;
+                fallbackMessage = `@${user} العلق خرج من الروم\n الي غار يجي غيرو 😂❤️`;
             }
             
             await sock.sendMessage(id, {
                 text:
-`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
-
-${fallbackMessage}`,
+`${fallbackMessage}`,
                 mentions: [participantString]
             });
         }
@@ -104,11 +98,11 @@ ${fallbackMessage}`,
 }
 
 module.exports = {
-    command: 'الوداع',
+    command: 'رساله_الوداع',
     aliases: ['وداع', 'خروج'],
-    category: 'admin',
+    category: 'اوامـࢪ الـمـطـوࢪ',
     description: 'إعداد رسالة وداع للأعضاء اللي بيخرجوا من الجروب',
-    usage: '.الوداع <تشغيل | ايقاف | تعيين رسالة>',
+    usage: '.الوداع <تشغيل | تعطيل | تعيين رسالة>',
     groupOnly: true,
     adminOnly: true,
 

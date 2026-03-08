@@ -3,7 +3,7 @@ const settings = require('../settings');
 module.exports = {
   command: 'المطور',
   aliases: ['صاحب_البوت', 'owner', 'creator'],
-  category: 'معلومات',
+  category: 'اوامـࢪ الـبـوت',
   description: 'جيبلك رقم واتساب صاحب البوت',
   usage: '.المطور',
   async handler(sock, message, context = {}) {
@@ -22,13 +22,13 @@ END:VCARD
           displayName: `${settings.botOwner}`, 
           contacts: [{ vcard }] 
         },
-        caption: `📲 تقدر تتواصل مع المطور دا على الواتساب!`
+        caption: ``
       }, { quoted: message });
 
     } catch (error) {
       console.error('Owner Command Error:', error);
       await sock.sendMessage(chatId, {
-        text: '❌ حصل مشكلة في جلب رقم صاحب البوت.'
+        text: 'حصل مشكلة في جلب رقم صاحب البوت 😄❤️'
       }, { quoted: message });
     }
   }

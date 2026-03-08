@@ -1,7 +1,7 @@
 module.exports = {
   command: 'لعبه_الزهر',
   aliases: ['زهر', 'dice'],
-  category: 'games',
+  category: 'اوامـࢪ الالـعـاب',
   description: 'Roll a random dice sticker',
   usage: '.dado',
 

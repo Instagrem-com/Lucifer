@@ -1,7 +1,7 @@
 module.exports = {
   command: 'معلومات_الجروب',
   aliases: ['معلومات', 'معلومات_القروب', 'جروب_انفو'],
-  category: 'group',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'عرض معلومات الجروب بالكامل',
   usage: '.معلومات_الجروب',
   groupOnly: true,
@@ -26,26 +26,24 @@ module.exports = {
       const owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || chatId.split('-')[0] + '@s.whatsapp.net';
       
       const text = `
-⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+🏷️معلومات الجروب 🏷️
 
-معلومات الجروب 🏷️
+ايدي الجروب 🆔 :
+${groupMetadata.id} 
 
-ايدي الجروب:
-${groupMetadata.id} 🆔
+اسم الجروب 👀 :
+${groupMetadata.subject} 
 
-اسم الجروب:
-${groupMetadata.subject} 📛
+عدد الاعضاء 👥 :
+${participants.length} 
 
-عدد الاعضاء:
-${participants.length} 👥
+صاحب الجروب 👑 :
+@${owner.split('@')[0]} 
 
-صاحب الجروب:
-@${owner.split('@')[0]} 👑
+المشرفين 🛡️:
+${listAdmin} 
 
-المشرفين:
-${listAdmin} 🛡️
-
-وصف الجروب:
+وصف الجروب 📝:
 ${groupMetadata.desc?.toString() || 'مفيش وصف للجروب'} 📌
 `.trim();
 

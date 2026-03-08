@@ -16,7 +16,7 @@ function formatTime() {
 const menuStyles = [
   {
     render({ title, info, categories, prefix }) {
-      let t = `╭━━『 *قائمة MEGA* 』━⬣\n`;
+      let t = `┃━━『 *قـائـمـة الاوامـࢪ* 』━⬣\n`;
       t += `┃ ✨ *بوت: ${info.bot}*\n`;
       t += `┃ 🔧 *بادئة الأوامر: ${info.prefix}*\n`;
       t += `┃ 📦 *الإضافات: ${info.total}*\n`;
@@ -26,15 +26,15 @@ const menuStyles = [
       for (const [cat, cmds] of categories) {
         t += `┃━━━ *${cat.toUpperCase()}* ━✦\n`;
         for (const c of cmds)
-          t += `┃ ➤ ${prefix}${c}\n`;
+          t += `┃ ★ ${prefix}${c}\n`;
       }
-      t += `╰━━━━━━━━━━━━━⬣`;
+      t += `━━━━━━━━━━━━━⬣`;
       return t;
     }
   },
   {
     render({ title, info, categories, prefix }) {
-      let t = `◈╭─❍「 *قائمة MEGA* 」❍\n`;
+      let t = `◈├─❍「 *قائمة MEGA* 」❍\n`;
       t += `◈├• 🌟 *بوت: ${info.bot}*\n`;
       t += `◈├• ⚙️ *بادئة الأوامر: ${info.prefix}*\n`;
       t += `◈├• 🍫 *الإضافات: ${info.total}*\n`;
@@ -46,13 +46,13 @@ const menuStyles = [
         for (const c of cmds)
           t += `◈├• ${prefix}${c}\n`;
       }
-      t += `◈╰──★─☆──♪♪─❍`;
+      t += `────★─☆──♪♪─❍`;
       return t;
     }
   },
   {
     render({ title, info, categories, prefix }) {
-      let t = `┏━━━━ *قائمة MEGA* ━━━┓\n`;
+      let t = `┃━━━━ *قائمة MEGA* ━━━\n`;
       t += `┃• *بوت: ${info.bot}*\n`;
       t += `┃• *بادئات الأوامر: ${info.prefix}*\n`;
       t += `┃• *الإضافات: ${info.total}*\n`;
@@ -62,20 +62,20 @@ const menuStyles = [
       for (const [cat, cmds] of categories) {
         t += `┃━━━━ *${cat.toUpperCase()}* ━━◆\n`;
         for (const c of cmds)
-          t += `┃ ▸ ${prefix}${c}\n`;
+          t += `┃ ✌︎ ${prefix}${c}\n`;
       }
-      t += `┗━━━━━━━━━━━━━━━┛`;
+      t += `━━━━━━━━━━━━━━━━`;
       return t;
     }
   },
   {
     render({ title, info, categories, prefix }) {
       let t = `✦═══ *قائمة MEGA* ═══✦\n`;
-      t += `║➩ *بوت: ${info.bot}*\n`;
-      t += `║➩ *بادئات الأوامر: ${info.prefix}*\n`;
-      t += `║➩ *الإضافات: ${info.total}*\n`;
-      t += `║➩ *الإصدار: ${info.version}*\n`;
-      t += `║➩ *الوقت: ${info.time}*\n`;
+      t += `║✦ *بوت: ${info.bot}*\n`;
+      t += `║✦ *بادئات الأوامر: ${info.prefix}*\n`;
+      t += `║✦ *الإضافات: ${info.total}*\n`;
+      t += `║✦ *الإصدار: ${info.version}*\n`;
+      t += `║✦ *الوقت: ${info.time}*\n`;
 
       for (const [cat, cmds] of categories) {
         t += `║══ *${cat.toUpperCase()}* ══✧\n`;
@@ -89,16 +89,16 @@ const menuStyles = [
   {
     render({ title, info, categories, prefix }) {
       let t = `❀━━━ *قائمة MEGA* ━━━❀\n`;
-      t += `┃☞ *بوت: ${info.bot}*\n`;
-      t += `┃☞ *بادئات الأوامر: ${info.prefix}*\n`;
-      t += `┃☞ *الإضافات: ${info.total}*\n`;
-      t += `┃☞ *الإصدار: ${info.version}*\n`;
-      t += `┃☞ *الوقت: ${info.time}*\n`;
+      t += `┃❀ *بوت: ${info.bot}*\n`;
+      t += `┃❀ *بادئات الأوامر: ${info.prefix}*\n`;
+      t += `┃❀ *الإضافات: ${info.total}*\n`;
+      t += `┃❀ *الإصدار: ${info.version}*\n`;
+      t += `┃❀ *الوقت: ${info.time}*\n`;
 
       for (const [cat, cmds] of categories) {
         t += `┃━━━〔 *${cat.toUpperCase()}* 〕━❀\n`;
         for (const c of cmds)
-          t += `┃☞ ${prefix}${c}\n`;
+          t += `┃❀ ${prefix}${c}\n`;
       }
       t += `❀━━━━━━━━━━━━━━❀`;
       return t;
@@ -123,7 +123,7 @@ const menuStyles = [
   },
   {
     render({ title, info, categories, prefix }) {
-      let t = `╭───⬣ *قائمة MEGA* ──⬣\n`;
+      let t = `────⬣ *قائمة MEGA* ──⬣\n`;
       t += ` | ● *بوت: ${info.bot}*\n`;
       t += ` | ● *بادئات الأوامر: ${info.prefix}*\n`;
       t += ` | ● *الإضافات: ${info.total}*\n`;
@@ -134,7 +134,7 @@ const menuStyles = [
         for (const c of cmds)
           t += ` | ● ${prefix}${c}\n`;
       }
-      t += `╰──────────⬣`;
+      t += `───────────⬣`;
       return t;
     }
   }
@@ -144,10 +144,10 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 module.exports = {
   command: 'اوامر',
-  aliases: ['help', 'commands', 'h', 'list'],
-  category: 'general',
+  aliases: ['m', 'y', 'lucifer', 'l'],
+  category: 'اوامـࢪ الـبـوت',
   description: 'Show all commands',
-  usage: '.menu [command]',
+  usage: '.اوامر ',
 
   async handler(sock, message, args, context) {
     const { chatId, channelInfo } = context;
@@ -166,7 +166,7 @@ module.exports = {
       
       if (!cmd) {
         return sock.sendMessage(chatId, { 
-          text: `❌ Command "${args[0]}" not found.\n\nUse ${prefix}menu to see all commands.`,
+          text: `الامر دا "${args[0]}" مش موجود ف الاوامر.\n\n ${prefix} شوف الاوامر تاني 👀❤️`,
           ...channelInfo
         }, { quoted: message });
       }

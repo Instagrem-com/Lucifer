@@ -17,11 +17,11 @@ async function downloadMediaMessage(message, mediaType) {
 }
 
 module.exports = {
-    command: 'hidetag',
-    aliases: ['ht', 'htag'],
-    category: 'admin',
+    command: 'منشن_مخفي',
+    aliases: ['تاج', 'منشن'],
+    category: 'ااوامـࢪ الـجـࢪوبـات',
     description: 'Tag all non-admin members without showing their names',
-    usage: '.hidetag <message> or reply to message',
+    usage: '.منشن_مخفي اكتب الرساله او اعمل رياكت ع الرساله',
     groupOnly: true,
     adminOnly: true,
 
@@ -33,7 +33,7 @@ module.exports = {
 
         if (!isBotAdmin) {
             await sock.sendMessage(chatId, { 
-                text: '❌ *Please make the bot an admin first*' 
+                text: ' *البوت مش ادمن ياحب خليني ادمن عشان اعمل منشن* 👀❤️' 
             }, { quoted: message });
             return;
         }
@@ -81,7 +81,7 @@ module.exports = {
             }
         } else {
             await sock.sendMessage(chatId, { 
-                text: messageText || '📢 *Announcement for all members*', 
+                text: messageText || 'َ', 
                 mentions: nonAdmins 
             });
         }

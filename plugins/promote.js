@@ -22,11 +22,7 @@ async function handlePromotionEvent(sock, groupId, participants, author) {
       promotedBy = 'النظام';
     }
 
-    const promotionMessage = `*『 ترقية أعضاء الجروب 』*\n\n` +
-      `👥 *العضو${participants.length > 1 ? 'ين' : ''} اللي اترفعت:*\n` +
-      `${promotedUsernames.map(name => `• ${name}`).join('\n')}\n\n` +
-      `👑 *اللي رفعهم:* ${promotedBy}\n\n` +
-      `📅 *التاريخ:* ${new Date().toLocaleString()}`;
+    const promotionMessage = `🔥 *『 ترقية حد من الجروب 』* 🔥`;
     
     await sock.sendMessage(groupId, {
       text: promotionMessage,
@@ -38,9 +34,9 @@ async function handlePromotionEvent(sock, groupId, participants, author) {
 }
 
 module.exports = {
-  command: 'ترقية',
-  aliases: ['admin', 'رفع'],
-  category: 'admin',
+  command: 'ادمن',
+  aliases: ['رول', 'رفع'],
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'ارفع عضو/أعضاء أدمن في الجروب',
   usage: '.ترقية [@العضو] أو رد على رسالته',
   groupOnly: true,

@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
     command: 'ميجا',
     aliases: ['megadl', 'ميجادل'],
-    category: 'تحميل',
+    category: 'اوامـࢪ الـتـحـمـيـل',
     description: 'يحمل الملفات من MEGA مع شريط تقدم لحظي',
     usage: '.ميجا <رابط ميجا>',
 
@@ -14,7 +14,7 @@ module.exports = {
 
         if (!text) {
             return await sock.sendMessage(chatId, { 
-                text: "ابعت رابط ميجا عشان أحمل الملف ليك ❌\n\nمثال:\n.ميجا https://mega.nz/file/xxxx#xxxx"
+                text: "ابعت رابط ميجا عشان أحمل الملف ليك من الموقع 👀❤️\n\nمثال 📝👇🏼:\n.ميجا https://mega.nz/file/xxxx#xxxx"
             }, { quoted: message });
         }
 
@@ -23,11 +23,11 @@ module.exports = {
             await file.loadAttributes();
 
             if (file.size >= 500 * 1024 * 1024) {
-                return await sock.sendMessage(chatId, { text: '❌ الملف كبير قوي! الحد الأقصى 500MB' }, { quoted: message });
+                return await sock.sendMessage(chatId, { text: ' الملف كبير ياعم قوي الحد الأقصى 500MB 😂❤️' }, { quoted: message });
             }
 
             const { key } = await sock.sendMessage(chatId, { 
-                text: `🌩️ *تحميل MEGA*\n\n▢ *الملف:* ${file.name}\n▢ *الحجم:* ${this.formatBytes(file.size)}\n\n*التقدم:* 0% [░░░░░░░░░░]` 
+                text: `🌩️ *تحميل MEGA* 🌩️\n\n▢ *الملف* 💻 : ${file.name}\n▢ *الحجم* ⚙️ : ${this.formatBytes(file.size)}\n\n*التقدم:* 0% [░░░░░░░░░░]` 
             }, { quoted: message });
 
             const stream = file.download();
@@ -41,7 +41,7 @@ module.exports = {
                 if (Date.now() - lastUpdate > 3000 || percentage === 100) {
                     const bar = this.generateBar(percentage);
                     await sock.sendMessage(chatId, { 
-                        text: `🌩️ *تحميل MEGA*\n\n▢ *الملف:* ${file.name}\n▢ *الحجم:* ${this.formatBytes(bytesTotal)}\n\n*التقدم:* ${percentage}% [${bar}]`,
+                        text: `🌩️ *تحميل MEGA* 🌩️\n\n▢ *الملف* 💻 ${file.name}\n▢ *الحجم* ⚙️ ${this.formatBytes(bytesTotal)}\n\n*التقدم:* ${percentage}% [${bar}]`,
                         edit: key 
                     });
                     lastUpdate = Date.now();
@@ -63,7 +63,7 @@ module.exports = {
                     document: buffer,
                     fileName: file.name,
                     mimetype: mimeTypes[ext] || 'application/octet-stream',
-                    caption: `✅ تم تحميل الملف بنجاح!\n▢ *الملف:* ${file.name}\n▢ *الحجم:* ${this.formatBytes(file.size)}`
+                    caption: `الملف نزل ياحب 👀❤️\n▢ *الملف:* ${file.name}\n▢ *الحجم:* ${this.formatBytes(file.size)}\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
                 }, { quoted: message });
             });
 

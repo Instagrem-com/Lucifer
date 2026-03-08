@@ -1,7 +1,7 @@
 module.exports = {
-  command: 'الصوره',
+  command: 'صوره_بروفايل',
   aliases: ['صورة', 'بروفايل', 'جيب_الصوره'],
-  category: 'general',
+  category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'جلب صورة بروفايل المستخدم',
   usage: '.الصوره @الشخص او رد على رسالته او الرقم',
 
@@ -10,7 +10,7 @@ module.exports = {
     const isGroup = chatId.endsWith('@g.us');
 
     let target;
-    let displayName = 'غير معروف';
+    let displayName = '';
     let displayNumber = '';
 
     const quoted = message.message?.extendedTextMessage?.contextInfo;
@@ -26,7 +26,7 @@ module.exports = {
         target = input + '@s.whatsapp.net';
       } else {
         return await sock.sendMessage(chatId, { 
-          text: '*الرقم اللي كتبته مش صحيح اكتب الرقم كامل* ❌' 
+          text: '*الرقم اللي كتبته مش صح اكتب الرقم كامل* 👀❤️ ' 
         }, { quoted: message });
       }
     } else {
@@ -47,7 +47,7 @@ module.exports = {
       const cleanNumber = realJid.replace(/@s\.whatsapp\.net|@lid/g, '').split(':')[0];
       displayNumber = `+${cleanNumber}`;
 
-      if (displayName === 'غير معروف') {
+      if (displayName === '') {
         try {
           const name = await sock.getName(realJid);
           if (name && !name.startsWith('+')) displayName = name;
@@ -59,7 +59,7 @@ module.exports = {
         ppUrl = await sock.profilePictureUrl(realJid, 'image');
       } catch (e) {
         return await sock.sendMessage(chatId, { 
-          text: `*مفيش صورة بروفايل للشخص دا* (${displayNumber}) ❌` 
+          text: `*مفيش صورة بروفايل للشخص دا* (${displayNumber}) 😄❤️` 
         }, { quoted: message });
       }
 
@@ -67,12 +67,8 @@ module.exports = {
         await sock.sendMessage(chatId, { 
           image: { url: ppUrl },
           caption:
-`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
-
-اسم الشخص:
-${displayName} 👤
-
-رقم الشخص:
+`${displayName} 
+رقم الشخص 💻 :
 ${displayNumber} 📱`
         }, { quoted: message });
       }

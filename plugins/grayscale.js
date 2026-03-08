@@ -5,9 +5,9 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'ابيض_واسود',
+  command: 'صوره_ابيض_واسود',
   aliases: ['رمادي', 'تحويل_رمادي'],
-  category: 'tools',
+  category: 'اوامـࢪ الاداوات',
   description: 'تحويل الصورة إلى أبيض وأسود',
   usage: 'اعمل رد على صورة واكتب .ابيض_واسود',
 
@@ -23,12 +23,10 @@ module.exports = {
           chatId,
           { 
 text:
-`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+`اعمل رد على صورة عشان احولها ابيض واسود 🖤
 
-اعمل رد على صورة عشان احولها ابيض واسود 🖤
-
-الاستخدام:
-.ابيض_واسود`
+الاستخدام 👇🏼 :
+.ابيض_واسود واعمل ربلاي ع الصوره`
           },
           { quoted: message }
         );
@@ -66,9 +64,9 @@ text:
         {
           image: { url: grayFile },
           caption:
-`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+`الـصوره خلصت ياحب 👀❤️
 
-تم تحويل الصورة لابيض واسود بنجاح 🖤`
+*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
         },
         { quoted: message }
       );
@@ -80,9 +78,7 @@ text:
         chatId,
         { 
 text:
-`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
-
-حصل مشكلة و معرفتش احول الصورة حاول تاني ❌`
+`حصل مشكلة و معرفتش احول الصورة حاول تاني ❌`
         },
         { quoted: message }
       );

@@ -5,9 +5,9 @@ const API = 'https://api.qasimdev.dpdns.org/api/loaderto/download'
 const API_KEY = 'qasim-dev'
 
 module.exports = {
-  command: 'تشغيل',
+  command: 'اغنيه',
   aliases: ['اغنية', 'play', 'music'],
-  category: 'ميوزك',
+  category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'ابحث عن اغنية من يوتيوب وحملها MP3',
   usage: '.تشغيل <اسم الاغنية>',
 
@@ -18,21 +18,21 @@ module.exports = {
 
     if (!query) {
       return sock.sendMessage(chatId, {
-        text: `🎧 *اكتب اسم الاغنية*\n\nمثال:\n.تشغيل faded`
+        text: `🎧 *اكتب اسم الاغنية* 🎧\n\nمثال 📝👇🏼 :\n.اغنيه اتنسيت`
       }, { quoted: message })
     }
 
     try {
 
       await sock.sendMessage(chatId, {
-        text: '🔎 *بدور على الاغنية...*'
+        text: ' * ويـيــت بدور على الاغنية...🔎*'
       }, { quoted: message })
 
       const search = await yts(query)
 
       if (!search.videos.length) {
         return sock.sendMessage(chatId, {
-          text: '❌ *ملقتش اي اغنية بالاسم دا!*'
+          text: '*ملقتش اي اغنية بالاسم دا.😄❤️*'
         }, { quoted: message })
       }
 
@@ -40,13 +40,15 @@ module.exports = {
 
       await sock.sendMessage(chatId, {
         text:
-`✅ *تم العثور على الاغنية*
+`⚡ الاغنيه اتحميل ⚡
 
 🎵 ${video.title}
 ⏱️ ${video.timestamp}
 👤 ${video.author.name}
 
-⏳ *جاري التحميل...*`
+*جاري التحميل...⏳*
+
+*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
       }, { quoted: message })
 
       const { data } = await axios.get(API, {

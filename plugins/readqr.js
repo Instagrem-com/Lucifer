@@ -6,8 +6,8 @@ const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
   command: 'اقرا_كيو_ار', // بدل 'readqr'
-  aliases: ['qrread', 'decodeqr', 'اقراqr'],
-  category: 'ادوات',
+  aliases: ['qrread', 'QR', 'مسح_كيو_ار'],
+  category: 'اوامـࢪ الاداوات',
   description: 'اقرا QR Code من صورة',
   usage: 'رد على صورة واكتب .اقرا_كيو_ار',
 
@@ -21,7 +21,7 @@ module.exports = {
       if (!quoted?.imageMessage) {
         return await sock.sendMessage(
           chatId,
-          { text: '🧾 *قارئ QR*\n\n📌 رد على صورة فيها QR Code عشان اقراهولك\n\nالاستخدام:\n.اقرا_كيو_ار' },
+          { text: '🧾 *قارئ QR* 🧾\n\n رد على صورة فيها QR Code عشان اقراهولك 👀❤️\n\nالاستخدام 📝:\n.اقرا_كيو_ار' },
           { quoted: message }
         );
       }
@@ -65,14 +65,16 @@ module.exports = {
         chatId,
         {
           text:
-`✅ *تم قراءة QR Code*
+`✅ *تم قراءة QR Code* ✅
 
-📄 *النتيجة:*
+📄 *النتيجة* 📄
 \`\`\`
 ${res.data.result}
 \`\`\`
 
-👤 بواسطة: ${res.data.creator}
+بواسطة ⚡ : ${res.data.creator}
+
+*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪
 `
         },
         { quoted: message }

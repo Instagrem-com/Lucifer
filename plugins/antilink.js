@@ -130,7 +130,7 @@ async function handleLinkDetection(sock, chatId, message, userMessage, senderId)
 module.exports = {
     command: 'ممنوع_اللينكات',
     aliases: ['ممنوع_اللينك'],
-    category: 'admin',
+    category: 'اوامـࢪ الـمـطـوࢪ',
     description: 'مانع اللينكات في الجروب',
     usage: '.ممنوع_اللينكات <تفعيل|تعطيل|ضبط|عرض>',
     groupOnly: true,

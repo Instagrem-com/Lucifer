@@ -11,7 +11,7 @@ const AXIOS_DEFAULTS = {
 module.exports = {
   command: 'فيسبوك',
   aliases: ['fb', 'fbdl'],
-  category: 'download',
+  category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'تحميل فيديوهات فيسبوك',
   usage: '.فيسبوك <رابط فيديو فيسبوك>',
 
@@ -63,7 +63,7 @@ module.exports = {
         ? selected.url
         : `https://gtech-api-xtp1.onrender.com${selected.url}`;
 
-      const caption = ` 🥂 *الفـيـديـو يـا حـب* 🥂\n الجودة 💻 : *${selected.resolution || 'غير معروفة 👀'}*
+      const caption = ` 🥂 *الفـيـديـو يـا حـب* 🥂\n\n الجودة 💻 : *${selected.resolution || 'غير معروفة 👀'}*
 
 > *BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`;
 

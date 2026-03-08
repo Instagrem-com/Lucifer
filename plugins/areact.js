@@ -15,7 +15,7 @@ function random(arr) {
 module.exports = {
   command: 'رياكت_تلقائي',
   aliases: ['رياكت'],
-  category: 'owner',
+  category: 'اوامـࢪ الـمـطـوࢪ',
   description: 'رياكت ع الرساله تلقائي',
   usage: '.رياكت_تلقائي تفعيل/تعطيل',
   ownerOnly: true,

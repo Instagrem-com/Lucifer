@@ -13,44 +13,44 @@ async function modeCommand(sock, message, args, context) {
     }
 
     const subCommand = args[0]?.toLowerCase()
-    const currentMode = await store.getBotMode() || 'public'
+    const currentMode = await store.getBotMode() || 'عام'
 
-    if (!subCommand || subCommand === 'status' || subCommand === 'check') {
+    if (!subCommand || subCommand === 'عرض' || subCommand === 'الحاله') {
         const modeEmojis = {
-            public: '🌍',
-            private: '🔒',
-            groups: '👥',
-            inbox: '💬',
-            self: '👤'
+            عام: '🌍',
+            خاص: '🔒',
+            جروب: '👥',
+            شات: '💬',
+            نفسي: '👤'
         }
 
         const modeDescriptions = {
-            public: 'الكل يقدر يستخدم البوت (جروبات وشات خاص)',
-            private: 'بس المالك والسوبر مالك يقدروا يستخدموا البوت',
-            groups: 'بيشتغل بس في الجروبات (كل الناس في الجروب)',
-            inbox: 'بيشتغل بس في الشات الخاص (كل الناس يقدروا يراسلوا البوت)',
-            self: 'بس المالك والسوبر مالك (زي الخاص)'
+            عام: 'الكل يقدر يستخدم البوت (جروبات وشات خاص) 👀❤️',
+            خاص: 'بس المالك والسوبر مالك يقدروا يستخدموا البوت 👀❤️',
+            جروب: 'بيشتغل بس في الجروبات (كل الناس في الجروب) 👀❤️',
+            شات: 'بيشتغل بس في الشات الخاص (كل الناس يقدروا يراسلوا البوت) 👀❤️',
+            نفسي: 'بس المالك والسوبر مالك (زي الخاص) 👀❤️'
         }
 
-        let statusText = `📊 *حالة وضع البوت*\n\n`
-        statusText += `الوضع الحالي: ${modeEmojis[currentMode]} *${currentMode.toUpperCase()}*\n`
-        statusText += `الوصف: ${modeDescriptions[currentMode]}\n\n`
+        let statusText = `📊 *حالة وضع البوت* 📊\n\n`
+        statusText += `الوضع الحالي ⚙️ ${modeEmojis[currentMode]} *${currentMode.toUpperCase()}*\n`
+        statusText += `الوصف 📝 ${modeDescriptions[currentMode]}\n\n`
         statusText += `━━━━━━━━━━━━━━━━━━━━\n\n`
-        statusText += `*الوضعيات المتاحة:*\n\n`
+        statusText += `*الوضعيات المتاحة 👀❤️*\n\n`
         
         Object.entries(modeDescriptions).forEach(([mode, desc]) => {
             const current = mode === currentMode ? '✓ ' : ''
             statusText += `${current}${modeEmojis[mode]} \`${mode}\`\n${desc}\n\n`
         })
 
-        statusText += `*طريقة الاستخدام:*\n`
-        statusText += `• \`.الوضع <mode>\` - لتغيير الوضع\n`
-        statusText += `• \`.الوضع status\` - لعرض الوضع الحالي\n\n`
-        statusText += `*أمثلة:*\n`
-        statusText += `• \`.الوضع public\` - البوت متاح للكل\n`
-        statusText += `• \`.الوضع groups\` - البوت للجروبات بس\n`
-        statusText += `• \`.الوضع inbox\` - البوت للشات الخاص بس\n`
-        statusText += `• \`.الوضع private\` - البوت للمالك والسوبر مالك فقط`
+        statusText += ` 📝 *طريقة الاستخدام* : 📝\n`
+        statusText += `• \`.الوضع <mode>\` - لتغيير الوضع ❤️✨\n`
+        statusText += `• \`.الوضع عرض\` - لعرض الوضع الحالي ❤️✨\n\n`
+        statusText += `*أمثلة* : 📝\n`
+        statusText += `• \`.الوضع عام\` - البوت متاح للكل ❤️✨\n`
+        statusText += `• \`.الوضع جروب\` - البوت للجروبات بس ❤️✨\n`
+        statusText += `• \`.الوضع شات\` - البوت للشات الخاص بس ❤️✨\n`
+        statusText += `• \`.الوضع خاص\` - البوت للمالك والسوبر مالك فقط ❤️✨`
 
         return await sock.sendMessage(chatId, {
             text: statusText,
@@ -58,11 +58,11 @@ async function modeCommand(sock, message, args, context) {
         }, { quoted: message })
     }
 
-    const validModes = ['public', 'private', 'groups', 'inbox', 'self']
+    const validModes = ['عام', 'خاص', 'جروب', 'شات', 'نفسي']
     
     if (!validModes.includes(subCommand)) {
         return await sock.sendMessage(chatId, {
-            text: `❌ الوضع مش صحيح: *${subCommand}*\nالوضعيات الصحيحة: ${validModes.join(', ')}\n\nاستخدم \`.الوضع\` لمشاهدة كل الوضعيات.`,
+            text: ` الوضع مش صحيح 👀❤️ *${subCommand}*\nالوضعيات الصحيحة 📝: ${validModes.join(', ')}\n\nاستخدم \`.الوضع\` لمشاهدة كل الوضعيات. ❤️✨`,
             ...channelInfo
         }, { quoted: message })
     }
@@ -70,33 +70,33 @@ async function modeCommand(sock, message, args, context) {
     await store.setBotMode(subCommand)
 
     const modeEmojis = {
-        public: '🌍',
-        private: '🔒',
-        groups: '👥',
-        inbox: '💬',
-        self: '👤'
+        عام: '🌍',
+        خاص: '🔒',
+        جروب: '👥',
+        شات: '💬',
+        نفسي: '👤'
     }
 
     const modeMessages = {
-        public: 'البوت دلوقتي متاح *للجميع* في الجروبات والشات الخاص.',
-        private: 'البوت دلوقتي محدود للمالك والسوبر مالك فقط.',
-        groups: 'البوت دلوقتي بيشتغل *في الجروبات فقط* (كل أعضاء الجروب يقدروا يستخدموه).',
-        inbox: 'البوت دلوقتي بيشتغل *في الشات الخاص فقط* (كل الناس يقدروا يراسلوا البوت).',
-        self: 'البوت دلوقتي محدود للمالك والسوبر مالك فقط.'
-    }
+        عام: 'الكل يقدر يستخدم البوت (جروبات وشات خاص) 👀❤️',
+            خاص: 'بس المالك والسوبر مالك يقدروا يستخدموا البوت 👀❤️',
+            جروب: 'بيشتغل بس في الجروبات (كل الناس في الجروب) 👀❤️',
+            شات: 'بيشتغل بس في الشات الخاص (كل الناس يقدروا يراسلوا البوت) 👀❤️',
+            نفسي: 'بس المالك والسوبر مالك (زي الخاص) 👀❤️'
+        }
 
     await sock.sendMessage(chatId, {
-        text: `${modeEmojis[subCommand]} *تم تغيير الوضع إلى ${subCommand.toUpperCase()}*\n\n${modeMessages[subCommand]}\n\n_استخدم \`.الوضع status\` لمراجعة الوضع الحالي._`,
+        text: `${modeEmojis[subCommand]} *تم تغيير الوضع إلى 👀❤️\n ${subCommand.toUpperCase()}*\n\n${modeMessages[subCommand]}\n\n_استخدم \`.الوضع عرض\` لمراجعة الوضع الحالي 😊❤️`,
         ...channelInfo
     }, { quoted: message })
 }
 
 module.exports = {
     command: 'الوضع',
-    aliases: ['وضع_البوت', 'ضبط_الوضع'],
-    category: 'مالك',
+    aliases: ['وضع', 'mode'],
+    category: 'اوامـࢪ الـمـطـوࢪ',
     description: 'تحكم متقدم في استخدام البوت - من يقدر يستخدم البوت وفين',
-    usage: '.الوضع [public|private|groups|inbox|self|status]',
+    usage: '.الوضع [عام|خاص|جروب|شات|نفسي|عرض]',
     ownerOnly: true,
     handler: modeCommand
 }

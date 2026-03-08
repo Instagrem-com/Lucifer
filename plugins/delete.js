@@ -3,9 +3,9 @@ const store = require('../lib/lightweight_store');
 module.exports = {
     command: 'مسح',
     aliases: ['delreact', 'rmreact'],
-    category: 'admin',
-    description: 'يمسح أي رسالة عملت عليها Reaction',
-    usage: '.مسح_الريآكت (رد على الرسالة)',
+    category: 'اوامـࢪ الـجـࢪوبـات',
+    description: 'يمسح أي رسالة عملت عليها ربلاي 👀❤️',
+    usage: '.مسح (رد على الرسالة)',
     groupOnly: true,
     adminOnly: true,
 
@@ -28,7 +28,7 @@ module.exports = {
 
         if (!repliedMsgId) {
             await sock.sendMessage(chatId, { 
-                text: '*من فضلك رد على الرسالة اللي عايز تمسحها* 😄❤️' 
+                text: '*رد على الرسالة اللي عايز تمسحها يـاجـب* 😄❤️' 
             }, { quoted: message });
             return;
         }

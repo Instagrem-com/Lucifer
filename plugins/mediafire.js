@@ -22,9 +22,9 @@ async function mediafireDl(url) {
 }
 
 module.exports = {
-  command: 'ميديافاير',
+  command: 'تحميل_ميديا_فاير',
   aliases: ['ميديا', 'فاير'],
-  category: 'تحميل',
+  category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'يحمل أي ملف من ميديافاير',
   usage: '.ميديافاير <الرابط>',
 
@@ -33,7 +33,7 @@ module.exports = {
     const text = args.join(' ');
 
     if (!text) return await sock.sendMessage(chatId, { 
-      text: "ابعت رابط ميديافاير عشان أحمل الملف ليك ❌\n\nمثال:\n.ميديافاير https://www.mediafire.com/file/xxxxx/file" 
+      text: "ابعت رابط ميديا فاير عشان أحمل الملف ليك 👀❤️\n\nمثال 📝 :\n.تحميل_ميديا_فير https://www.mediafire.com/file/xxxxx/file" 
     }, { quoted: message });
 
     try {
@@ -41,14 +41,14 @@ module.exports = {
       const data = await mediafireDl(text);
       if (!data || !data.link) {
         return await sock.sendMessage(chatId, { 
-          text: "مش قادر أقرأ صفحة ميديافاير، يمكن الرابط خاص أو بايظ ❌" 
+          text: "مش قادر أقرأ صفحة ميديا فاير يمكن الرابط خاص أو بايظ 🙃❤️" 
         }, { quoted: message });
       }
 
-      let caption = `≡ *محمل ميديافاير*\n\n`;
-      caption += `▢ *الملف:* ${data.name}\n`;
-      caption += `▢ *الحجم:* ${data.size}\n`;
-      caption += `▢ *النوع:* ${data.ext}\n\n`;
+      let caption = `≡ *تم تحميل الملف 😊❤️*\n\n`;
+      caption += `▢ *الملف* 👀❤️ ${data.name}\n`;
+      caption += `▢ *الحجم* 💻 ${data.size}\n`;
+      caption += `▢ *النوع* 📝 ${data.ext}\n\n`;
       caption += `جاري تحميل الملف... استنى شوية ⌛`;
 
       await sock.sendMessage(chatId, { text: caption }, { quoted: message });
@@ -67,7 +67,7 @@ module.exports = {
 
       if (buffer.length < 10000) {
           return await sock.sendMessage(chatId, { 
-            text: "الملف اتحمل بس شكله تالف أو مش صحيح ❌" 
+            text: "الملف اتحمل بس شكله تالف أو مش صح 🙃❤️" 
           });
       }
 
@@ -87,13 +87,13 @@ module.exports = {
         document: buffer,
         fileName: data.name,
         mimetype: mimeType,
-        caption: `تم تحميل الملف بنجاح: ${data.name} ✅`
+        caption: `الملف اتحمل ياحب 👀❤️${data.name} \n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
       }, { quoted: message });
 
     } catch (err) {
       console.error('MF Download Error:', err);
       await sock.sendMessage(chatId, { 
-        text: 'حصل خطأ أثناء التحميل: ' + err.message + ' ❌' 
+        text: 'حصل خطأ أثناء التحميل 🙃' + err.message + '🗑️' 
       }, { quoted: message });
     }
   }

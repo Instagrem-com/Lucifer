@@ -1,7 +1,7 @@
 module.exports = {
-  command: 'اختراق',
-  aliases: ['هكر', 'اختراق_وهمي'],
-  category: 'fun',
+  command: 'هكر',
+  aliases: ['اختراق', 'اختراق_وهمي'],
+  category: 'الالـعـاب',
   description: 'محاكاة عملية اختراق للمزاح',
   usage: '.اختراق <الهدف>',
 
@@ -10,7 +10,7 @@ module.exports = {
     const target = args?.[0] || 'الهدف';
 
     try {
-      await sock.sendMessage(chatId, { text: `⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠\n\nجاري بدء عملية الاختراق 💻` }, { quoted: message });
+      await sock.sendMessage(chatId, { text: `جاري بدء عملية الاختراق 💻\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪` }, { quoted: message });
       await delay(1500);
 
       await sock.sendMessage(chatId, { text: `جارى الاتصال بالسيرفر بأمان 🔌` }, { quoted: message });
@@ -28,17 +28,17 @@ module.exports = {
       await sock.sendMessage(chatId, { text: `جارى تحميل البيانات السرية من السيرفر 📥` }, { quoted: message });
       await displayProgressBar(sock, message, 'تحميل الملفات', 5, chatId);
 
-      await sock.sendMessage(chatId, { text: `جارى زرع باب خلفي للدخول لاحقاً 🔒` }, { quoted: message });
+      await sock.sendMessage(chatId, { text: `جارى تامين اتصال الاختراق 🔒` }, { quoted: message });
       await delay(2500);
 
-      await sock.sendMessage(chatId, { text: `تم الاختراق بنجاح الهدف "${target}" 💥` }, { quoted: message });
+      await sock.sendMessage(chatId, { text: `تم الاختراق بنجاح الهدف "${target}" ⚡` }, { quoted: message });
       await delay(1000);
 
-      await sock.sendMessage(chatId, { text: `تمت المهمة بنجاح جاري تسجيل الخروج 🤖` }, { quoted: message });
+      await sock.sendMessage(chatId, { text: `تمت المهمة بنجاح جاري ارسال بياناتك للمطور 💀🖤` }, { quoted: message });
 
     } catch (error) {
       console.error('Error in hack sequence:', error);
-      await sock.sendMessage(chatId, { text: `حصل خطأ أثناء عملية الاختراق حاول مرة أخرى ⚠️` }, { quoted: message });
+      await sock.sendMessage(chatId, { text: ` ⚠️ حصل خطأ أثناء عملية الاختراق حاول مرة أخرى ` }, { quoted: message });
     }
   }
 };
