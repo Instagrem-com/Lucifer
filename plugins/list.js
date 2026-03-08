@@ -1,17 +1,3 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
 
 
 const settings = require('../settings');
@@ -32,12 +18,12 @@ function formatTime() {
 const menuStyles = [
   {
     render({ title, info, categories, prefix }) {
-      let t = `╭━━『 *MEGA MENU* 』━⬣\n`;
-      t += `┃ ✨ *Bot: ${info.bot}*\n`;
-      t += `┃ 🔧 *Prefix: ${info.prefix}*\n`;
-      t += `┃ 📦 *Plugin: ${info.total}*\n`;
-      t += `┃ 💎 *Version: ${info.version}*\n`;
-      t += `┃ ⏰ *Time: ${info.time}*\n`;
+      let t = `╭━━『 *قائمة MEGA* 』━⬣\n`;
+      t += `┃ ✨ *بوت: ${info.bot}*\n`;
+      t += `┃ 🔧 *بادئة الأوامر: ${info.prefix}*\n`;
+      t += `┃ 📦 *الإضافات: ${info.total}*\n`;
+      t += `┃ 💎 *الإصدار: ${info.version}*\n`;
+      t += `┃ ⏰ *الوقت: ${info.time}*\n`;
 
       for (const [cat, cmds] of categories) {
         t += `┃━━━ *${cat.toUpperCase()}* ━✦\n`;
@@ -48,15 +34,14 @@ const menuStyles = [
       return t;
     }
   },
-
   {
     render({ title, info, categories, prefix }) {
-      let t = `◈╭─❍「 *MEGA MENU* 」❍\n`;
-      t += `◈├• 🌟 *Bot: ${info.bot}*\n`;
-      t += `◈├• ⚙️ *Prefix: ${info.prefix}*\n`;
-      t += `◈├• 🍫 *Plugins: ${info.total}*\n`;
-      t += `◈├• 💎 *Version: ${info.version}*\n`;
-      t += `◈├• ⏰ *Time: ${info.time}*\n`;
+      let t = `◈╭─❍「 *قائمة MEGA* 」❍\n`;
+      t += `◈├• 🌟 *بوت: ${info.bot}*\n`;
+      t += `◈├• ⚙️ *بادئة الأوامر: ${info.prefix}*\n`;
+      t += `◈├• 🍫 *الإضافات: ${info.total}*\n`;
+      t += `◈├• 💎 *الإصدار: ${info.version}*\n`;
+      t += `◈├• ⏰ *الوقت: ${info.time}*\n`;
 
       for (const [cat, cmds] of categories) {
         t += `◈├─❍「 *${cat.toUpperCase()}* 」❍\n`;
@@ -67,15 +52,14 @@ const menuStyles = [
       return t;
     }
   },
-
   {
     render({ title, info, categories, prefix }) {
-      let t = `┏━━━━ *MEGA MENU* ━━━┓\n`;
-      t += `┃• *Bot : ${info.bot}*\n`;
-      t += `┃• *Prefixes : ${info.prefix}*\n`;
-      t += `┃• *Plugins : ${info.total}*\n`;
-      t += `┃• *Version : ${info.version}*\n`;
-      t += `┃• *Time : ${info.time}*\n`;
+      let t = `┏━━━━ *قائمة MEGA* ━━━┓\n`;
+      t += `┃• *بوت: ${info.bot}*\n`;
+      t += `┃• *بادئات الأوامر: ${info.prefix}*\n`;
+      t += `┃• *الإضافات: ${info.total}*\n`;
+      t += `┃• *الإصدار: ${info.version}*\n`;
+      t += `┃• *الوقت: ${info.time}*\n`;
 
       for (const [cat, cmds] of categories) {
         t += `┃━━━━ *${cat.toUpperCase()}* ━━◆\n`;
@@ -86,15 +70,14 @@ const menuStyles = [
       return t;
     }
   },
-
   {
     render({ title, info, categories, prefix }) {
-      let t = `✦═══ *MEGA MENU* ═══✦\n`;
-      t += `║➩ *Bot: ${info.bot}*\n`;
-      t += `║➩ *Prefixes: ${info.prefix}*\n`;
-      t += `║➩ *Plugins: ${info.total}*\n`;
-      t += `║➩ *Version: ${info.version}*\n`;
-      t += `║➩ *Time: ${info.time}*\n`;
+      let t = `✦═══ *قائمة MEGA* ═══✦\n`;
+      t += `║➩ *بوت: ${info.bot}*\n`;
+      t += `║➩ *بادئات الأوامر: ${info.prefix}*\n`;
+      t += `║➩ *الإضافات: ${info.total}*\n`;
+      t += `║➩ *الإصدار: ${info.version}*\n`;
+      t += `║➩ *الوقت: ${info.time}*\n`;
 
       for (const [cat, cmds] of categories) {
         t += `║══ *${cat.toUpperCase()}* ══✧\n`;
@@ -105,15 +88,14 @@ const menuStyles = [
       return t;
     }
   },
-
   {
     render({ title, info, categories, prefix }) {
-      let t = `❀━━━ *MEGA MENU* ━━━❀\n`;
-      t += `┃☞ *Bot: ${info.bot}*\n`;
-      t += `┃☞ *Prefixes: ${info.prefix}*\n`;
-      t += `┃☞ *Plugins: ${info.total}*\n`;
-      t += `┃☞ *Version: ${info.version}*\n`;
-      t += `┃☞ *Time: ${info.time}*\n`;
+      let t = `❀━━━ *قائمة MEGA* ━━━❀\n`;
+      t += `┃☞ *بوت: ${info.bot}*\n`;
+      t += `┃☞ *بادئات الأوامر: ${info.prefix}*\n`;
+      t += `┃☞ *الإضافات: ${info.total}*\n`;
+      t += `┃☞ *الإصدار: ${info.version}*\n`;
+      t += `┃☞ *الوقت: ${info.time}*\n`;
 
       for (const [cat, cmds] of categories) {
         t += `┃━━━〔 *${cat.toUpperCase()}* 〕━❀\n`;
@@ -124,15 +106,14 @@ const menuStyles = [
       return t;
     }
   },
-
   {
     render({ title, info, categories, prefix }) {
-      let t = `◆━━━ *MEGA MENU* ━━━◆\n`;
-      t += `┃ ¤ *Bot: ${info.bot}*\n`;
-      t += `┃ ¤ *Prefixes: ${info.prefix}*\n`;
-      t += `┃ ¤ *Plugins: ${info.total}*\n`;
-      t += `┃ ¤ *Version: ${info.version}*\n`;
-      t += `┃ ¤ *Time: ${info.time}*\n`;
+      let t = `◆━━━ *قائمة MEGA* ━━━◆\n`;
+      t += `┃ ¤ *بوت: ${info.bot}*\n`;
+      t += `┃ ¤ *بادئات الأوامر: ${info.prefix}*\n`;
+      t += `┃ ¤ *الإضافات: ${info.total}*\n`;
+      t += `┃ ¤ *الإصدار: ${info.version}*\n`;
+      t += `┃ ¤ *الوقت: ${info.time}*\n`;
       for (const [cat, cmds] of categories) {
         t += `┃━━ *${cat.toUpperCase()}* ━━◆◆\n`;
         for (const c of cmds)
@@ -142,15 +123,14 @@ const menuStyles = [
       return t;
     }
   },
-
   {
     render({ title, info, categories, prefix }) {
-      let t = `╭───⬣ *MEGA MENU* ──⬣\n`;
-      t += ` | ● *Bot: ${info.bot}*\n`;
-      t += ` | ● *Prefixes: ${info.prefix}*\n`;
-      t += ` | ● *Plugins: ${info.total}*\n`;
-      t += ` | ● *Version: ${info.version}*\n`;
-      t += ` | ● *Time: ${info.time}*\n`;
+      let t = `╭───⬣ *قائمة MEGA* ──⬣\n`;
+      t += ` | ● *بوت: ${info.bot}*\n`;
+      t += ` | ● *بادئات الأوامر: ${info.prefix}*\n`;
+      t += ` | ● *الإضافات: ${info.total}*\n`;
+      t += ` | ● *الإصدار: ${info.version}*\n`;
+      t += ` | ● *الوقت: ${info.time}*\n`;
       for (const [cat, cmds] of categories) {
         t += ` |───⬣ *${cat.toUpperCase()}* ──⬣\n`;
         for (const c of cmds)
@@ -165,7 +145,7 @@ const menuStyles = [
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 module.exports = {
-  command: 'menu',
+  command: 'اوامر',
   aliases: ['help', 'commands', 'h', 'list'],
   category: 'general',
   description: 'Show all commands',
@@ -194,16 +174,16 @@ module.exports = {
       }
 
       const text = 
-`╭━━━━━━━━━━━━━━⬣
-┃ 📌 *COMMAND INFO*
+`━━━━━━━━━━━━━━⬣
+┃ 📌 *معلومات الأمر*
 ┃
-┃ ⚡ *Command:* ${prefix}${cmd.command}
-┃ 📝 *Desc:* ${cmd.description || 'No description'}
-┃ 📖 *Usage:* ${cmd.usage || `${prefix}${cmd.command}`}
-┃ 🏷️ *Category:* ${cmd.category || 'misc'}
-┃ 🔖 *Aliases:* ${cmd.aliases?.length ? cmd.aliases.map(a => prefix + a).join(', ') : 'None'}
+┃ ⚡ *الأمر:* ${prefix}${cmd.command}
+┃ 📝 *الوصف:* ${cmd.description || 'لا يوجد وصف'}
+┃ 📖 *طريقة الاستخدام:* ${cmd.usage || `${prefix}${cmd.command}`}
+┃ 🏷️ *الفئة:* ${cmd.category || 'عام'}
+┃ 🔖 *الأسماء المستعارة:* ${cmd.aliases?.length ? cmd.aliases.map(a => prefix + a).join(', ') : 'لا يوجد'}
 ┃
-╰━━━━━━━━━━━━━━⬣`;
+━━━━━━━━━━━━━━⬣`;
 
       if (fs.existsSync(imagePath)) {
         return sock.sendMessage(chatId, {
@@ -242,18 +222,3 @@ module.exports = {
     }
   }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
