@@ -81,7 +81,7 @@ async function convertBufferToStickerWebp(inputBuffer, isAnimated, cropSquare) {
 
   const json = {
     'sticker-pack-id': crypto.randomBytes(32).toString('hex'),
-    'sticker-pack-name': settings.packname || 'MegaBot',
+    'sticker-pack-name': settings.packname || 'لوسيفر',
     'emojis': ['📸']
   };
   const exifAttr = Buffer.from([0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x41, 0x57, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00]);
@@ -108,7 +108,7 @@ async function convertBufferToStickerWebp(inputBuffer, isAnimated, cropSquare) {
         await img2.load(smallWebp);
         const json2 = {
           'sticker-pack-id': crypto.randomBytes(32).toString('hex'),
-          'sticker-pack-name': settings.packname || 'MegaBot',
+          'sticker-pack-name': settings.packname || 'لوسيفر',
           'emojis': ['📸']
         };
         const exifAttr2 = Buffer.from([0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x41, 0x57, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00]);
@@ -164,7 +164,7 @@ async function fetchBufferFromUrl(url) {
       });
       return Buffer.concat(chunks);
     } catch (e2) {
-      console.error('Both axios download attempts failed:', e1?.message || e1, e2?.message || e2);
+      console.error('محاولتين التنزيل فشلوا:', e1?.message || e1, e2?.message || e2);
       throw e2;
     }
   }
@@ -199,7 +199,7 @@ async function forceMiniSticker(inputBuffer, isVideo, cropSquare) {
   await img.load(smallWebp);
   const json = {
     'sticker-pack-id': crypto.randomBytes(32).toString('hex'),
-    'sticker-pack-name': settings.packname || 'MegaBot',
+    'sticker-pack-name': settings.packname || 'لوسيفر',
     'emojis': ['📸']
   };
   const exifAttr = Buffer.from([0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x41, 0x57, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00]);
@@ -216,11 +216,11 @@ async function forceMiniSticker(inputBuffer, isVideo, cropSquare) {
 }
 
 module.exports = {
-  command: 'igs',
-  aliases: ['igsticker', 'instasticker'],
+  command: 'استيكر_انستا',
+  aliases: ['ستيكر_انست', 'ستيكر_انستا'],
   category: 'stickers',
-  description: 'Convert Instagram post/reel to sticker',
-  usage: '.igs <instagram URL>',
+  description: 'حول بوست أو ريل من انستجرام لستيكر',
+  usage: '.إنستك <لينك انستجرام>',
   
   async handler(sock, message, args, context) {
     const { chatId, channelInfo } = context;
@@ -231,7 +231,7 @@ module.exports = {
       
       if (!urlMatch) {
         await sock.sendMessage(chatId, { 
-          text: `Send an Instagram post/reel link.\nUsage: .igs <url>`,
+          text: `😅 ابعتلي لينك بوست أو ريل من انستجرام.\nالاستخدام: .إنستك <لينك>`,
           ...channelInfo
         }, { quoted: message });
         return;
@@ -242,7 +242,7 @@ module.exports = {
       const downloadData = await igdl(urlMatch[0]).catch(() => null);
       if (!downloadData || !downloadData.data) {
         await sock.sendMessage(chatId, { 
-          text: '❌ Failed to fetch media from Instagram link.',
+          text: '❌ معنديش فكرة عن الوسائط في اللينك ده.',
           ...channelInfo
         }, { quoted: message });
         return;
@@ -260,7 +260,7 @@ module.exports = {
       
       if (items.length === 0) {
         await sock.sendMessage(chatId, { 
-          text: '❌ No media found at the provided link.',
+          text: '❌ مافيش وسائط في اللينك اللي بعته.',
           ...channelInfo
         }, { quoted: message });
         return;
@@ -305,18 +305,9 @@ module.exports = {
             await new Promise(r => setTimeout(r, 800));
           }
         } catch (perItemErr) {
-          console.error('IGS item error:', perItemErr);
+          console.error('حصل خطأ في معالجة عنصر من اللينك:', perItemErr);
         }
       }
 
     } catch (err) {
-      console.error('Error in igs command:', err);
-      await sock.sendMessage(chatId, { 
-        text: 'Failed to create sticker from Instagram link.',
-        ...channelInfo
-      }, { quoted: message });
-    }
-  }
-};
-
-
+      console.error

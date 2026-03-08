@@ -5,11 +5,11 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'invert',
+  command: 'صوره_نيجاتيف',
   aliases: ['negative'],
   category: 'tools',
-  description: 'Convert an image to negative',
-  usage: 'Reply to an image with .invert',
+  description: 'حوّل الصورة لنيجاتيف بسهولة 🔥',
+  usage: 'رد على صورة واكتب .invert',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -21,7 +21,7 @@ module.exports = {
       if (!quoted?.imageMessage) {
         return await sock.sendMessage(
           chatId,
-          { text: '🤍 *Invert Image*\n\nReply to an image to convert it to negative\n\nUsage:\n.invert' },
+          { text: 'حوّل الصورة لنيجاتيف بسهولة 🤍\n\nرد على صورة عشان أحولها نيجاتيف\n\nطريقة الاستخدام:\n.invert' },
           { quoted: message }
         );
       }
@@ -48,7 +48,7 @@ module.exports = {
       );
       fs.unlinkSync(tempFile);
 
-      if (!res?.data) throw new Error('Negative conversion failed');
+      if (!res?.data) throw new Error('فشل تحويل الصورة');
 
       const grayFile = path.join(__dirname, `invert_result_${Date.now()}.jpg`);
       fs.writeFileSync(grayFile, res.data);
@@ -57,7 +57,7 @@ module.exports = {
         chatId,
         {
           image: { url: grayFile },
-          caption: `🤍 *Inverted Image*\n\nProcessed by: MEGA-MD`
+          caption: `الصورة اتحولت لنيجاتيف بنجاح 🤍\n\nتم المعالجة عن طريق لوسيفر 🔥`
         },
         { quoted: message }
       );
@@ -67,7 +67,7 @@ module.exports = {
       console.error('Invert Plugin Error:', err);
       await sock.sendMessage(
         chatId,
-        { text: '❌ Failed to convert image to sepia. Make sure the image is clear and try again.' },
+        { text: 'معرفتش أحول الصورة لنيجاتيف دلوقتي 😓 اتأكد إن الصورة واضحة وجرب تاني' },
         { quoted: message }
       );
     }

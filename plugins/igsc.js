@@ -57,7 +57,7 @@ async function convertBufferToStickerWebp(inputBuffer, isAnimated, cropSquare) {
 
   const json = {
     'sticker-pack-id': crypto.randomBytes(32).toString('hex'),
-    'sticker-pack-name': settings.packname || 'MegaBot',
+    'sticker-pack-name': settings.packname || 'لوسيفر',
     'emojis': ['📸']
   };
   const exifAttr = Buffer.from([0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x41, 0x57, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00]);
@@ -88,11 +88,11 @@ async function fetchBufferFromUrl(url) {
 }
 
 module.exports = {
-  command: 'igsc',
+  command: 'بوست_انستا_لاستيكر_2',
   aliases: ['igstickercrop', 'instacrop'],
   category: 'stickers',
-  description: 'Convert Instagram post/reel to cropped sticker',
-  usage: '.igsc <instagram URL>',
+  description: 'حول بوست أو ريل إنستجرام لستيكر مقصوص 🔥',
+  usage: '.igsc <لينك الانستجرام>',
   
   async handler(sock, message, args, context) {
     const { chatId, channelInfo } = context;
@@ -103,7 +103,7 @@ module.exports = {
       
       if (!urlMatch) {
         await sock.sendMessage(chatId, { 
-          text: `Send an Instagram post/reel link.\nUsage: .igsc <url>`,
+          text: `ابعتلنا لينك بوست أو ريل من إنستجرام 😎\nطريقة الاستخدام: .igsc <لينك>`,
           ...channelInfo
         }, { quoted: message });
         return;
@@ -114,7 +114,7 @@ module.exports = {
       const downloadData = await igdl(urlMatch[0]).catch(() => null);
       if (!downloadData || !downloadData.data) {
         await sock.sendMessage(chatId, { 
-          text: '❌ Failed to fetch media from Instagram link.',
+          text: '❌ معملش تحميل للوسائط من لينك الانستجرام 😓',
           ...channelInfo
         }, { quoted: message });
         return;
@@ -132,7 +132,7 @@ module.exports = {
       
       if (items.length === 0) {
         await sock.sendMessage(chatId, { 
-          text: '❌ No media found at the provided link.',
+          text: '❌ مفيش ميديا في اللينك ده 😢',
           ...channelInfo
         }, { quoted: message });
         return;
@@ -170,7 +170,7 @@ module.exports = {
     } catch (err) {
       console.error('Error in igsc command:', err);
       await sock.sendMessage(chatId, { 
-        text: 'Failed to create cropped sticker from Instagram link.',
+        text: '❌ معملش تحويل للستيكير من لينك الانستجرام 😅',
         ...channelInfo
       }, { quoted: message });
     }

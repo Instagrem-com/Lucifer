@@ -1,52 +1,56 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-  command: 'imdb',
+  command: 'معلومات_عن_فيلم',
   aliases: ['movie', 'film'],
   category: 'info',
-  description: 'Get detailed information about a movie or series from IMDB',
-  usage: '.imdb <movie/series title>',
+  description: 'جيبلك كل التفاصيل عن فيلم أو مسلسل من IMDB 🔥',
+  usage: '.imdb <اسم الفيلم/المسلسل>',
+  
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
     const text = args.join(' ').trim();
 
     if (!text) {
       await sock.sendMessage(chatId, { 
-        text: '*Please provide a movie or series title.*\nExample: `.imdb Inception`', 
+        text: 'ابعتلي اسم الفيلم أو المسلسل عشان أجيبلك التفاصيل 😎\nمثال: `.imdb Inception`', 
         quoted: message 
       });
       return;
     }
+
     try {
       const res = await fetch(`https://api.popcat.xyz/imdb?q=${encodeURIComponent(text)}`);
-      if (!res.ok) throw new Error(`API request failed with status ${res.status}`);
+      if (!res.ok) throw new Error(`API معملش رد صح وحالته ${res.status}`);
       const json = await res.json();
+
       const ratings = (json.ratings || [])
-        .map(r => `⭐ *${r.source}:* ${r.value}`)
-        .join('\n') || 'No ratings available';
+        .map(r => `⭐ ${r.source}: ${r.value}`)
+        .join('\n') || 'مفيش تقييمات متاحة 😅';
 
       const movieInfo = `
-🎬 *${json.title || 'N/A'}* (${json.year || 'N/A'})
-🎭 *Genres:* ${json.genres || 'N/A'}
-📺 *Type:* ${json.type || 'N/A'}
-📝 *Plot:* ${json.plot || 'N/A'}
-⭐ *IMDB Rating:* ${json.rating || 'N/A'} (${json.votes || 'N/A'} votes)
-🏆 *Awards:* ${json.awards || 'N/A'}
-🎬 *Director:* ${json.director || 'N/A'}
-✍️ *Writer:* ${json.writer || 'N/A'}
-👨‍👩‍👧‍👦 *Actors:* ${json.actors || 'N/A'}
-⏱️ *Runtime:* ${json.runtime || 'N/A'}
-📅 *Released:* ${json.released || 'N/A'}
-🌐 *Country:* ${json.country || 'N/A'}
-🗣️ *Languages:* ${json.languages || 'N/A'}
-💰 *Box Office:* ${json.boxoffice || 'N/A'}
-💽 *DVD Release:* ${json.dvd || 'N/A'}
-🏢 *Production:* ${json.production || 'N/A'}
-🔗 *Website:* ${json.website || 'N/A'}
+${json.title || 'N/A'} 🎬 (${json.year || 'N/A'})
+النوع 🎭: ${json.genres || 'N/A'}
+النوعية 📺: ${json.type || 'N/A'}
+القصة 📝: ${json.plot || 'N/A'}
+تقييم IMDB ⭐: ${json.rating || 'N/A'} (${json.votes || 'N/A'} صوت)
+الجوائز 🏆: ${json.awards || 'N/A'}
+المخرج 🎬: ${json.director || 'N/A'}
+الكاتب ✍️: ${json.writer || 'N/A'}
+النجوم 👨‍👩‍👧‍👦: ${json.actors || 'N/A'}
+مدة العرض ⏱️: ${json.runtime || 'N/A'}
+تاريخ الإصدار 📅: ${json.released || 'N/A'}
+الدولة 🌐: ${json.country || 'N/A'}
+اللغات 🗣️: ${json.languages || 'N/A'}
+إيرادات 💰: ${json.boxoffice || 'N/A'}
+إصدار DVD 💽: ${json.dvd || 'N/A'}
+الإنتاج 🏢: ${json.production || 'N/A'}
+الموقع 🔗: ${json.website || 'N/A'}
 
-*Ratings:*
+التقييمات:
 ${ratings}
       `.trim();
+
       if (json.poster) {
         await sock.sendMessage(chatId, { 
           image: { url: json.poster }, 
@@ -56,13 +60,13 @@ ${ratings}
       } else {
         await sock.sendMessage(chatId, { text: movieInfo, quoted: message });
       }
+
     } catch (error) {
       console.error('IMDB Command Error:', error);
       await sock.sendMessage(chatId, { 
-        text: '❌ Failed to fetch movie information. Please try again later.', 
+        text: '❌ معملش تحميل معلومات الفيلم دلوقتي 😓 جرب تاني بعد شويه', 
         quoted: message 
       });
     }
   }
 };
-

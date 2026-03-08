@@ -12,11 +12,11 @@ function extractUniqueMedia(mediaData = []) {
 }
 
 module.exports = {
-  command: 'instagram',
+  command: 'انستا',
   aliases: ['ig', 'igdl', 'insta'],
   category: 'download',
-  description: 'Download Instagram posts, reels & videos',
-  usage: '.ig <instagram link>',
+  description: 'حمّل بوستات ورييلز وفيديوهات إنستجرام بسهولة 🔥',
+  usage: '.ig <لينك الانستجرام>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -33,21 +33,22 @@ module.exports = {
       if (!text) {
         return await sock.sendMessage(
           chatId,
-          { text: '📸 *Instagram Downloader*\n\nUsage:\n.ig <post | reel | video link>' },
+          { text: 'حمّل من إنستجرام بسهولة 📸\n\nطريقة الاستخدام:\n.ig <لينك بوست أو ريل>' },
           { quoted: message }
         );
       }
-        
+
       const igRegex =
         /https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/(p|reel|tv)\//i;
 
       if (!igRegex.test(text)) {
         return await sock.sendMessage(
           chatId,
-          { text: '❌ Invalid Instagram link.\nPlease send a valid post, reel, or video URL.' },
+          { text: 'اللينك ده مش صحيح 😅 ابعت لينك بوست أو ريل من إنستجرام' },
           { quoted: message }
         );
       }
+
       await sock.sendMessage(chatId, {
         react: { text: '🔄', key: message.key }
       });
@@ -57,7 +58,7 @@ module.exports = {
       if (!res?.data?.length) {
         return await sock.sendMessage(
           chatId,
-          { text: '❌ No media found.\nThe post may be private or unavailable.' },
+          { text: 'ملقتش ميديا في اللينك ده 😓 ممكن يكون البوست برايفت أو اتمسح' },
           { quoted: message }
         );
       }
@@ -67,7 +68,7 @@ module.exports = {
       if (!mediaList.length) {
         return await sock.sendMessage(
           chatId,
-          { text: '❌ No downloadable media found.' },
+          { text: 'ملقتش ميديا قابلة للتحميل من اللينك ده 😢' },
           { quoted: message }
         );
       }
@@ -88,7 +89,7 @@ module.exports = {
             {
               video: { url },
               mimetype: 'video/mp4',
-              caption: '📥 *Downloaded by MEGA-MD*'
+              caption: 'اتحمل من البوت لوسيفر بنجاح 🔥'
             },
             { quoted: message }
           );
@@ -97,7 +98,7 @@ module.exports = {
             chatId,
             {
               image: { url },
-              caption: '📥 *Downloaded by MEGA-MD*'
+              caption: 'اتحملت من البوت لوسيفر بنجاح 🔥'
             },
             { quoted: message }
           );
@@ -112,7 +113,7 @@ module.exports = {
       console.error('Instagram plugin error:', err);
       await sock.sendMessage(
         chatId,
-        { text: '❌ Failed to download Instagram media. Please try again later.' },
+        { text: 'معرفتش أحمل الميديا من إنستجرام دلوقتي 😓 جرب تاني بعد شوية' },
         { quoted: message }
       );
     }

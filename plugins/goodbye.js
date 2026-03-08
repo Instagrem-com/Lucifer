@@ -37,7 +37,7 @@ async function handleLeaveEvent(sock, id, participants) {
                     .replace(/{user}/g, `@${displayName}`)
                     .replace(/{group}/g, groupName);
             } else {
-                finalMessage = `*@${displayName}* we will never miss you!`;
+                finalMessage = `@${displayName} خرج من الجروب ومحدش هيفتقده 😏`;
             }
             
             try {
@@ -59,7 +59,10 @@ async function handleLeaveEvent(sock, id, participants) {
                     
                     await sock.sendMessage(id, {
                         image: imageBuffer,
-                        caption: finalMessage,
+                        caption:
+`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+
+${finalMessage} 👋`,
                         mentions: [participantString]
                     });
                     continue;
@@ -69,7 +72,10 @@ async function handleLeaveEvent(sock, id, participants) {
             }
             
             await sock.sendMessage(id, {
-                text: finalMessage,
+                text:
+`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+
+${finalMessage} 👋`,
                 mentions: [participantString]
             });
         } catch (error) {
@@ -83,11 +89,14 @@ async function handleLeaveEvent(sock, id, participants) {
                     .replace(/{user}/g, `@${user}`)
                     .replace(/{group}/g, groupName);
             } else {
-                fallbackMessage = `Goodbye @${user}! 👋`;
+                fallbackMessage = `@${user} خرج من الجروب خلاص 👋`;
             }
             
             await sock.sendMessage(id, {
-                text: fallbackMessage,
+                text:
+`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+
+${fallbackMessage}`,
                 mentions: [participantString]
             });
         }
@@ -95,11 +104,11 @@ async function handleLeaveEvent(sock, id, participants) {
 }
 
 module.exports = {
-    command: 'goodbye',
-    aliases: ['bye', 'leave'],
+    command: 'رسال_الوداع',
+    aliases: ['وداع', 'خروج'],
     category: 'admin',
-    description: 'Configure goodbye messages for leaving members',
-    usage: '.goodbye <on|off|set message>',
+    description: 'إعداد رسالة وداع للأعضاء اللي بيخرجوا من الجروب',
+    usage: '.الوداع <تشغيل | ايقاف | تعيين رسالة>',
     groupOnly: true,
     adminOnly: true,
 

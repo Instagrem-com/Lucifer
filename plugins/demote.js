@@ -20,15 +20,15 @@ async function handleDemotionEvent(sock, groupId, participants, author) {
             demotedBy = `@${authorJid.split('@')[0]}`;
             mentionList.push(authorJid);
         } else {
-            demotedBy = 'System';
+            demotedBy = 'النظام';
         }
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const demotionMessage = `*『 GROUP DEMOTION 』*\n\n` +
-            `👤 *Demoted User${participants.length > 1 ? 's' : ''}:*\n` +
-            `${demotedUsernames.map(name => `• ${name}`).join('\n')}\n\n` +
-            `👑 *Demoted By:* ${demotedBy}\n\n` +
-            `📅 *Date:* ${new Date().toLocaleString()}`;
+        const demotionMessage = `*⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠*\n\n` +
+            `*الاعضاء اللي اتشال منهم الادمن:*\n` +
+            `${demotedUsernames.map(name => `• ${name}`).join('\n')} 😈\n\n` +
+            `*بواسطة:* ${demotedBy} 👑\n\n` +
+            `*التاريخ:* ${new Date().toLocaleString()} 📅`;
         
         await sock.sendMessage(groupId, {
             text: demotionMessage,
@@ -43,11 +43,11 @@ async function handleDemotionEvent(sock, groupId, participants, author) {
 }
 
 module.exports = {
-    command: 'demote',
-    aliases: ['dmt', 'removeadmin'],
+    command: 'تنزيل',
+    aliases: ['نزل', 'شيل_ادمن'],
     category: 'admin',
-    description: 'Demote user(s) from admin to member',
-    usage: '.demote @user or reply to message',
+    description: 'تنزيل عضو من ادمن لعضو عادي',
+    usage: '.تنزيل @الشخص او رد على رسالته',
     groupOnly: true,
     adminOnly: true,
 
@@ -57,7 +57,7 @@ module.exports = {
 
         if (!isBotAdmin) {
             await sock.sendMessage(chatId, { 
-                text: '❌ *Please make the bot an admin first*'
+                text: '*ارفع البوت ادمن الاول يا صاحبي* ❌'
             }, { quoted: message });
             return;
         }
@@ -74,7 +74,7 @@ module.exports = {
         
         if (userToDemote.length === 0) {
             await sock.sendMessage(chatId, { 
-                text: '❌ *Please mention a user or reply to their message*\n\nUsage: `.demote @user` or reply with `.demote`'
+                text: '*منشن الشخص الاول او اعمل رد على رسالته عشان اعرف انزله*\n\nالاستخدام: `.تنزيل @الشخص` ❌'
             }, { quoted: message });
             return;
         }
@@ -89,11 +89,11 @@ module.exports = {
             
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const demotionMessage = `*『 GROUP DEMOTION 』*\n\n` +
-                `👤 *Demoted User${userToDemote.length > 1 ? 's' : ''}:*\n` +
-                `${usernames.map(name => `• ${name}`).join('\n')}\n\n` +
-                `👑 *Demoted By:* @${message.key.participant ? message.key.participant.split('@')[0] : message.key.remoteJid.split('@')[0]}\n\n` +
-                `📅 *Date:* ${new Date().toLocaleString()}`;
+            const demotionMessage = `*⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠*\n\n` +
+                `*العضو اللي اتشال من الادمن:*\n` +
+                `${usernames.map(name => `• ${name}`).join('\n')} 😈\n\n` +
+                `*بواسطة:* @${message.key.participant ? message.key.participant.split('@')[0] : message.key.remoteJid.split('@')[0]} 👑\n\n` +
+                `*التاريخ:* ${new Date().toLocaleString()} 📅`;
             
             await sock.sendMessage(chatId, { 
                 text: demotionMessage,
@@ -105,7 +105,7 @@ module.exports = {
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 try {
                     await sock.sendMessage(chatId, { 
-                        text: '❌ *Rate limit reached*\n\nPlease try again in a few seconds.'
+                        text: '*البوت مضغوط شوية دلوقتي جرب كمان شوية* ⏳'
                     }, { quoted: message });
                 } catch (retryError) {
                     console.error('Error sending retry message:', retryError);
@@ -113,7 +113,7 @@ module.exports = {
             } else {
                 try {
                     await sock.sendMessage(chatId, { 
-                        text: '❌ *Failed to demote user(s)*\n\nMake sure the bot has sufficient permissions.'
+                        text: '*معرفتش انزله من الادمن يمكن البوت مش اعلى منه* ❌'
                     }, { quoted: message });
                 } catch (sendError) {
                     console.error('Error sending error message:', sendError);

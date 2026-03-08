@@ -1,16 +1,16 @@
 module.exports = {
-  command: 'getpp',
-  aliases: ['dlpp', 'profilepic', 'getdp'],
+  command: 'صوره_بروفايل',
+  aliases: ['getpp', 'بروفايل', 'جيب_الصوره'],
   category: 'general',
-  description: 'Get user profile picture',
-  usage: '.getpp @user or reply or number',
+  description: 'جلب صورة بروفايل المستخدم',
+  usage: '.الصوره @الشخص او رد على رسالته او الرقم',
 
   async handler(sock, message, args, context = {}) {
     const chatId = message.key.remoteJid;
     const isGroup = chatId.endsWith('@g.us');
 
     let target;
-    let displayName = 'Unknown';
+    let displayName = 'غير معروف';
     let displayNumber = '';
 
     const quoted = message.message?.extendedTextMessage?.contextInfo;
@@ -26,7 +26,7 @@ module.exports = {
         target = input + '@s.whatsapp.net';
       } else {
         return await sock.sendMessage(chatId, { 
-          text: '❌ Invalid number. Use format: 923051234567 or +923051234567' 
+          text: '*الرقم اللي كتبته مش صحيح اكتب الرقم كامل* ❌' 
         }, { quoted: message });
       }
     } else {
@@ -47,7 +47,7 @@ module.exports = {
       const cleanNumber = realJid.replace(/@s\.whatsapp\.net|@lid/g, '').split(':')[0];
       displayNumber = `+${cleanNumber}`;
 
-      if (displayName === 'Unknown') {
+      if (displayName === 'غير معروف') {
         try {
           const name = await sock.getName(realJid);
           if (name && !name.startsWith('+')) displayName = name;
@@ -59,21 +59,28 @@ module.exports = {
         ppUrl = await sock.profilePictureUrl(realJid, 'image');
       } catch (e) {
         return await sock.sendMessage(chatId, { 
-          text: `❌ No profile picture found for *${displayName}* (${displayNumber})` 
+          text: `*مفيش صورة بروفايل للشخص دا* (${displayNumber}) ❌` 
         }, { quoted: message });
       }
 
       if (ppUrl) {
         await sock.sendMessage(chatId, { 
           image: { url: ppUrl },
-          caption: `📸 *Profile Picture*\n\n👤 *Name:* ${displayName}\n📱 *Number:* ${displayNumber}`
+          caption:
+`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+
+اسم الشخص:
+${displayName} 👤
+
+رقم الشخص:
+${displayNumber} 📱`
         }, { quoted: message });
       }
 
     } catch (error) {
       console.error('GetPP Error:', error);
       await sock.sendMessage(chatId, { 
-        text: '❌ Failed to fetch profile picture.' 
+        text: '*حصل مشكلة و معرفتش اجيب صورة البروفايل* ❌' 
       }, { quoted: message });
     }
   }

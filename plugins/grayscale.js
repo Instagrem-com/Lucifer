@@ -5,11 +5,11 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'grayscale',
-  aliases: ['gray', 'grey'],
+  command: 'صوره_لاسود_وابيض',
+  aliases: ['رمادي', 'تحويل_رمادي'],
   category: 'tools',
-  description: 'Convert an image to grayscale',
-  usage: 'Reply to an image with .grayscale',
+  description: 'تحويل الصورة إلى أبيض وأسود',
+  usage: 'اعمل رد على صورة واكتب .ابيض_واسود',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -21,7 +21,15 @@ module.exports = {
       if (!quoted?.imageMessage) {
         return await sock.sendMessage(
           chatId,
-          { text: '🖤 *Grayscale Image*\n\nReply to an image to convert it to grayscale\n\nUsage:\n.grayscale' },
+          { 
+text:
+`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+
+اعمل رد على صورة عشان احولها ابيض واسود 🖤
+
+الاستخدام:
+.ابيض_واسود`
+          },
           { quoted: message }
         );
       }
@@ -57,7 +65,10 @@ module.exports = {
         chatId,
         {
           image: { url: grayFile },
-          caption: `🖤 *Grayscale Image*\n\nProcessed by: MEGA-MD`
+          caption:
+`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+
+تم تحويل الصورة لابيض واسود بنجاح 🖤`
         },
         { quoted: message }
       );
@@ -67,7 +78,12 @@ module.exports = {
       console.error('Grayscale Plugin Error:', err);
       await sock.sendMessage(
         chatId,
-        { text: '❌ Failed to convert image to grayscale. Make sure the image is clear and try again.' },
+        { 
+text:
+`⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
+
+حصل مشكلة و معرفتش احول الصورة حاول تاني ❌`
+        },
         { quoted: message }
       );
     }

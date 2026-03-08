@@ -1,9 +1,9 @@
 module.exports = {
-  command: 'groupinfo',
-  aliases: ['ginfo', 'gcinfo', 'infogroup'],
+  command: 'معلومات_الجروب',
+  aliases: ['معلومات', 'معلومات_القروب', 'جروب_انفو'],
   category: 'group',
-  description: 'Display detailed group information',
-  usage: '.groupinfo',
+  description: 'عرض معلومات الجروب بالكامل',
+  usage: '.معلومات_الجروب',
   groupOnly: true,
   
   async handler(sock, message, args, context) {
@@ -26,20 +26,27 @@ module.exports = {
       const owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || chatId.split('-')[0] + '@s.whatsapp.net';
       
       const text = `
-┌──「 *INFO GROUP* 」
-▢ *♻️ID:*
-   • ${groupMetadata.id}
-▢ *🔖NAME* : 
-• ${groupMetadata.subject}
-▢ *👥Members* :
-• ${participants.length}
-▢ *🤿Group Owner:*
-• @${owner.split('@')[0]}
-▢ *🕵🏻‍♂️Admins:*
-${listAdmin}
+⎝⎝⛥ 𝐋𝐔𝐂𝐈𝐅𝐄𝐑 ⛥⎠⎠
 
-▢ *📌Description* :
-   • ${groupMetadata.desc?.toString() || 'No description'}
+معلومات الجروب 🏷️
+
+ايدي الجروب:
+${groupMetadata.id} 🆔
+
+اسم الجروب:
+${groupMetadata.subject} 📛
+
+عدد الاعضاء:
+${participants.length} 👥
+
+صاحب الجروب:
+@${owner.split('@')[0]} 👑
+
+المشرفين:
+${listAdmin} 🛡️
+
+وصف الجروب:
+${groupMetadata.desc?.toString() || 'مفيش وصف للجروب'} 📌
 `.trim();
 
       await sock.sendMessage(chatId, {
@@ -52,7 +59,7 @@ ${listAdmin}
     } catch (error) {
       console.error('Error in groupinfo command:', error);
       await sock.sendMessage(chatId, { 
-        text: 'Failed to get group info!',
+        text: 'معرفتش اجيب معلومات الجروب دلوقتي حاول تاني ❌',
         ...channelInfo
       }, { quoted: message });
     }

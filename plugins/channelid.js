@@ -27,7 +27,7 @@ module.exports = {
 
       const metadata = await sock.newsletterMetadata("invite", code);
 
-      const response = `*The ID BY" ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪ \n ${metadata.id}
+      const response = `*The ID BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪ \n ${metadata.id}
       `.trim();
 
       await sock.sendMessage(chatId, { text: response }, { quoted: message });
