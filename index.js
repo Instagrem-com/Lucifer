@@ -73,10 +73,10 @@ setInterval(() => {
     }
 }, 30_000);
 
-let phoneNumber = global.PAIRING_NUMBER || process.env.PAIRING_NUMBER || "923051391005";
+let phoneNumber = global.PAIRING_NUMBER || process.env.PAIRING_NUMBER || "201226943082";
 let owner = JSON.parse(fs.readFileSync('./data/owner.json'));
 
-global.botname = process.env.BOT_NAME || "MEGA-MD";
+global.botname = process.env.BOT_NAME || "✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪";
 global.themeemoji = "•";
 
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code");
@@ -343,8 +343,8 @@ async function startQasimDev() {
                                 forwardingScore: 1,
                                 isForwarded: true,
                                 forwardedNewsletterMessageInfo: {
-                                    newsletterJid: '120363319098372999@newsletter',
-                                    newsletterName: 'MEGA MD',
+                                    newsletterJid: '120363425019719202@newsletter',
+                                    newsletterName: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
                                     serverMessageId: -1
                                 }
                             }
@@ -406,7 +406,7 @@ async function startQasimDev() {
                 phoneNumberInput = process.env.PAIRING_NUMBER;
                 printLog('info', `Using phone number from environment: ${phoneNumberInput}`);
             } else if (rl && !rl.closed) {
-                phoneNumberInput = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFormat: 6281376552730 (without + or spaces) : `)));
+                phoneNumberInput = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFormat: 201501728150 (without + or spaces) : `)));
             } else {
                 phoneNumberInput = phoneNumber;
                 printLog('info', `Using default phone number: ${phoneNumberInput}`);
@@ -481,13 +481,13 @@ async function startQasimDev() {
                     const ghostStatus = (ghostMode && ghostMode.enabled) ? '\n👻 Stealth Mode: ACTIVE' : '';
                     
                     await QasimDev.sendMessage(botNumber, {
-                        text: `🤖 Bot Connected Successfully!\n\n⏰ Time: ${new Date().toLocaleString()}\n✅ Status: Online and Ready!${ghostStatus}\n\n✅Make sure to join below channel`,
+                        text: `⚡ بــوت عـمـگ لـوسـيـفـࢪ اونلايـن ⚡\n\n⏰ وقـت الاتـصـال ⏰ ${new Date().toLocaleString()}\n\nالحالة : جاهز للشغل ياحب 👀❤️${ghostStatus}\n\n اشـتـرک ف الـقـنـاة يـاحـب 👇🏼❤️✨`,
                         contextInfo: {
                             forwardingScore: 1,
                             isForwarded: true,
                             forwardedNewsletterMessageInfo: {
-                                newsletterJid: '120363319098372999@newsletter',
-                                newsletterName: 'MEGA MD',
+                                newsletterJid: '120363425019719202@newsletter',
+                                newsletterName: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
                                 serverMessageId: -1
                             }
                         }
@@ -497,13 +497,13 @@ async function startQasimDev() {
                 }
 
                  await delay(1999);
-                console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'MEGA-MD'} ]`)}\n\n`));
+                console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪'} ]`)}\n\n`));
                 console.log(chalk.cyan(`< ================================================== >`));
-                console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: GlobalTechInfo`));
-                console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: GlobalTechInfo`));
+                console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`));
+                console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`));
                 console.log(chalk.magenta(`${global.themeemoji || '•'} WA NUMBER: ${owner}`));
-                console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: Qasim Ali`));
-                console.log(chalk.green(`${global.themeemoji || '•'} 🤖 Bot Connected Successfully! ✅`));
+                console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`));
+                console.log(chalk.green(`${global.themeemoji || '•'} الـبـوت مـتـصـل ⚡`));
                 console.log(chalk.blue(`Bot Version: ${settings.version}`));
                 console.log(chalk.cyan(`Loaded Commands: ${commandHandler.commands.size}`));
                 console.log(chalk.cyan(`Prefixes: ${settings.prefixes.join(', ')}`));
@@ -566,7 +566,7 @@ async function startQasimDev() {
 
 
 async function main() {
-    printLog('info', 'Starting MEGA MD BOT...');
+    printLog('info', 'Starting Lucifer BOT...');
     
     const sessionReady = await initializeSession();
     
