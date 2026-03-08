@@ -5,7 +5,7 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'صوره_نيجاتيف',
+  command: 'invert',
   aliases: ['negative'],
   category: 'tools',
   description: 'حوّل الصورة لنيجاتيف بسهولة 🔥',

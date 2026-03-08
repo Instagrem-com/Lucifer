@@ -1,9 +1,9 @@
 module.exports = {
-    command: 'kick',
-    aliases: ['remove', 'fire'],
+    command: 'طرد',
+    aliases: ['انطر', 'fire'],
     category: 'admin',
-    description: 'Remove user(s) from the group',
-    usage: '.kick @user or reply to message',
+    description: 'طرد عضو أو أكتر من الجروب بسهولة 🔥',
+    usage: '.kick @user أو رد على رسالة العضو',
     groupOnly: true,
     adminOnly: true,
 
@@ -13,7 +13,7 @@ module.exports = {
 
         if (!isBotAdmin) {
             await sock.sendMessage(chatId, { 
-                text: '❌ *Please make the bot an admin first*' 
+                text: 'لازم تخليني أدمن الأول عشان أعرف أطرد حد 😅' 
             }, { quoted: message });
             return;
         }
@@ -30,7 +30,7 @@ module.exports = {
         
         if (usersToKick.length === 0) {
             await sock.sendMessage(chatId, { 
-                text: '❌ *Please mention a user or reply to their message*\n\nUsage: `.kick @user` or reply with `.kick`'
+                text: 'منشن الشخص اللي عايز تطرده أو رد على رسالته 😎\n\nالاستخدام:\n.kick @user أو رد على الرسالة واكتب .kick'
             }, { quoted: message });
             return;
         }
@@ -100,7 +100,7 @@ module.exports = {
 
         if (isTryingToKickBot) {
             await sock.sendMessage(chatId, { 
-                text: "❌ *I can't kick myself* 🤖"
+                text: "مش هطرد نفسي يعني 😏"
             }, { quoted: message });
             return;
         }
@@ -113,13 +113,14 @@ module.exports = {
             }));
             
             await sock.sendMessage(chatId, { 
-                text: `🚫 *User${usersToKick.length > 1 ? 's' : ''} Removed*\n\n${usernames.join(', ')} has been kicked from the group!`,
+                text: `العضو${usersToKick.length > 1 ? 'ات' : ''} اترموا برا الجروب بنجاح 🚫\n\n${usernames.join(', ')}`,
                 mentions: usersToKick
             }, { quoted: message });
+
         } catch (error) {
             console.error('Error in kick command:', error);
             await sock.sendMessage(chatId, { 
-                text: '❌ *Failed to kick user(s)*\n\nMake sure the bot has sufficient permissions.'
+                text: 'معرفتش أطرد العضو دلوقتي 😓 اتأكد إن عندي صلاحيات كفاية'
             }, { quoted: message });
         }
     }

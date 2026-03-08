@@ -2,11 +2,11 @@ const { File } = require('megajs');
 const path = require('path');
 
 module.exports = {
-    command: 'mega',
-    aliases: ['megadl'],
-    category: 'download',
-    description: 'Download from MEGA with real-time progress',
-    usage: '.mega <mega-url>',
+    command: 'ميجا',
+    aliases: ['megadl', 'ميجادل'],
+    category: 'تحميل',
+    description: 'يحمل الملفات من MEGA مع شريط تقدم لحظي',
+    usage: '.ميجا <رابط ميجا>',
 
     async handler(sock, message, args, context = {}) {
         const { chatId } = context;
@@ -14,7 +14,7 @@ module.exports = {
 
         if (!text) {
             return await sock.sendMessage(chatId, { 
-                text: `*Usage:* .mega https://mega.nz/file/xxxx#xxxx` 
+                text: "ابعت رابط ميجا عشان أحمل الملف ليك ❌\n\nمثال:\n.ميجا https://mega.nz/file/xxxx#xxxx"
             }, { quoted: message });
         }
 
@@ -23,11 +23,11 @@ module.exports = {
             await file.loadAttributes();
 
             if (file.size >= 500 * 1024 * 1024) {
-                return await sock.sendMessage(chatId, { text: '❌ *Error:* File too large (Limit: 500MB)' }, { quoted: message });
+                return await sock.sendMessage(chatId, { text: '❌ الملف كبير قوي! الحد الأقصى 500MB' }, { quoted: message });
             }
 
             const { key } = await sock.sendMessage(chatId, { 
-                text: `🌩️ *MEGA DOWNLOAD*\n\n▢ *File:* ${file.name}\n▢ *Size:* ${this.formatBytes(file.size)}\n\n*Progress:* 0% [░░░░░░░░░░]` 
+                text: `🌩️ *تحميل MEGA*\n\n▢ *الملف:* ${file.name}\n▢ *الحجم:* ${this.formatBytes(file.size)}\n\n*التقدم:* 0% [░░░░░░░░░░]` 
             }, { quoted: message });
 
             const stream = file.download();
@@ -41,7 +41,7 @@ module.exports = {
                 if (Date.now() - lastUpdate > 3000 || percentage === 100) {
                     const bar = this.generateBar(percentage);
                     await sock.sendMessage(chatId, { 
-                        text: `🌩️ *MEGA DOWNLOAD*\n\n▢ *File:* ${file.name}\n▢ *Size:* ${this.formatBytes(bytesTotal)}\n\n*Progress:* ${percentage}% [${bar}]`,
+                        text: `🌩️ *تحميل MEGA*\n\n▢ *الملف:* ${file.name}\n▢ *الحجم:* ${this.formatBytes(bytesTotal)}\n\n*التقدم:* ${percentage}% [${bar}]`,
                         edit: key 
                     });
                     lastUpdate = Date.now();
@@ -63,23 +63,23 @@ module.exports = {
                     document: buffer,
                     fileName: file.name,
                     mimetype: mimeTypes[ext] || 'application/octet-stream',
-                    caption: `✅ *Download Complete*\n▢ *File:* ${file.name}\n▢ *Size:* ${this.formatBytes(file.size)}`
+                    caption: `✅ تم تحميل الملف بنجاح!\n▢ *الملف:* ${file.name}\n▢ *الحجم:* ${this.formatBytes(file.size)}`
                 }, { quoted: message });
             });
 
             stream.on('error', async (err) => {
-                await sock.sendMessage(chatId, { text: `❌ *Download Error:* ${err.message}` });
+                await sock.sendMessage(chatId, { text: `❌ حصل خطأ أثناء التحميل: ${err.message}` });
             });
 
         } catch (error) {
-            await sock.sendMessage(chatId, { text: `❌ *Error:* ${error.message}` });
+            await sock.sendMessage(chatId, { text: `❌ حصل خطأ: ${error.message}` });
         }
     },
 
     formatBytes(bytes) {
-        if (bytes === 0) return '0 Bytes';
+        if (bytes === 0) return '0 بايت';
         const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const sizes = ['بايت', 'KB', 'MB', 'GB', 'TB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     },
@@ -90,4 +90,3 @@ module.exports = {
         return '█'.repeat(filledBars) + '░'.repeat(totalBars - filledBars);
     }
 };
-          

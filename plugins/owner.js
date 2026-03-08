@@ -1,12 +1,12 @@
 const settings = require('../settings');
 
 module.exports = {
-  command: 'owner',
-  aliases: ['creator'],
-  category: 'info',
-  description: 'Get the contact of the bot owner',
-  usage: '.owner',
-  async handler(sock, message, args, context = {}) {
+  command: 'المطور',
+  aliases: ['صاحب_البوت', 'owner', 'creator'],
+  category: 'معلومات',
+  description: 'جيبلك رقم واتساب صاحب البوت',
+  usage: '.المطور',
+  async handler(sock, message, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
     try {
       const vcard = `
@@ -16,13 +16,19 @@ FN:${settings.botOwner}
 TEL;waid=${settings.ownerNumber}:${settings.ownerNumber}
 END:VCARD
       `.trim();
+
       await sock.sendMessage(chatId, {
-        contacts: { displayName: settings.botOwner, contacts: [{ vcard }] },
+        contacts: { 
+          displayName: `${settings.botOwner}`, 
+          contacts: [{ vcard }] 
+        },
+        caption: `📲 تقدر تتواصل مع المطور دا على الواتساب!`
       }, { quoted: message });
+
     } catch (error) {
       console.error('Owner Command Error:', error);
       await sock.sendMessage(chatId, {
-        text: '❌ Failed to fetch owner contact.'
+        text: '❌ حصل مشكلة في جلب رقم صاحب البوت.'
       }, { quoted: message });
     }
   }

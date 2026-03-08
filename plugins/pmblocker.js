@@ -9,32 +9,24 @@ const HAS_DB = !!(MONGO_URL || POSTGRES_URL || MYSQL_URL || SQLITE_URL);
 
 const PMBLOCKER_PATH = './data/pmblocker.json';
 
-const DEFAULT_MESSAGE = '⚠️ Direct messages are blocked!\nYou cannot DM this bot. Please contact the owner in group chats only.';
+const DEFAULT_MESSAGE = '⚠️ متقدرش تبعتلي رسالة على الخاص! اتواصل معايا بس في الجروبات.';
 
 async function readState() {
     try {
         if (HAS_DB) {
             const data = await store.getSetting('global', 'pmblocker');
-            if (!data) {
-                return { enabled: false, message: DEFAULT_MESSAGE };
-            }
+            if (!data) return { enabled: false, message: DEFAULT_MESSAGE };
             return {
                 enabled: !!data.enabled,
-                message: typeof data.message === 'string' && data.message.trim() 
-                    ? data.message 
-                    : DEFAULT_MESSAGE
+                message: typeof data.message === 'string' && data.message.trim() ? data.message : DEFAULT_MESSAGE
             };
         } else {
-            if (!fs.existsSync(PMBLOCKER_PATH)) {
-                return { enabled: false, message: DEFAULT_MESSAGE };
-            }
+            if (!fs.existsSync(PMBLOCKER_PATH)) return { enabled: false, message: DEFAULT_MESSAGE };
             const raw = fs.readFileSync(PMBLOCKER_PATH, 'utf8');
             const data = JSON.parse(raw || '{}');
             return {
                 enabled: !!data.enabled,
-                message: typeof data.message === 'string' && data.message.trim() 
-                    ? data.message 
-                    : DEFAULT_MESSAGE
+                message: typeof data.message === 'string' && data.message.trim() ? data.message : DEFAULT_MESSAGE
             };
         }
     } catch {
@@ -49,85 +41,80 @@ async function writeState(enabled, message) {
             enabled: !!enabled,
             message: typeof message === 'string' && message.trim() ? message : current.message
         };
-        
         if (HAS_DB) {
             await store.saveSetting('global', 'pmblocker', payload);
         } else {
-            if (!fs.existsSync('./data')) {
-                fs.mkdirSync('./data', { recursive: true });
-            }
+            if (!fs.existsSync('./data')) fs.mkdirSync('./data', { recursive: true });
             fs.writeFileSync(PMBLOCKER_PATH, JSON.stringify(payload, null, 2));
         }
     } catch (e) {
-        console.error('Error writing PM blocker state:', e);
+        console.error('خطأ في حفظ حالة PM Blocker:', e);
     }
 }
 
 module.exports = {
-    command: 'pmblocker',
+    command: 'حظر_رسايل_الخاص',
     aliases: ['pmblock', 'blockpm', 'antipm'],
     category: 'owner',
-    description: 'Block private messages and auto-block users who DM the bot',
-    usage: '.pmblocker <on|off|status|setmsg>',
+    description: 'تحكم في الرسائل الخاصة: حظر أو السماح برسائل الخاص',
+    usage: '.pmblocker <شغل|وقف|الحالة|غير_رسالة>',
     ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
         const state = await readState();
-        
+
         const sub = args[0]?.toLowerCase();
         const rest = args.slice(1);
 
-        if (!sub || !['on', 'off', 'status', 'setmsg'].includes(sub)) {
+        if (!sub || !['شغل', 'وقف', 'الحالة', 'غير_رسالة'].includes(sub)) {
             await sock.sendMessage(chatId, {
-                text: `📵 *PM BLOCKER*\n\n` +
-                      `*Storage:* ${HAS_DB ? 'Database' : 'File System'}\n\n` +
-                      `*Commands:*\n` +
-                      `• \`.pmblocker on\` - Enable DM blocking\n` +
-                      `• \`.pmblocker off\` - Disable DM blocking\n` +
-                      `• \`.pmblocker status\` - Current status\n` +
-                      `• \`.pmblocker setmsg <text>\` - Set warning message\n\n` +
-                      `*Current Status:* ${state.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
+                text: `📵 *نظام حظر الرسائل الخاصة*\n\n` +
+                      `*طريقة الحفظ:* ${HAS_DB ? 'قاعدة بيانات' : 'ملف محلي'}\n\n` +
+                      `*الأوامر:*\n` +
+                      `• \`.pmblocker شغل\` - تفعيل حظر رسائل الخاص\n` +
+                      `• \`.pmblocker وقف\` - تعطيل حظر رسائل الخاص\n` +
+                      `• \`.pmblocker الحالة\` - عرض الحالة الحالية\n` +
+                      `• \`.pmblocker غير_رسالة <نص>\` - تعديل رسالة التحذير\n\n` +
+                      `*الحالة الحالية:* ${state.enabled ? '✅ مفعل' : '❌ معطل'}`
             }, { quoted: message });
             return;
         }
 
-        if (sub === 'status') {
+        if (sub === 'الحالة') {
             await sock.sendMessage(chatId, {
-                text: `📵 *PM BLOCKER STATUS*\n\n` +
-                      `*Status:* ${state.enabled ? '✅ ENABLED' : '❌ DISABLED'}\n` +
-                      `*Storage:* ${HAS_DB ? 'Database' : 'File System'}\n\n` +
-                      `*Warning Message:*\n${state.message}`
+                text: `📵 *حالة PM Blocker*\n\n` +
+                      `*الحالة:* ${state.enabled ? '✅ مفعل' : '❌ معطل'}\n` +
+                      `*طريقة الحفظ:* ${HAS_DB ? 'قاعدة بيانات' : 'ملف محلي'}\n\n` +
+                      `*رسالة التحذير الحالية:*\n${state.message}`
             }, { quoted: message });
             return;
         }
 
-        if (sub === 'setmsg') {
+        if (sub === 'غير_رسالة') {
             const newMsg = rest.join(' ').trim();
             if (!newMsg) {
                 await sock.sendMessage(chatId, {
-                    text: '*Please provide a message*\n\nUsage: `.pmblocker setmsg <your message>`'
+                    text: '*اكتب رسالة جديدة!* \n\nالاستخدام: `.pmblocker غير_رسالة <نص>`'
                 }, { quoted: message });
                 return;
             }
             await writeState(state.enabled, newMsg);
             await sock.sendMessage(chatId, {
-                text: `✅ *PM blocker message updated!*\n\n*New message:*\n${newMsg}`
+                text: `✅ *تم تعديل رسالة التحذير!*\n\n*الرسالة الجديدة:*\n${newMsg}`
             }, { quoted: message });
             return;
         }
 
-        const enable = sub === 'on';
+        const enable = sub === 'شغل';
         await writeState(enable);
-        
+
         await sock.sendMessage(chatId, {
-            text: `📵 *PM Blocker ${enable ? 'ENABLED' : 'DISABLED'}*\n\n` +
-                  `${enable ? '✅ Users who DM the bot will be warned and blocked.' : '❌ Private messages are now allowed.'}`
+            text: `📵 *PM Blocker ${enable ? 'مفعل ✅' : 'معطل ❌'}*\n\n` +
+                  `${enable ? '⚠️ أي حد يبعث رسالة خاصة هيتحذر ويتحظر.' : 'الرسائل الخاصة بقت مسموحة دلوقتي.'}`
         }, { quoted: message });
     },
 
     readState,
     writeState
 };
-
-

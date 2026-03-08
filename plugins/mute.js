@@ -1,9 +1,9 @@
 module.exports = {
-  command: 'mute',
-  aliases: ['silence'],
-  category: 'admin',
-  description: 'Mute the group for a specified duration',
-  usage: '.mute [duration in minutes]',
+  command: 'فتح',
+  aliases: ['صمت', 'mute'],
+  category: 'اوامـر_الـجـروبـات',
+  description: 'كتم الجروب لمدة معينة أو تشغيل كتم دائم',
+  usage: '.كتم [المدة بالدقايق]',
   groupOnly: true,
   adminOnly: true,
   
@@ -13,36 +13,38 @@ module.exports = {
     const durationInMinutes = args[0] ? parseInt(args[0]) : undefined;
 
     try {
+      // كتم الجروب
       await sock.groupSettingUpdate(chatId, 'announcement');
       
       if (durationInMinutes !== undefined && durationInMinutes > 0) {
         const durationInMilliseconds = durationInMinutes * 60 * 1000;
         await sock.sendMessage(chatId, { 
-          text: `The group has been muted for ${durationInMinutes} minutes.`,
+          text: `🔇 الجروب تم كتمه لمدة ${durationInMinutes} دقيقة.`,
           ...channelInfo 
         }, { quoted: message });
         
+        // رفع الكتم بعد انتهاء الوقت
         setTimeout(async () => {
           try {
             await sock.groupSettingUpdate(chatId, 'not_announcement');
             await sock.sendMessage(chatId, { 
-              text: 'The group has been unmuted.',
+              text: '🔊 الجروب اتفتح والكتم اتشال.',
               ...channelInfo 
             });
           } catch (unmuteError) {
-            console.error('Error unmuting group:', unmuteError);
+            console.error('خطأ أثناء إزالة الكتم:', unmuteError);
           }
         }, durationInMilliseconds);
       } else {
         await sock.sendMessage(chatId, { 
-          text: 'The group has been muted.',
+          text: '🔇 الجروب تم كتمه (كتم دائم).',
           ...channelInfo 
         }, { quoted: message });
       }
     } catch (error) {
-      console.error('Error muting/unmuting the group:', error);
+      console.error('خطأ أثناء كتم/فتح الجروب:', error);
       await sock.sendMessage(chatId, { 
-        text: 'An error occurred while muting/unmuting the group. Please try again.',
+        text: '❌ حصل خطأ أثناء محاولة كتم أو فتح الجروب. جرب مرة تانية.',
         ...channelInfo 
       }, { quoted: message });
     }

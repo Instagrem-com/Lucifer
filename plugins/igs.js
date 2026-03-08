@@ -216,7 +216,7 @@ async function forceMiniSticker(inputBuffer, isVideo, cropSquare) {
 }
 
 module.exports = {
-  command: 'استيكر_انستا',
+  command: 'إنستك',
   aliases: ['ستيكر_انست', 'ستيكر_انستا'],
   category: 'stickers',
   description: 'حول بوست أو ريل من انستجرام لستيكر',

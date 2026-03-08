@@ -1,9 +1,9 @@
 module.exports = {
-  command: 'ping',
+  command: 'بنج',
   aliases: ['p', 'pong'],
-  category: 'general',
-  description: 'Check bot response time',
-  usage: '.ping',
+  category: 'عام',
+  description: 'اعرف سرعة استجابة البوت',
+  usage: '.بنغ',
   isPrefixless: true,
   
   async handler(sock, message, args) {
@@ -11,13 +11,13 @@ module.exports = {
     const chatId = message.key.remoteJid;
     
     const sent = await sock.sendMessage(chatId, { 
-      text: 'Pinging...' 
+      text: '⌛ بستنى البوت...' 
     });
     
     const end = Date.now();
     
     await sock.sendMessage(chatId, {
-      text: `🏓 Pong!\nLatency: ${end - start}ms`,
+      text: `🏓 بنغ!\nسرعة الاستجابة: ${end - start}ms`,
       edit: sent.key
     });
   }

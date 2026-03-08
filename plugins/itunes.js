@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-  command: 'معلومات_عن_اغنيه',
+  command: 'itunes',
   aliases: ['song', 'music', 'track'],
   category: 'info',
   description: 'هات معلومات تفصيلية عن أي أغنية من iTunes 🎶',

@@ -5,11 +5,11 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'readqr',
-  aliases: ['qrread', 'decodeqr'],
-  category: 'tools',
-  description: 'Read QR code from an image',
-  usage: 'Reply to an image with .readqr',
+  command: 'اقرا_كيو_ار', // بدل 'readqr'
+  aliases: ['qrread', 'decodeqr', 'اقراqr'],
+  category: 'ادوات',
+  description: 'اقرا QR Code من صورة',
+  usage: 'رد على صورة واكتب .اقرا_كيو_ار',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -21,15 +21,17 @@ module.exports = {
       if (!quoted?.imageMessage) {
         return await sock.sendMessage(
           chatId,
-          { text: '🧾 *QR Reader*\n\n📌 Reply to an image that contains a QR code\n\nUsage:\n.readqr' },
+          { text: '🧾 *قارئ QR*\n\n📌 رد على صورة فيها QR Code عشان اقراهولك\n\nالاستخدام:\n.اقرا_كيو_ار' },
           { quoted: message }
         );
       }
 
+      // تفاعل مؤقت مع الرسالة
       await sock.sendMessage(chatId, {
         react: { text: '🔍', key: message.key }
       });
 
+      // تحميل الصورة
       const stream = await downloadContentFromMessage(
         quoted.imageMessage,
         'image'
@@ -43,6 +45,7 @@ module.exports = {
       const tempFile = path.join(__dirname, `qr_${Date.now()}.png`);
       fs.writeFileSync(tempFile, buffer);
 
+      // رفع الصورة للAPI
       const form = new FormData();
       form.append('apikey', 'guru');
       form.append('image', fs.createReadStream(tempFile));
@@ -53,32 +56,33 @@ module.exports = {
         { headers: form.getHeaders(), timeout: 60000 }
       );
 
+      // مسح الصورة المؤقتة
       fs.unlinkSync(tempFile);
 
-      if (!res?.data?.status) throw new Error('Decode failed');
+      if (!res?.data?.status) throw new Error('فشل قراءة QR');
 
       await sock.sendMessage(
         chatId,
         {
           text:
-`✅ *QR Code Decoded*
+`✅ *تم قراءة QR Code*
 
-📄 *Result:*
+📄 *النتيجة:*
 \`\`\`
 ${res.data.result}
 \`\`\`
 
-👤 ${res.data.creator}
+👤 بواسطة: ${res.data.creator}
 `
         },
         { quoted: message }
       );
 
     } catch (err) {
-      console.error('QR Reader Error:', err);
+      console.error('خطأ في قارئ QR:', err);
       await sock.sendMessage(
         chatId,
-        { text: '❌ Failed to read QR code. Please try a clearer image.' },
+        { text: '❌ مقدرتش اقرا QR Code. جرب صورة أوضح شوية.' },
         { quoted: message }
       );
     }

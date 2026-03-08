@@ -5,7 +5,7 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'صوره_لاسود_وابيض',
+  command: 'ابيض_واسود',
   aliases: ['رمادي', 'تحويل_رمادي'],
   category: 'tools',
   description: 'تحويل الصورة إلى أبيض وأسود',

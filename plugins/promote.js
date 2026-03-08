@@ -2,10 +2,8 @@ const { isAdmin } = require('../lib/isAdmin');
 
 async function handlePromotionEvent(sock, groupId, participants, author) {
   try {
-    if (!Array.isArray(participants) || participants.length === 0) {
-      return;
-    }
-    
+    if (!Array.isArray(participants) || participants.length === 0) return;
+
     const promotedUsernames = await Promise.all(participants.map(async jid => {
       const jidString = typeof jid === 'string' ? jid : (jid.id || jid.toString());
       return `@${jidString.split('@')[0]} `;
@@ -21,49 +19,49 @@ async function handlePromotionEvent(sock, groupId, participants, author) {
       promotedBy = `@${authorJid.split('@')[0]}`;
       mentionList.push(authorJid);
     } else {
-      promotedBy = 'System';
+      promotedBy = 'النظام';
     }
 
-    const promotionMessage = `*『 GROUP PROMOTION 』*\n\n` +
-      `👥 *Promoted User${participants.length > 1 ? 's' : ''}:*\n` +
+    const promotionMessage = `*『 ترقية أعضاء الجروب 』*\n\n` +
+      `👥 *العضو${participants.length > 1 ? 'ين' : ''} اللي اترفعت:*\n` +
       `${promotedUsernames.map(name => `• ${name}`).join('\n')}\n\n` +
-      `👑 *Promoted By:* ${promotedBy}\n\n` +
-      `📅 *Date:* ${new Date().toLocaleString()}`;
+      `👑 *اللي رفعهم:* ${promotedBy}\n\n` +
+      `📅 *التاريخ:* ${new Date().toLocaleString()}`;
     
     await sock.sendMessage(groupId, {
       text: promotionMessage,
       mentions: mentionList
     });
   } catch (error) {
-    console.error('Error handling promotion event:', error);
+    console.error('خطأ أثناء التعامل مع حدث الترقيه:', error);
   }
 }
 
 module.exports = {
-  command: 'promote',
-  aliases: ['admin'],
+  command: 'ترقية',
+  aliases: ['admin', 'رفع'],
   category: 'admin',
-  description: 'Promote user(s) to admin',
-  usage: '.promote [@user] or reply to message',
+  description: 'ارفع عضو/أعضاء أدمن في الجروب',
+  usage: '.ترقية [@العضو] أو رد على رسالته',
   groupOnly: true,
   adminOnly: true,
-  
+
   async handler(sock, message, args, context) {
     const { chatId, channelInfo } = context;
-    
+
     let userToPromote = [];
     const mentionedJids = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
-    
+
     if (mentionedJids && mentionedJids.length > 0) {
       userToPromote = mentionedJids;
     }
     else if (message.message?.extendedTextMessage?.contextInfo?.participant) {
       userToPromote = [message.message.extendedTextMessage.contextInfo.participant];
     }
-    
+
     if (userToPromote.length === 0) {
       await sock.sendMessage(chatId, { 
-        text: 'Please mention the user or reply to their message to promote!',
+        text: '⚠️ من فضلك اعمل منشن للعضو أو رد على رسالته عشان ارفعه!',
         ...channelInfo
       }, { quoted: message });
       return;
@@ -75,28 +73,28 @@ module.exports = {
       const usernames = await Promise.all(userToPromote.map(async jid => {
         return `@${jid.split('@')[0]}`;
       }));
-      
+
       const promoterJid = sock.user.id;
-      
-      const promotionMessage = `*『 GROUP PROMOTION 』*\n\n` +
-        `👥 *Promoted User${userToPromote.length > 1 ? 's' : ''}:*\n` +
+
+      const promotionMessage = `*『 ترقية أعضاء الجروب 』*\n\n` +
+        `👥 *العضو${userToPromote.length > 1 ? 'ين' : ''} اللي اترفعت:*\n` +
         `${usernames.map(name => `• ${name}`).join('\n')}\n\n` +
-        `👑 *Promoted By:* @${promoterJid.split('@')[0]}\n\n` +
-        `📅 *Date:* ${new Date().toLocaleString()}`;
-        
+        `👑 *اللي رفعهم:* @${promoterJid.split('@')[0]}\n\n` +
+        `📅 *التاريخ:* ${new Date().toLocaleString()}`;
+
       await sock.sendMessage(chatId, { 
         text: promotionMessage,
         mentions: [...userToPromote, promoterJid],
         ...channelInfo
       });
     } catch (error) {
-      console.error('Error in promote command:', error);
+      console.error('خطأ في أمر الترقيه:', error);
       await sock.sendMessage(chatId, { 
-        text: 'Failed to promote user(s)!',
+        text: '❌ فشل في ترقية العضو/الأعضاء!',
         ...channelInfo
       }, { quoted: message });
     }
   },
-  
+
   handlePromotionEvent
 };

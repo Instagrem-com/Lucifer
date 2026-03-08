@@ -1,5 +1,3 @@
-
-
 const settings = require('../settings');
 const commandHandler = require('../lib/commandHandler');
 const path = require('path');

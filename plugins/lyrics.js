@@ -1,31 +1,34 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-  command: 'lyrics',
-  aliases: ['lyric', 'songlyrics'],
-  category: 'music',
-  description: 'Get lyrics of a song along with artist and image',
-  usage: '.lyrics <song name>',
+  command: 'كلمات_اغنية',
+  aliases: ['كلمات', 'اغنية_كلمات'],
+  category: 'موسيقى',
+  description: 'جيبلك كلمات الأغنية مع اسم الفنان والصورة',
+  usage: '.كلمات_اغنية <اسم الأغنية>',
+
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
     const songTitle = args.join(' ').trim();
 
     if (!songTitle) {
       await sock.sendMessage(chatId, {
-        text: '*Please enter the song name to get the lyrics!*\nUsage: `.lyrics <song name>`',
+        text: '💀 يابا! اكتب اسم الأغنية عشان أجيبلك كلماتها 😎\nالاستخدام: `.كلمات_اغنية <اسم الأغنية>`',
         quoted: message
       });
       return;
     }
+
     try {
       const apiUrl = `https://discardapi.dpdns.org/api/music/lyrics?apikey=qasim&song=${encodeURIComponent(songTitle)}`;
       const res = await fetch(apiUrl);
-      if (!res.ok) throw `API request failed with status ${res.status}`;
+      if (!res.ok) throw `فشل الطلب برمز: ${res.status}`;
       const data = await res.json();
       const messageData = data?.result?.message;
+
       if (!messageData?.lyrics) {
         await sock.sendMessage(chatId, {
-          text: `❌ Sorry, I couldn't find any lyrics for "${songTitle}".`,
+          text: `💀 آسف يا معلم، مش لاقي كلمات الأغنية "${songTitle}" 😢`,
           quoted: message
         });
         return;
@@ -37,12 +40,13 @@ module.exports = {
 
       const caption = `
 🎵 *${title}*
-👤 *Artist:* ${artist}
-🔗 *URL:* ${url}
+👤 *الفنان:* ${artist}
+🔗 *الرابط:* ${url}
 
-📝 *Lyrics:*
+📝 *كلمات الأغنية:*
 ${lyricsOutput}
       `.trim();
+
       if (image) {
         await sock.sendMessage(chatId, {
           image: { url: image },
@@ -55,13 +59,13 @@ ${lyricsOutput}
           quoted: message
         });
       }
+
     } catch (error) {
       console.error('Lyrics Command Error:', error);
       await sock.sendMessage(chatId, {
-        text: `❌ An error occurred while fetching the lyrics for "${songTitle}".`,
+        text: `💀 حصل غلطة يا معلم! مش قادر أجيب كلمات الأغنية "${songTitle}". جرب تاني 😎`,
         quoted: message
       });
     }
   }
 };
-

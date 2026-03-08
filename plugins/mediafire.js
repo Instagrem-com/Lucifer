@@ -22,30 +22,34 @@ async function mediafireDl(url) {
 }
 
 module.exports = {
-  command: 'mediafire',
-  aliases: ['mfire', 'mf'],
-  category: 'download',
-  description: 'Download files from MediaFire',
-  usage: '.mediafire <url>',
+  command: 'ميديافاير',
+  aliases: ['ميديا', 'فاير'],
+  category: 'تحميل',
+  description: 'يحمل أي ملف من ميديافاير',
+  usage: '.ميديافاير <الرابط>',
 
   async handler(sock, message, args, context = {}) {
     const { chatId } = context;
     const text = args.join(' ');
 
-    if (!text) return await sock.sendMessage(chatId, { text: "❌ Provide a MediaFire URL.\n\nExample:\n.mfire https://www.mediafire.com/file/5e54xv2cislhfgb/twoxzhn.zip/file" }, { quoted: message });
+    if (!text) return await sock.sendMessage(chatId, { 
+      text: "ابعت رابط ميديافاير عشان أحمل الملف ليك ❌\n\nمثال:\n.ميديافاير https://www.mediafire.com/file/xxxxx/file" 
+    }, { quoted: message });
 
     try {
 
       const data = await mediafireDl(text);
       if (!data || !data.link) {
-        return await sock.sendMessage(chatId, { text: "❌ Failed to parse MediaFire page. Link might be private or broken." }, { quoted: message });
+        return await sock.sendMessage(chatId, { 
+          text: "مش قادر أقرأ صفحة ميديافاير، يمكن الرابط خاص أو بايظ ❌" 
+        }, { quoted: message });
       }
 
-      let caption = `≡ *MEDIAFIRE DOWNLOADER*\n\n`;
-      caption += `▢ *File:* ${data.name}\n`;
-      caption += `▢ *Size:* ${data.size}\n`;
-      caption += `▢ *Extension:* ${data.ext}\n\n`;
-      caption += `*Download In Progress... Please Wait ⌛*`;
+      let caption = `≡ *محمل ميديافاير*\n\n`;
+      caption += `▢ *الملف:* ${data.name}\n`;
+      caption += `▢ *الحجم:* ${data.size}\n`;
+      caption += `▢ *النوع:* ${data.ext}\n\n`;
+      caption += `جاري تحميل الملف... استنى شوية ⌛`;
 
       await sock.sendMessage(chatId, { text: caption }, { quoted: message });
 
@@ -62,7 +66,9 @@ module.exports = {
       const buffer = Buffer.from(response.data);
 
       if (buffer.length < 10000) {
-          return await sock.sendMessage(chatId, { text: "❌ Error: The downloaded file is corrupt or invalid." });
+          return await sock.sendMessage(chatId, { 
+            text: "الملف اتحمل بس شكله تالف أو مش صحيح ❌" 
+          });
       }
 
       let mimeType = 'application/octet-stream';
@@ -81,12 +87,14 @@ module.exports = {
         document: buffer,
         fileName: data.name,
         mimetype: mimeType,
-        caption: `✅ *Download Complete:* ${data.name}`
+        caption: `تم تحميل الملف بنجاح: ${data.name} ✅`
       }, { quoted: message });
 
     } catch (err) {
       console.error('MF Download Error:', err);
-      await sock.sendMessage(chatId, { text: '❌ Error: ' + err.message }, { quoted: message });
+      await sock.sendMessage(chatId, { 
+        text: 'حصل خطأ أثناء التحميل: ' + err.message + ' ❌' 
+      }, { quoted: message });
     }
   }
 };

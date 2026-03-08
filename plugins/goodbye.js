@@ -104,7 +104,7 @@ ${fallbackMessage}`,
 }
 
 module.exports = {
-    command: 'رسال_الوداع',
+    command: 'الوداع',
     aliases: ['وداع', 'خروج'],
     category: 'admin',
     description: 'إعداد رسالة وداع للأعضاء اللي بيخرجوا من الجروب',

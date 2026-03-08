@@ -1,6 +1,6 @@
 module.exports = {
-  command: 'صوره_بروفايل',
-  aliases: ['getpp', 'بروفايل', 'جيب_الصوره'],
+  command: 'الصوره',
+  aliases: ['صورة', 'بروفايل', 'جيب_الصوره'],
   category: 'general',
   description: 'جلب صورة بروفايل المستخدم',
   usage: '.الصوره @الشخص او رد على رسالته او الرقم',
