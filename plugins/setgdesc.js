@@ -1,9 +1,9 @@
 module.exports = {
-    command: 'setgdesc',
+    command: 'غير_وصف_الجروب',
     aliases: ['setdesc', 'groupdesc'],
-    category: 'admin',
-    description: 'Change group description',
-    usage: '.setgdesc <new description>',
+    category: 'اوامـࢪ الـجـࢪوبـات',
+    description: 'غير وصف الجروب',
+    usage: '.setgdesc <الوصف الجديد>',
     groupOnly: true,
     adminOnly: true,
 
@@ -13,7 +13,7 @@ module.exports = {
 
         if (!desc) {
             await sock.sendMessage(chatId, {
-                text: '❌ *Please provide a description*\n\nUsage: `.setgdesc <description>`'
+                text: '❌ يا عم 😅 لازم تكتب وصف جديد للجروب!\n\nUsage: `.setgdesc <الوصف>`'
             }, { quoted: message });
             return;
         }
@@ -21,12 +21,12 @@ module.exports = {
         try {
             await sock.groupUpdateDescription(chatId, desc);
             await sock.sendMessage(chatId, {
-                text: '✅ *Group description updated successfully!*'
+                text: '✅ تمام! وصف الجروب اتحدّث بنجاح 😎'
             }, { quoted: message });
         } catch (error) {
-            console.error('Error updating group description:', error);
+            console.error('خطأ في تحديث وصف الجروب:', error);
             await sock.sendMessage(chatId, {
-                text: '❌ *Failed to update group description*\n\nMake sure the bot is an admin.'
+                text: '❌ معلش 😔 مقدرتش أغير وصف الجروب\n\nاتأكد إن البوت مشرف في الجروب.'
             }, { quoted: message });
         }
     }

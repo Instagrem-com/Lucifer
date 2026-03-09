@@ -1,39 +1,27 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
-
 const axios = require('axios');
 
 module.exports = {
-  command: 'getpage',
-  aliases: ['source', 'viewsource'],
-  category: 'tools',
-  description: 'Get the raw HTML source of a website',
-  usage: '.getpage <url>',
+  command: 'كود_موقع',
+  aliases: ['source', 'viewsource', 'سورس'],
+  category: 'اوامـࢪ الاداوات',
+  description: 'جلب كود HTML الخام لأي موقع',
+  usage: '.getpage <الرابط>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
     const url = args[0];
 
     if (!url || !url.startsWith('http')) {
-      return await sock.sendMessage(chatId, { text: 'Provide a valid URL (include http/https).' }, { quoted: message });
+      return await sock.sendMessage(chatId, { 
+        text: '❌ حط رابط صحيح ويكون فيه http أو https.' 
+      }, { quoted: message });
     }
 
     try {
-      await sock.sendMessage(chatId, { text: '🌐 *Fetching source code...*' });
-      
+      await sock.sendMessage(chatId, { 
+        text: '🌐 جاري جلب سورس الموقع...' 
+      });
+
       const res = await axios.get(url);
       const html = res.data;
       const buffer = Buffer.from(html, 'utf-8');
@@ -42,26 +30,13 @@ module.exports = {
         document: buffer, 
         mimetype: 'text/html', 
         fileName: 'source.html',
-        caption: `*Source code for:* ${url}`
+        caption: `📄 سورس الموقع:\n${url}`
       }, { quoted: message });
 
     } catch (err) {
-      await sock.sendMessage(chatId, { text: '❌ Failed to fetch source. The site might be protected.' });
+      await sock.sendMessage(chatId, { 
+        text: '❌ مقدرتش أجيب سورس الموقع. ممكن يكون الموقع محمي.' 
+      }, { quoted: message });
     }
   }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/

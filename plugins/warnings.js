@@ -24,9 +24,9 @@ async function loadWarnings() {
 }
 
 module.exports = {
-  command: 'warnings',
+  command: 'التحذيرات',
   aliases: ['checkwarn', 'warncount'],
-  category: 'group',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'Check warning count of a user',
   usage: '.warnings [@user]',
   groupOnly: true,
@@ -38,7 +38,7 @@ module.exports = {
     
     if (mentionedJidList.length === 0) {
       await sock.sendMessage(chatId, { 
-        text: 'Please mention a user to check warnings.',
+        text: 'اعمل منشن ياحب للي عايز تعرف تحذيراتو 👀❤️',
         ...channelInfo
       }, { quoted: message });
       return;
@@ -49,7 +49,7 @@ module.exports = {
     const warningCount = (warnings[chatId] && warnings[chatId][userToCheck]) || 0;
 
     await sock.sendMessage(chatId, { 
-      text: `@${userToCheck.split('@')[0]} has ${warningCount} warning(s).\n\nStorage: ${HAS_DB ? 'Database' : 'File System'}`,
+      text: `@${userToCheck.split('@')[0]} التحذير 👀❤️${warningCount} \n\nمكان التخزين: ${HAS_DB ? 'Database' : 'ملفات النظام'}`,
       mentions: [userToCheck],
       ...channelInfo
     }, { quoted: message });

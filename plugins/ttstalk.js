@@ -1,18 +1,18 @@
 const axios = require('axios');
 
 module.exports = {
-  command: 'ttstalk',
-  aliases: ['tikstalk', 'ttprofile'],
-  category: 'stalk',
-  description: 'Lookup TikTok user profile',
-  usage: '.ttstalk <username>',
+  command: 'معلومات_تيكتوك', // الاسم بالعربي
+  aliases: ['تيكستالك', 'ttprofile', 'ttستالك'],
+  category: 'اوامـࢪ الاداوات',
+  description: 'عرض معلومات حساب مستخدم تيكتوك',
+  usage: '.تيكتوك_ستالك <اسم المستخدم>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
 
     if (!args.length) {
       return await sock.sendMessage(chatId, {
-        text: '*Please provide a TikTok username.*\nExample: .ttstalk truepakistanofficial'
+        text: '❌ الرجاء كتابة اسم مستخدم تيكتوك.\nمثال: .تيكتوك_ستالك truepakistanofficial'
       }, { quoted: message });
     }
 
@@ -24,24 +24,24 @@ module.exports = {
       });
 
       if (!data?.result?.user) {
-        return await sock.sendMessage(chatId, { text: '❌ TikTok user not found.' }, { quoted: message });
+        return await sock.sendMessage(chatId, { text: '❌ لم يتم العثور على مستخدم تيكتوك.' }, { quoted: message });
       }
 
       const user = data.result.user;
       const stats = data.result.statsV2 || data.result.stats;
       const profileImage = user.avatarLarger || user.avatarMedium || user.avatarThumb;
-      const verifiedMark = user.verified ? '✅ Verified' : '';
+      const verifiedMark = user.verified ? '✅ حساب موثق' : '';
 
-      const caption = `🎵 *TikTok Profile Info*\n\n` +
-                      `👤 Nickname: ${user.nickname || 'N/A'} ${verifiedMark}\n` +
-                      `🆔 Username: @${user.uniqueId || 'N/A'}\n` +
-                      `📝 Bio: ${user.signature || 'N/A'}\n` +
-                      `🔒 Private Account: ${user.privateAccount ? 'Yes' : 'No'}\n\n` +
-                      `👥 Followers: ${stats?.followerCount || 0}\n` +
-                      `➡ Following: ${stats?.followingCount || 0}\n` +
-                      `❤️ Likes: ${stats?.heartCount || 0}\n` +
-                      `🎥 Videos: ${stats?.videoCount || 0}\n\n` +
-                      `🔗 Profile URL: https://www.tiktok.com/@${user.uniqueId}`;
+      const caption = `🎵 *معلومات حساب تيكتوك*\n\n` +
+                      `👤 الاسم: ${user.nickname || 'غير متوفر'} ${verifiedMark}\n` +
+                      `🆔 اسم المستخدم: @${user.uniqueId || 'غير متوفر'}\n` +
+                      `📝 البايو: ${user.signature || 'غير متوفر'}\n` +
+                      `🔒 حساب خاص: ${user.privateAccount ? 'نعم' : 'لا'}\n\n` +
+                      `👥 المتابعون: ${stats?.followerCount || 0}\n` +
+                      `➡ المتابعين: ${stats?.followingCount || 0}\n` +
+                      `❤️ الإعجابات: ${stats?.heartCount || 0}\n` +
+                      `🎥 عدد الفيديوهات: ${stats?.videoCount || 0}\n\n` +
+                      `🔗 رابط الحساب: https://www.tiktok.com/@${user.uniqueId}`;
 
       if (profileImage) {
         await sock.sendMessage(chatId, { image: { url: profileImage }, caption: caption }, { quoted: message });
@@ -50,8 +50,8 @@ module.exports = {
       }
 
     } catch (err) {
-      console.error('TikTok plugin error:', err);
-      await sock.sendMessage(chatId, { text: '❌ Failed to fetch TikTok profile.' }, { quoted: message });
+      console.error('❌ خطأ في أمر ستالك تيكتوك:', err);
+      await sock.sendMessage(chatId, { text: '❌ فشل جلب معلومات حساب تيكتوك.' }, { quoted: message });
     }
   }
 };

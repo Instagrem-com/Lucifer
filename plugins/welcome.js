@@ -3,9 +3,9 @@ const { isWelcomeOn, getWelcome } = require('../lib/index');
 const fetch = require('node-fetch');
 
 module.exports = {
-  command: 'welcome',
+  command: 'رساله_الترحيب',
   aliases: ['setwelcome'],
-  category: 'admin',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'Configure welcome message for the group',
   usage: '.welcome [on/off/message]',
   groupOnly: true,
@@ -34,8 +34,8 @@ async function handleJoinEvent(sock, id, participants) {
       forwardingScore: 1,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: '120363319098372999@newsletter',
-        newsletterName: 'MEGA MD',
+        newsletterJid: '120363425019719202@newsletter',
+        newsletterName: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪,
         serverMessageId: -1
       }
     }

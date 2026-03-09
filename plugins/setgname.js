@@ -1,9 +1,9 @@
 module.exports = {
-    command: 'setgname',
+    command: 'غير_اسم_الجروب',
     aliases: ['setname', 'groupname'],
-    category: 'admin',
-    description: 'Change group name',
-    usage: '.setgname <new name>',
+    category: 'اوامـࢪ الـجـࢪوبـات',
+    description: 'غير اسم الجروب',
+    usage: '.setgname <الاسم الجديد>',
     groupOnly: true,
     adminOnly: true,
 
@@ -13,7 +13,7 @@ module.exports = {
 
         if (!name) {
             await sock.sendMessage(chatId, {
-                text: '❌ *Please provide a group name*\n\nUsage: `.setgname <new name>`'
+                text: '❌ يا عم 😅 لازم تحط اسم جديد للجروب!\n\nUsage: `.setgname <الاسم>`'
             }, { quoted: message });
             return;
         }
@@ -21,12 +21,12 @@ module.exports = {
         try {
             await sock.groupUpdateSubject(chatId, name);
             await sock.sendMessage(chatId, {
-                text: `✅ *Group name updated to:*\n${name}`
+                text: `✅ تمام! اسم الجروب اتغير لـ:\n${name} 😎`
             }, { quoted: message });
         } catch (error) {
-            console.error('Error updating group name:', error);
+            console.error('خطأ في تغيير اسم الجروب:', error);
             await sock.sendMessage(chatId, {
-                text: '❌ *Failed to update group name*\n\nMake sure the bot is an admin.'
+                text: '❌ معلش 😔 مقدرتش أغير اسم الجروب\n\nاتأكد إن البوت مشرف في الجروب.'
             }, { quoted: message });
         }
     }

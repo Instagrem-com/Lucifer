@@ -1,11 +1,11 @@
 const axios = require('axios');
 
 module.exports = {
-  command: 'spotify',
-  aliases: ['sp', 'spotifydl'],
-  category: 'download',
-  description: 'Download music from Spotify',
-  usage: '.spotify <song/artist/keywords>',
+  command: 'سبوتيفاي',
+  aliases: ['sp', 'spotifydl', 'سبوتيفاي'],
+  category: اوامـࢪ الاداوات',
+  description: 'تحميل أغنية من سبوتيفاي',
+  usage: '.spotify <اسم الأغنية أو الفنان>',
   
   async handler(sock, message, args, context) {
     const { chatId, channelInfo } = context;
@@ -15,17 +15,20 @@ module.exports = {
 
       if (!query) {
         await sock.sendMessage(chatId, { 
-          text: 'Usage: .spotify <song/artist/keywords>\nExample: .spotify con calma',
+          text: '🎵 الاستخدام:\n.spotify <اسم الأغنية أو الفنان>\n\nمثال:\n.spotify con calma',
           ...channelInfo
         }, { quoted: message });
         return;
       }
 
       const apiUrl = `https://okatsu-rolezapiiz.vercel.app/search/spotify?q=${encodeURIComponent(query)}`;
-      const { data } = await axios.get(apiUrl, { timeout: 20000, headers: { 'user-agent': 'Mozilla/5.0' } });
+      const { data } = await axios.get(apiUrl, { 
+        timeout: 20000, 
+        headers: { 'user-agent': 'Mozilla/5.0' } 
+      });
 
       if (!data?.status || !data?.result) {
-        throw new Error('No result from Spotify API');
+        throw new Error('مفيش نتيجة من API');
       }
 
       const r = data.result;
@@ -33,13 +36,16 @@ module.exports = {
       
       if (!audioUrl) {
         await sock.sendMessage(chatId, { 
-          text: 'No downloadable audio found for this query.',
+          text: '❌ مفيش صوت قابل للتحميل للأغنية دي.',
           ...channelInfo
         }, { quoted: message });
         return;
       }
 
-      const caption = `🎵 ${r.title || r.name || 'Unknown Title'}\n👤 ${r.artist || ''}\n⏱ ${r.duration || ''}\n🔗 ${r.url || ''}`.trim();
+      const caption = `🎵 ${r.title || r.name || 'عنوان غير معروف'}
+👤 ${r.artist || 'غير معروف'}
+⏱ ${r.duration || ''}
+🔗 ${r.url || ''}`.trim();
 
       if (r.thumbnails) {
         await sock.sendMessage(chatId, { 
@@ -47,7 +53,7 @@ module.exports = {
           caption,
           ...channelInfo
         }, { quoted: message });
-      } else if (caption) {
+      } else {
         await sock.sendMessage(chatId, { 
           text: caption,
           ...channelInfo
@@ -62,9 +68,9 @@ module.exports = {
       }, { quoted: message });
 
     } catch (error) {
-      console.error('[SPOTIFY] error:', error?.message || error);
+      console.error('[SPOTIFY] خطأ:', error?.message || error);
       await sock.sendMessage(chatId, { 
-        text: 'Failed to fetch Spotify audio. Try another query later.',
+        text: '❌ حصل خطأ أثناء تحميل الأغنية من سبوتيفاي. جرب اسم تاني.',
         ...channelInfo
       }, { quoted: message });
     }

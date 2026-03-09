@@ -1,8 +1,8 @@
 module.exports = {
-  command: 'ship',
-  aliases: ['couple'],
-  category: 'group',
-  description: 'Randomly ship two members in the group',
+  command: 'جواز',
+  aliases: ['couple', 'شيب'],
+  category: 'اوامـࢪ الـجـࢪوبـات',
+  description: 'يختار عضوين من الجروب ويربطهم بشكل عشوائي 💖',
   usage: '.ship',
   groupOnly: true,
   
@@ -10,28 +10,35 @@ module.exports = {
     const { chatId, channelInfo } = context;
     
     try {
-      const participants = await sock.groupMetadata(chatId);
-      const ps = participants.participants.map(v => v.id);
+      const groupData = await sock.groupMetadata(chatId);
+      const participants = groupData.participants.map(v => v.id);
       
-      let firstUser, secondUser;
+      if (participants.length < 2) {
+        return await sock.sendMessage(chatId, {
+          text: '⚠️ محتاج على الأقل عضوين عشان أعمل شِيب!',
+          ...channelInfo
+        }, { quoted: message });
+      }
 
-      firstUser = ps[Math.floor(Math.random() * ps.length)];
+      let firstUser = participants[Math.floor(Math.random() * participants.length)];
+      let secondUser;
+
       do {
-        secondUser = ps[Math.floor(Math.random() * ps.length)];
+        secondUser = participants[Math.floor(Math.random() * participants.length)];
       } while (secondUser === firstUser);
 
-      const formatMention = id => '@' + id.split('@')[0];
+      const mention = id => '@' + id.split('@')[0];
 
       await sock.sendMessage(chatId, {
-        text: `${formatMention(firstUser)} ❤️ ${formatMention(secondUser)}\nCongratulations 💖🍻`,
+        text: `💘 *اليوم في شِيب جديد!*\n${mention(firstUser)} ❤️ ${mention(secondUser)}\nمبروك على الحب 🍻💖`,
         mentions: [firstUser, secondUser],
         ...channelInfo
       });
 
     } catch (error) {
-      console.error('Error in ship command:', error);
+      console.error('خطأ في أمر ship:', error);
       await sock.sendMessage(chatId, { 
-        text: '❌ Failed to ship! Make sure this is a group.',
+        text: '❌ فشل في عمل شِيب! اتأكد ان ده جروب.',
         ...channelInfo
       }, { quoted: message });
     }

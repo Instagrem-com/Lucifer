@@ -1,12 +1,11 @@
-
 const axios = require('axios');
 
 module.exports = {
-  command: 'snapchat',
-  aliases: ['scspot', 'snapdl'],
-  category: 'download',
-  description: 'Download media (video or image) from Snapchat Spotlight URL',
-  usage: '.snapchat <Snapchat URL>',
+  command: 'سناب_شات',
+  aliases: ['scspot', 'snapdl', 'سناب'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'تحميل فيديو أو صورة من رابط Snapchat Spotlight',
+  usage: '.snapchat <رابط سناب>',
 
   async handler(sock, message, args, context) {
     const { chatId, channelInfo, rawText } = context;
@@ -18,21 +17,21 @@ module.exports = {
 
     if (!url) {
       return await sock.sendMessage(chatId, { 
-        text: 'Please provide a Snapchat Spotlight URL.\nExample: .snapchat https://www.snapchat.com/spotlight/...',
+        text: '❌ رجاءً ضع رابط Snapchat Spotlight.\nمثال: .snapchat https://www.snapchat.com/spotlight/...',
         ...channelInfo
       }, { quoted: message });
     }
 
     try {
       await sock.sendMessage(chatId, { 
-        text: '⏳ Fetching Snapchat media...',
+        text: '⏳ جاري جلب الميديا من Snapchat...',
         ...channelInfo
       }, { quoted: message });
 
       const apiUrl = `https://discardapi.dpdns.org/api/dl/snapchat?apikey=guru&url=${encodeURIComponent(url)}`;
       
-      console.log('Requesting URL:', apiUrl);
-      console.log('Original URL:', url);
+      console.log('طلب API للرابط:', apiUrl);
+      console.log('الرابط الأصلي:', url);
       
       const { data } = await axios.get(apiUrl, { 
         timeout: 15000,
@@ -41,11 +40,11 @@ module.exports = {
         }
       });
 
-      console.log('Snapchat API Response:', JSON.stringify(data, null, 2));
+      console.log('استجابة API السناب:', JSON.stringify(data, null, 2));
 
       if (!data || data.status !== true || !data.result || !Array.isArray(data.result) || data.result.length === 0) {
         return await sock.sendMessage(chatId, { 
-          text: '❌ No media found for this Snapchat Spotlight URL.',
+          text: '❌ لم يتم العثور على أي ميديا لهذا الرابط.',
           ...channelInfo
         }, { quoted: message });
       }
@@ -54,24 +53,24 @@ module.exports = {
         if (mediaItem.video) {
           await sock.sendMessage(chatId, { 
             video: { url: mediaItem.video }, 
-            caption: '📹 Snapchat Spotlight Video',
+            caption: '📹 فيديو Snapchat Spotlight',
             ...channelInfo
           }, { quoted: message });
         }
         if (mediaItem.image) {
           await sock.sendMessage(chatId, { 
             image: { url: mediaItem.image }, 
-            caption: '🖼 Snapchat Spotlight Image',
+            caption: '🖼 صورة من Snapchat Spotlight',
             ...channelInfo
           }, { quoted: message });
         }
       }
 
     } catch (error) {
-      console.error('Snapchat plugin error:', error.message);
+      console.error('خطأ في أمر Snapchat:', error.message);
       
       await sock.sendMessage(chatId, { 
-        text: `❌ Failed to fetch Snapchat media.\nError: ${error.message}`,
+        text: `❌ فشل تحميل الميديا من Snapchat.\nالخطأ: ${error.message}`,
         ...channelInfo
       }, { quoted: message });
     }

@@ -3,11 +3,12 @@ const store = require('../lib/lightweight_store');
 const { cleanJid } = require('../lib/isOwner');
 
 module.exports = {
-    command: 'settings',
+    command: 'اعدادات_البوت',
     aliases: ['config', 'setting'],
-    category: 'owner',
-    description: 'Show bot settings and per-group configurations',
+    category: 'اوامـࢪ الـمـطـوࢪ',
+    description: 'عرض إعدادات البوت وإعدادات الجروب',
     usage: '.settings',
+    
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
         const senderId = message.key.participant || message.key.remoteJid;
@@ -18,15 +19,14 @@ module.exports = {
 
             if (!isMe && !isOwner) {
                 return await sock.sendMessage(chatId, { 
-                    text: '❌ *Access Denied:* Only Owner/Sudo can view settings.' 
+                    text: '❌ متاح بس للمالك/المساعد الرئيسي يشوف الإعدادات.' 
                 }, { quoted: message });
             }
             
             const isGroup = chatId.endsWith('@g.us');
-
             const botMode = await store.getBotMode();
-            
             const allSettings = await store.getAllSettings('global');
+            
             const autoStatus = allSettings.autoStatus || { enabled: false };
             const autoread = allSettings.autoread || { enabled: false };
             const autotyping = allSettings.autotyping || { enabled: false };
@@ -36,16 +36,16 @@ module.exports = {
 
             const getSt = (val) => val ? '✅' : '❌';
 
-            let menuText = `╭━〔 *MEGA SETTINGS* 〕━┈\n┃\n`;
-            menuText += `┃ 👤 *User:* @${cleanJid(senderId)}\n`;
-            menuText += `┃ 🤖 *Mode:* ${botMode.toUpperCase()}\n`;
-            menuText += `┃\n┣━〔 *GLOBAL CONFIG* 〕━┈\n`;
-            menuText += `┃ ${getSt(autoStatus?.enabled)} *Auto Status*\n`;
-            menuText += `┃ ${getSt(autoread?.enabled)} *Auto Read*\n`;
-            menuText += `┃ ${getSt(autotyping?.enabled)} *Auto Typing*\n`;
-            menuText += `┃ ${getSt(pmblocker?.enabled)} *PM Blocker*\n`;
-            menuText += `┃ ${getSt(anticall?.enabled)} *Anti Call*\n`;
-            menuText += `┃ ${getSt(autoReaction)} *Auto Reaction*\n`;
+            let menuText = `╭━〔 *إعدادات MEGA* 〕━┈\n┃\n`;
+            menuText += `┃ 👤 *المستخدم:* @${cleanJid(senderId)}\n`;
+            menuText += `┃ 🤖 *وضع البوت:* ${botMode.toUpperCase()}\n`;
+            menuText += `┃\n┣━〔 *الإعدادات العامة* 〕━┈\n`;
+            menuText += `┃ ${getSt(autoStatus?.enabled)} *حالة تلقائية*\n`;
+            menuText += `┃ ${getSt(autoread?.enabled)} *قراءة تلقائية*\n`;
+            menuText += `┃ ${getSt(autotyping?.enabled)} *كتابة تلقائية*\n`;
+            menuText += `┃ ${getSt(pmblocker?.enabled)} *حظر الرسائل الخاصة*\n`;
+            menuText += `┃ ${getSt(anticall?.enabled)} *مكالمات ممنوعة*\n`;
+            menuText += `┃ ${getSt(autoReaction)} *رد تلقائي*\n`;
             menuText += `┃\n`;
 
             if (isGroup) {
@@ -58,15 +58,15 @@ module.exports = {
                 const groupWelcome = groupSettings.welcome || false;
                 const groupGoodbye = groupSettings.goodbye || false;
 
-                menuText += `┣━〔 *GROUP CONFIG* 〕━┈\n`;
-                menuText += `┃ ${getSt(groupAntilink.enabled)} *Antilink*\n`;
-                menuText += `┃ ${getSt(groupBadword.enabled)} *Antibadword*\n`;
-                menuText += `┃ ${getSt(groupAntitag.enabled)} *Antitag*\n`;
-                menuText += `┃ ${getSt(groupChatbot)} *Chatbot*\n`;
-                menuText += `┃ ${getSt(groupWelcome)} *Welcome*\n`;
-                menuText += `┃ ${getSt(groupGoodbye)} *Goodbye*\n`;
+                menuText += `┣━〔 *إعدادات الجروب* 〕━┈\n`;
+                menuText += `┃ ${getSt(groupAntilink.enabled)} *حماية الروابط*\n`;
+                menuText += `┃ ${getSt(groupBadword.enabled)} *حماية الكلمات الممنوعة*\n`;
+                menuText += `┃ ${getSt(groupAntitag.enabled)} *حماية المنشن*\n`;
+                menuText += `┃ ${getSt(groupChatbot)} *شات بوت*\n`;
+                menuText += `┃ ${getSt(groupWelcome)} *رسائل ترحيب*\n`;
+                menuText += `┃ ${getSt(groupGoodbye)} *رسائل وداع*\n`;
             } else {
-                menuText += `┃ 💡 *Note:* _Use in group for group configs._\n`;
+                menuText += `┃ 💡 *ملاحظة:* _استخدم الأمر داخل الجروب عشان تشوف إعدادات الجروب._\n`;
             }
 
             menuText += `┃\n╰━━━━━━━━━━━━━━━━┈`;
@@ -76,9 +76,8 @@ module.exports = {
                 mentions: [senderId],
                 contextInfo: {
                     externalAdReply: {
-                        title: "SYSTEM SETTINGS PANEL",
-                        body: "Configuration Status",
-                        thumbnailUrl: "https://github.com/GlobalTechInfo.png",
+                        title: "لوحة إعدادات البوت",
+                        body: "الحالة الحالية للإعدادات",
                         mediaType: 1,
                         renderLargerThumbnail: true
                     }
@@ -86,9 +85,9 @@ module.exports = {
             }, { quoted: message });
 
         } catch (error) {
-            console.error('Settings Command Error:', error);
+            console.error('خطأ في إعدادات البوت:', error);
             await sock.sendMessage(chatId, { 
-                text: '❌ Error: Failed to load settings.' 
+                text: '❌ حصل خطأ ومقدرتش أحمل الإعدادات.' 
             }, { quoted: message });
         }
     }

@@ -1,7 +1,7 @@
 module.exports = {
   command: 'هكر',
   aliases: ['اختراق', 'اختراق_وهمي'],
-  category: 'الالـعـاب',
+  category: 'اوامـࢪ الاداوات',
   description: 'محاكاة عملية اختراق للمزاح',
   usage: '.اختراق <الهدف>',
 

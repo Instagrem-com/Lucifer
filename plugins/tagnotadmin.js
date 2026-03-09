@@ -1,7 +1,7 @@
 module.exports = {
-  command: 'tagnotadmin',
+  command: 'منشن_للادمن',
   aliases: ['tagmembers', 'tagnon'],
-  category: 'admin',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'Tag all non-admin members in the group',
   usage: '.tagnotadmin',
   groupOnly: true,
@@ -24,7 +24,7 @@ module.exports = {
         return;
       }
 
-      let text = '🔊 *Hello Everyone:*\n\n';
+      let text = 'ࢪدو ع عـمـگـم لـوسـفـر 💀🖤\n\nالـي مـش هـيـࢪد امـو ࢪقـاصـةو 😂💃🏼\n\n';
       nonAdmins.forEach(jid => {
         text += `@${jid.split('@')[0]}\n`;
       });

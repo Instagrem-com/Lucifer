@@ -1,7 +1,7 @@
 module.exports = {
-  command: 'tagall',
+  command: 'منشن_جماعي',
   aliases: ['everyone', 'all'],
-  category: 'admin',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'Tag all group members with their usernames',
   usage: '.tagall',
   groupOnly: true,
@@ -22,7 +22,7 @@ module.exports = {
         return;
       }
       
-      let messageText = '🔊 *Hello Everyone:*\n\n';
+      let messageText = 'ࢪدو ع عـمـگـم لـوسـفـر 💀🖤\n\nالـي مـش هـيـࢪد امـو ࢪقـاصـةو 😂💃🏼\n\n';
       participants.forEach(participant => {
         messageText += `@${participant.id.split('@')[0]}\n`;
       });

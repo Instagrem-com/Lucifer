@@ -43,9 +43,9 @@ function getExtFromMessage(msg) {
 }
 
 module.exports = {
-  command: 'url',
-  aliases: ['geturl', 'mediaurl'],
-  category: 'tools',
+  command: 'صوره_فيديو_لرابط_3',
+  aliases: ['ulr_2', 'mediaurl'],
+  category: 'اوامـࢪ الاداوات',
   description: 'Get a URL for media (image, video, audio, sticker, document).',
   usage: '.url (send or reply to media)',
 
@@ -72,7 +72,7 @@ module.exports = {
       if (!targetMsg) {
         return sock.sendMessage(
           chatId,
-          { text: 'Send or reply to a media to get a URL.' },
+          { text: 'اعـمـل ريـاكـت ع الصـوره او الفـديـو  باسم الامر ياحب 👀❤️' },
           { quoted: message }
         )
       }
@@ -123,7 +123,7 @@ module.exports = {
 
       await sock.sendMessage(
         chatId,
-        { text: `URL: ${url}` },
+        { text: `الرابط ⚡ : ${url}\n\n *BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪` },
         { quoted: message }
       )
 

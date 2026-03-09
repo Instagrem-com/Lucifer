@@ -4,11 +4,12 @@ const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const isOwnerOrSudo = require('../lib/isOwner');
 
 module.exports = {
-  command: 'setpp',
+  command: 'غير_صوره_البروفايل',
   aliases: ['setppic', 'setdp'],
-  category: 'owner',
-  description: 'Set or update the bot profile picture (owner only)',
-  usage: '.setpp (reply to an image)',
+  category: 'اوامـࢪ الـمـطـوࢪ',
+  description: 'غير صورة البوت (للمالك بس)',
+  usage: '.setpp (رد على صورة)',
+  
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
 
@@ -18,24 +19,27 @@ module.exports = {
 
       if (!message.key.fromMe && !isOwner) {
         await sock.sendMessage(chatId, { 
-          text: '*This command is only available for the owner!*' 
+          text: '⚠️ الأمر ده متاح بس للمالك!' 
         }, { quoted: message });
         return;
       }
+
       const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
       if (!quotedMessage) {
         await sock.sendMessage(chatId, { 
-          text: '⚠️ Please reply to an image with the .setpp command!' 
+          text: '⚠️ رد على صورة وبعدين اكتب .setpp عشان تغير صورة البوت!' 
         }, { quoted: message });
         return;
       }
+
       const imageMessage = quotedMessage.imageMessage || quotedMessage.stickerMessage;
       if (!imageMessage) {
         await sock.sendMessage(chatId, { 
-          text: '*The replied message must contain an image!*' 
+          text: '⚠️ الرسالة اللي رديت عليها لازم تكون صورة!' 
         }, { quoted: message });
         return;
       }
+
       const tmpDir = path.join(process.cwd(), 'tmp');
       if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
@@ -50,13 +54,13 @@ module.exports = {
       fs.unlinkSync(imagePath);
 
       await sock.sendMessage(chatId, { 
-        text: '✅ Successfully updated bot profile picture!' 
+        text: '✅ تمام! صورة البوت اتغيرت بنجاح 😎' 
       }, { quoted: message });
 
     } catch (error) {
-      console.error('SetPP Command Error:', error);
+      console.error('خطأ في SetPP:', error);
       await sock.sendMessage(chatId, { 
-        text: '❌ Failed to update profile picture!' 
+        text: '❌ معلش 😔 مقدرتش أغير صورة البوت!' 
       }, { quoted: message });
     }
   }

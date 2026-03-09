@@ -1,22 +1,24 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-  command: 'translate',
-  aliases: ['trt'],
-  category: 'tools',
-  description: 'Translate text to the specified language.',
-  usage: '.translate <text> <lang> or reply to a message with .translate <lang>',
+  command: 'ترجمة', // الاسم بالعربي
+  aliases: ['trt', 'ترجم'],
+  category: 'اوامـࢪ الاداوات',
+  description: 'ترجم النص إلى اللغة المطلوبة',
+  usage: '.ترجمة <النص> <اللغة> أو رد على رسالة مع .ترجمة <اللغة>',
   
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
 
     try {
+      // تحديث حالة الكتابة
       await sock.presenceSubscribe(chatId);
       await sock.sendPresenceUpdate('composing', chatId);
 
       let textToTranslate = '';
       let lang = '';
 
+      // التحقق إذا كان المستخدم رد على رسالة
       const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
       if (quotedMessage) {
         textToTranslate = quotedMessage.conversation || 
@@ -27,9 +29,10 @@ module.exports = {
 
         lang = args[0]?.trim();
       } else {
+        // إذا لم يتم الرد على رسالة، يجب كتابة النص واللغة
         if (args.length < 2) {
           return await sock.sendMessage(chatId, {
-            text: `*TRANSLATOR*\n\nUsage:\n1. Reply to a message with: .translate <lang> or .trt <lang>\n2. Or type: .translate <text> <lang> or .trt <text> <lang>\n\nExample:\n.translate hello fr\n.trt hello fr\n\nLanguage codes:\nfr - French\nes - Spanish\nde - German\nit - Italian\npt - Portuguese\nru - Russian\nja - Japanese\nko - Korean\nzh - Chinese\nar - Arabic\nhi - Hindi`,
+            text: `🌐 *مترجم النصوص*\n\nطريقة الاستخدام:\n1. رد على رسالة مع: .ترجمة <كود اللغة>\n2. أو كتابة: .ترجمة <النص> <كود اللغة>\n\nمثال:\n.ترجمة hello fr\n.trt hello fr\n\nأكواد بعض اللغات:\nfr - فرنسي\nes - إسباني\nde - ألماني\nit - إيطالي\npt - برتغالي\nru - روسي\nja - ياباني\nko - كوري\nzh - صيني\nar - عربي\nhi - هندي`,
             quoted: message
           });
         }
@@ -40,13 +43,15 @@ module.exports = {
 
       if (!textToTranslate) {
         return await sock.sendMessage(chatId, {
-          text: 'No text found to translate. Please provide text or reply to a message.',
+          text: '❌ لم يتم العثور على نص للترجمة. الرجاء كتابة نص أو الرد على رسالة.',
           quoted: message
         });
       }
 
       let translatedText = null;
       let error = null;
+
+      // تجربة Google Translate API
       try {
         const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${lang}&dt=t&q=${encodeURIComponent(textToTranslate)}`);
         if (response.ok) {
@@ -58,6 +63,8 @@ module.exports = {
       } catch (e) {
         error = e;
       }
+
+      // تجربة MyMemory API إذا فشل السابق
       if (!translatedText) {
         try {
           const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(textToTranslate)}&langpair=auto|${lang}`);
@@ -71,6 +78,8 @@ module.exports = {
           error = e;
         }
       }
+
+      // تجربة API إضافية
       if (!translatedText) {
         try {
           const response = await fetch(`https://api.dreaded.site/api/translate?text=${encodeURIComponent(textToTranslate)}&lang=${lang}`);
@@ -84,19 +93,21 @@ module.exports = {
           error = e;
         }
       }
+
       if (!translatedText) {
-        throw new Error('All translation APIs failed');
+        throw new Error('فشل جميع واجهات الترجمة');
       }
+
       await sock.sendMessage(chatId, {
-        text: `${translatedText}`,
+        text: `📝 *الترجمة:*\n\n${translatedText}`,
       }, {
         quoted: message
       });
 
     } catch (error) {
-      console.error('❌ Error in translate command:', error);
+      console.error('❌ خطأ في أمر الترجمة:', error);
       await sock.sendMessage(chatId, {
-        text: '❌ Failed to translate text. Please try again later.\n\nUsage:\n1. Reply to a message with: .translate <lang> or .trt <lang>\n2. Or type: .translate <text> <lang> or .trt <text> <lang>',
+        text: '❌ فشل ترجمة النص. الرجاء المحاولة لاحقًا.\n\nطريقة الاستخدام:\n1. رد على رسالة مع: .ترجمة <كود اللغة>\n2. أو كتابة: .ترجمة <النص> <كود اللغة>',
         quoted: message
       });
     }

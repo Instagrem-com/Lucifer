@@ -5,42 +5,42 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'sharpen',
+  command: 'توضيح_الصوره',
   aliases: ['enhance'],
-  category: 'tools',
-  description: 'Convert an image to sharpen',
-  usage: 'Reply to an image with .sharpen',
+  category: 'اوامـࢪ الاداوات',
+  description: 'تحويل الصورة لتصبح أكثر وضوحًا (Sharpen)',
+  usage: 'رد على صورة مع .sharpen',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
 
     try {
-      const quoted =
-        message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+      const quoted = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
 
       if (!quoted?.imageMessage) {
         return await sock.sendMessage(
           chatId,
-          { text: '🩵 *Sharpen Image*\n\nReply to an image to convert it to sepia\n\nUsage:\n.sharpen' },
+          { text: '🩵 *توضيح الصورة*\n\nرد على صورة عشان البوت يحسنها ويخليها أوضح\n\nالاستخدام:\n.sharpen' },
           { quoted: message }
         );
       }
 
+      // إرسال رد فعل مؤقت
       await sock.sendMessage(chatId, { react: { text: '🔄', key: message.key } });
 
+      // تحميل الصورة المرفقة
       const stream = await downloadContentFromMessage(quoted.imageMessage, 'image');
       let buffer = Buffer.from([]);
-      for await (const chunk of stream) {
-        buffer = Buffer.concat([buffer, chunk]);
-      }
+      for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
 
-      const tempFile = path.join(__dirname, `sepia_${Date.now()}.jpg`);
+      const tempFile = path.join(__dirname, `sharpen_${Date.now()}.jpg`);
       fs.writeFileSync(tempFile, buffer);
 
       const form = new FormData();
       form.append('apikey', 'guru');
       form.append('file', fs.createReadStream(tempFile));
 
+      // رفع الصورة لAPI للتعديل
       const res = await axios.post(
         'https://discardapi.dpdns.org/api/image/sharpen',
         form,
@@ -48,26 +48,27 @@ module.exports = {
       );
       fs.unlinkSync(tempFile);
 
-      if (!res?.data) throw new Error('Sharpen conversion failed');
+      if (!res?.data) throw new Error('فشل تعديل الصورة');
 
-      const grayFile = path.join(__dirname, `sepia_result_${Date.now()}.jpg`);
-      fs.writeFileSync(grayFile, res.data);
+      const resultFile = path.join(__dirname, `sharpen_result_${Date.now()}.jpg`);
+      fs.writeFileSync(resultFile, res.data);
 
       await sock.sendMessage(
         chatId,
         {
-          image: { url: grayFile },
-          caption: `🩵 *Sharpen Image*\n\n𝙿𝚛𝚘𝚌𝚎𝚜𝚜𝚎𝚍 𝚋𝚢: 𝙼𝙴𝙶𝙰-𝙼𝙳`
+          image: { url: resultFile },
+          caption: '🩵 *الصورة تم تحسينها*\n\nتمت المعالجة بواسطة: MEGA-MD'
         },
         { quoted: message }
       );
-      fs.unlinkSync(grayFile);
+
+      fs.unlinkSync(resultFile);
 
     } catch (err) {
-      console.error('Sharpen Plugin Error:', err);
+      console.error('خطأ في Sharpen Plugin:', err);
       await sock.sendMessage(
         chatId,
-        { text: '❌ Failed to convert image to sepia. Make sure the image is clear and try again.' },
+        { text: '❌ فشل في تحسين الصورة. اتأكد ان الصورة واضحة وجرب تاني.' },
         { quoted: message }
       );
     }

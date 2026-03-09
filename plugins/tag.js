@@ -15,9 +15,9 @@ async function downloadMediaMessage(message, mediaType) {
 }
 
 module.exports = {
-  command: 'tag',
+  command: 'منشن',
   aliases: ['tagall', 'hidetag'],
-  category: 'admin',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'Tag all group members',
   usage: '.tag [message] or reply to a message',
   groupOnly: true,
@@ -77,7 +77,7 @@ module.exports = {
       }
     } else {
       await sock.sendMessage(chatId, {
-        text: tagText || "Tagged message",
+        text: tagText || "ࢪدو ع عـمـگـم لـوسـفـر 💀🖤",
         mentions: mentionedJidList,
         ...channelInfo
       });

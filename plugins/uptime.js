@@ -1,25 +1,10 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
 
 module.exports = {
-  command: 'uptime',
-  aliases: ['runtime'],
-  category: 'general',
+  command: 'وقت_التشغيل',
+  aliases: ['وقت'],
+  category: 'اوامـࢪ الـمـطـوࢪ',
   description: 'Show bot status information',
-  usage: '.uptime',
+  usage: '.وقت_التشغيل',
   isPrefixless: true,
 
   async handler(sock, message) {
@@ -47,27 +32,12 @@ module.exports = {
     const commandCount = commandHandler.commands.size;
 
     const text =
-      `🤖 *MEGA-MD STATUS*\n\n` +
-      `⏱ Uptime: ${formatUptime(uptimeMs)}\n` +
-      `🚀 Started: ${startedAt}\n` +
-      `📦 Plugins: ${commandCount}\n` +
-      `💾 RAM: ${ramMb} MB`;
+      `🐉 *✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪* 🐉\n\n` +
+      ` الـوقـت ⏱ : ${formatUptime(uptimeMs)}\n` +
+      ` شـغـال 🚀: ${startedAt}\n` +
+      `عـدد الاوامـر 📦 : ${commandCount}\n` +
+      ` الـرامـات 💾 : ${ramMb} MB`;
 
     await sock.sendMessage(chatId, { text });
   }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/

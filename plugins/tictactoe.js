@@ -12,13 +12,13 @@ async function handleTicTacToeMove(sock, chatId, senderId, text) {
 
         if (!room) return;
 
-        const isSurrender = /^(surrender|give up)$/i.test(text);
+        const isSurrender = /^(استسلم|انسحب)$/i.test(text);
         
         if (!isSurrender && !/^[1-9]$/.test(text)) return;
 
         if (senderId !== room.game.currentTurn && !isSurrender) {
             await sock.sendMessage(chatId, { 
-                text: '❌ Not your turn!' 
+                text: '❌ مش دورك دلوقتي!' 
             });
             return;
         }
@@ -30,7 +30,7 @@ async function handleTicTacToeMove(sock, chatId, senderId, text) {
 
         if (!ok) {
             await sock.sendMessage(chatId, { 
-                text: '❌ Invalid move! That position is already taken.' 
+                text: '❌ حركة غير صالحة! المكان ده مأخوذ بالفعل.' 
             });
             return;
         }
@@ -56,7 +56,7 @@ async function handleTicTacToeMove(sock, chatId, senderId, text) {
             winner = senderId === room.game.playerX ? room.game.playerO : room.game.playerX;
             
             await sock.sendMessage(chatId, { 
-                text: `🏳️ @${senderId.split('@')[0]} has surrendered! @${winner.split('@')[0]} wins the game!`,
+                text: `🏳️ @${senderId.split('@')[0]} استسلم! @${winner.split('@')[0]} فاز باللعبة!`,
                 mentions: [senderId, winner]
             });
             delete games[room.id];
@@ -65,15 +65,15 @@ async function handleTicTacToeMove(sock, chatId, senderId, text) {
 
         let gameStatus;
         if (winner) {
-            gameStatus = `🎉 @${winner.split('@')[0]} wins the game!`;
+            gameStatus = `🎉 @${winner.split('@')[0]} فاز باللعبة!`;
         } else if (isTie) {
-            gameStatus = `🤝 Game ended in a draw!`;
+            gameStatus = `🤝 انتهت اللعبة بالتعادل!`;
         } else {
-            gameStatus = `🎲 Turn: @${room.game.currentTurn.split('@')[0]} (${senderId === room.game.playerX ? '❎' : '⭕'})`;
+            gameStatus = `🎲 دور: @${room.game.currentTurn.split('@')[0]} (${senderId === room.game.playerX ? '❎' : '⭕'})`;
         }
 
         const str = `
-🎮 *TicTacToe Game*
+🎮 *لعبة إكس أو*
 
 ${gameStatus}
 
@@ -81,10 +81,10 @@ ${arr.slice(0, 3).join('')}
 ${arr.slice(3, 6).join('')}
 ${arr.slice(6).join('')}
 
-▢ Player ❎: @${room.game.playerX.split('@')[0]}
-▢ Player ⭕: @${room.game.playerO.split('@')[0]}
+▢ لاعب ❎: @${room.game.playerX.split('@')[0]}
+▢ لاعب ⭕: @${room.game.playerO.split('@')[0]}
 
-${!winner && !isTie ? '• Type a number (1-9) to make your move\n• Type *surrender* to give up' : ''}
+${!winner && !isTie ? '• اكتب رقم من 1-9 للعب\n• اكتب *استسلم* للتخلي عن اللعبة' : ''}
 `;
 
         const mentions = [
@@ -110,16 +110,16 @@ ${!winner && !isTie ? '• Type a number (1-9) to make your move\n• Type *surr
         }
 
     } catch (error) {
-        console.error('Error in tictactoe move:', error);
+        console.error('خطأ في حركة إكس أو:', error);
     }
 }
 
 module.exports = {
-    command: 'tictactoe',
+    command: 'اكس_اوه',
     aliases: ['ttt', 'xo'],
-    category: 'games',
-    description: 'Play TicTacToe game with another user',
-    usage: '.tictactoe [room name]',
+    category: 'اوامـࢪ الالـعـاب',
+    description: 'العب لعبة إكس أو مع شخص آخر',
+    usage: '.tictactoe [اسم الغرفة]',
     groupOnly: true,
 
     async handler(sock, message, args, context = {}) {
@@ -133,7 +133,7 @@ module.exports = {
                 [room.game.playerX, room.game.playerO].includes(senderId)
             )) {
                 await sock.sendMessage(chatId, { 
-                    text: '*You are already in a game*\n\nType *surrender* to quit the current game first.'
+                    text: '*أنت بالفعل في لعبة*\n\nاكتب *استسلم* للخروج من اللعبة الحالية أولاً.'
                 }, { quoted: message });
                 return;
             }
@@ -163,19 +163,19 @@ module.exports = {
                 }[v]));
 
                 const str = `
-🎮 *TicTacToe Game Started!*
+🎮 *بدأت لعبة إكس أو!*
 
-Waiting for @${room.game.currentTurn.split('@')[0]} to play...
+في انتظار @${room.game.currentTurn.split('@')[0]} للعب...
 
 ${arr.slice(0, 3).join('')}
 ${arr.slice(3, 6).join('')}
 ${arr.slice(6).join('')}
 
-▢ *Room ID:* ${room.id}
-▢ *Rules:*
-• Make 3 rows of symbols vertically, horizontally or diagonally to win
-• Type a number (1-9) to place your symbol
-• Type *surrender* to give up
+▢ *معرّف الغرفة:* ${room.id}
+▢ *القوانين:*
+• حاول تكوين 3 رموز على خط عمودي، أفقي أو قطري للفوز
+• اكتب رقم من 1-9 لوضع رمزك
+• اكتب *استسلم* للتخلي عن اللعبة
 `;
                 await sock.sendMessage(chatId, { 
                     text: str,
@@ -194,7 +194,7 @@ ${arr.slice(6).join('')}
                 if (text) room.name = text;
 
                 await sock.sendMessage(chatId, { 
-                    text: `*Waiting for opponent*\n\nType \`.tictactoe ${text || ''}\` to join this game!\n\nPlayer ❎: @${senderId.split('@')[0]}`,
+                    text: `*في انتظار منافس*\n\nاكتب \`.tictactoe ${text || ''}\` للانضمام لهذه اللعبة!\n\nلاعب ❎: @${senderId.split('@')[0]}`,
                     mentions: [senderId]
                 }, { quoted: message });
 
@@ -202,9 +202,9 @@ ${arr.slice(6).join('')}
             }
 
         } catch (error) {
-            console.error('Error in tictactoe command:', error);
+            console.error('خطأ في أمر إكس أو:', error);
             await sock.sendMessage(chatId, { 
-                text: '❌ *Error starting game*\n\nPlease try again later.'
+                text: '❌ *حدث خطأ أثناء بدء اللعبة*\n\nحاول مرة أخرى لاحقاً.'
             }, { quoted: message });
         }
     },

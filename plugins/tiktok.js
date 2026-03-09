@@ -1,11 +1,11 @@
 const axios = require('axios');
 
 module.exports = {
-  command: 'tiktok',
+  command: 'تيكتوك',
   aliases: ['tt', 'ttdl', 'tiktokdl'],
-  category: 'download',
-  description: 'Download TikTok video without watermark (HD if available)',
-  usage: '.tiktok <TikTok URL>',
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'تحميل فيديو من تيك توك بدون علامة مائية',
+  usage: '.tiktok <رابط تيك توك>',
 
   async handler(sock, message, args, context) {
     const { chatId, channelInfo, rawText } = context;
@@ -17,13 +17,13 @@ module.exports = {
 
     if (!url) {
       return await sock.sendMessage(chatId, { 
-        text: '🎵 *TikTok Downloader*\n\nPlease provide a TikTok URL.\nExample:\n.tiktok https://vm.tiktok.com/XXXX'
+        text: '🎵 *محمل فيديوهات تيك توك*\n\nمن فضلك أرسل رابط تيك توك.\nمثال:\n.tiktok https://vm.tiktok.com/XXXX'
       }, { quoted: message });
     }
 
     try {
       await sock.sendMessage(chatId, { 
-        text: '⏳ Downloading TikTok video...'
+        text: '⏳ جاري تحميل فيديو تيك توك...'
       }, { quoted: message });
 
       const apiUrl = `https://discardapi.onrender.com/api/dl/tiktok?apikey=guru&url=${encodeURIComponent(url)}`;
@@ -35,7 +35,7 @@ module.exports = {
       });
 
       if (!data?.status || !data?.result) {
-        throw new Error('Invalid API response');
+        throw new Error('استجابة غير صالحة من الـ API');
       }
 
       const res = data.result;
@@ -44,29 +44,29 @@ module.exports = {
       const videoUrl = hd?.url || noWm?.url;
 
       if (!videoUrl) {
-        throw new Error('No downloadable video found');
+        throw new Error('لم يتم العثور على فيديو قابل للتحميل');
       }
 
       const caption =
-`🎵 *TikTok Downloader*
+`🎵 *محمل تيك توك*
 ━━━━━━━━━━━━━━━━━━━
-👤 *User:* ${res.author.nickname}
-🆔 *Username:* ${res.author.fullname}
-🌍 *Region:* ${res.region}
-⏱️ *Duration:* ${res.duration}
+👤 *المستخدم:* ${res.author.nickname}
+🆔 *اسم الحساب:* ${res.author.fullname}
+🌍 *المنطقة:* ${res.region}
+⏱️ *المدة:* ${res.duration}
 
-❤️ *Likes:* ${res.stats.likes}
-💬 *Comments:* ${res.stats.comment}
-🔁 *Shares:* ${res.stats.share}
-👀 *Views:* ${res.stats.views}
+❤️ *الإعجابات:* ${res.stats.likes}
+💬 *التعليقات:* ${res.stats.comment}
+🔁 *المشاركات:* ${res.stats.share}
+👀 *المشاهدات:* ${res.stats.views}
 
-🎧 *Sound:* ${res.music_info.title}
-📅 *Posted:* ${res.taken_at}
+🎧 *الصوت:* ${res.music_info.title}
+📅 *تاريخ النشر:* ${res.taken_at}
 
-📝 *Caption:*
-${res.title || 'No caption'}
+📝 *الوصف:*
+${res.title || 'لا يوجد وصف'}
 
-✨ *Quality:* ${hd ? 'HD No Watermark' : 'No Watermark'}
+✨ *الجودة:* ${hd ? 'HD بدون علامة مائية' : 'بدون علامة مائية'}
 ━━━━━━━━━━━━━━━━━━━`;
 
       await sock.sendMessage(chatId, { 
@@ -80,11 +80,11 @@ ${res.title || 'No caption'}
 
       if (error.code === 'ECONNABORTED') {
         await sock.sendMessage(chatId, { 
-          text: '⏱️ Request timed out. Please try again later.' 
+          text: '⏱️ انتهت مهلة الطلب، حاول مرة أخرى لاحقاً.' 
         }, { quoted: message });
       } else {
         await sock.sendMessage(chatId, { 
-          text: `❌ Failed to download TikTok video.\nReason: ${error.message}` 
+          text: `❌ فشل تحميل فيديو تيك توك.\nالسبب: ${error.message}` 
         }, { quoted: message });
       }
     }

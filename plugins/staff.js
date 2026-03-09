@@ -1,9 +1,9 @@
 module.exports = {
-  command: 'staff',
-  aliases: ['admins', 'adminlist'],
-  category: 'group',
-  description: 'Display list of group admins',
-  usage: '.staff',
+  command: 'المشرفين',
+  aliases: ['الادمن', 'admins', 'staff'],
+  category: 'اوامـࢪ الـجـࢪوبـات',
+  description: 'عرض قائمة مشرفين الجروب',
+  usage: '.المشرفين',
   groupOnly: true,
   
   async handler(sock, message, args, context) {
@@ -21,14 +21,19 @@ module.exports = {
       
       const participants = groupMetadata.participants;
       const groupAdmins = participants.filter(p => p.admin);
-      const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n▢ ');
+      const listAdmin = groupAdmins
+        .map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`)
+        .join('\n▢ ');
 
-      const owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || chatId.split('-')[0] + '@s.whatsapp.net';
+      const owner =
+        groupMetadata.owner ||
+        groupAdmins.find(p => p.admin === 'superadmin')?.id ||
+        chatId.split('-')[0] + '@s.whatsapp.net';
 
       const text = `
-≡ *GROUP ADMINS* _${groupMetadata.subject}_
+≡ *مشرفين الجروب* _${groupMetadata.subject}_
 
-┌─⊷ *ADMINS*
+┌─⊷ *الادمن*
 ▢ ${listAdmin}
 └───────────
 `.trim();
@@ -41,9 +46,9 @@ module.exports = {
       });
 
     } catch (error) {
-      console.error('Error in staff command:', error);
+      console.error('خطأ في أمر المشرفين:', error);
       await sock.sendMessage(chatId, { 
-        text: 'Failed to get admin list!',
+        text: '❌ فشل في جلب قائمة المشرفين!',
         ...channelInfo
       }, { quoted: message });
     }

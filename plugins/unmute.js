@@ -1,7 +1,7 @@
 module.exports = {
-  command: 'unmute',
+  command: 'فتح',
   aliases: ['unsilence'],
-  category: 'admin',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'Unmute the group',
   usage: '.unmute',
   groupOnly: true,
@@ -13,7 +13,7 @@ module.exports = {
     try {
       await sock.groupSettingUpdate(chatId, 'not_announcement');
       await sock.sendMessage(chatId, { 
-        text: 'The group has been unmuted.',
+        text: 'الجروب اتفتح يا شوباب 👀❤️',
         ...channelInfo
       }, { quoted: message });
     } catch (error) {

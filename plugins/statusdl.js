@@ -1,12 +1,12 @@
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'dlstatus',
-  aliases: ['swdl', 'statusdl'],
-  category: 'download',
-  description: 'Download quoted Status updates',
-  usage: 'Reply to a status and type .dlstatus',
-  ownerOnly: 'true',
+  command: 'تحميل_حالة',
+  aliases: ['dlstatus', 'حالة', 'تنزيل_حالة'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'تحميل حالة واتساب بالرد عليها',
+  usage: 'رد على الحالة واكتب .تحميل_حالة',
+  ownerOnly: true,
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -17,7 +17,7 @@ module.exports = {
 
     if (!contextInfo || contextInfo.remoteJid !== 'status@broadcast') {
       return await sock.sendMessage(chatId, { 
-        text: "Please reply/quote a Status update to download it." 
+        text: "⚠️ لازم ترد على الحالة علشان أقدر أحملها." 
       }, { quoted: message });
     }
 
@@ -30,7 +30,9 @@ module.exports = {
 
       if (quotedType === 'conversation' || quotedType === 'extendedTextMessage') {
         const text = quotedMsg.conversation || quotedMsg.extendedTextMessage?.text;
-        return await sock.sendMessage(chatId, { text: `📝 *Status Text:*\n\n${text}` }, { quoted: message });
+        return await sock.sendMessage(chatId, { 
+          text: `📝 *نص الحالة:*\n\n${text}` 
+        }, { quoted: message });
       }
 
       const stream = await downloadContentFromMessage(
@@ -44,14 +46,23 @@ module.exports = {
       }
 
       if (quotedType === 'imageMessage') {
-        await sock.sendMessage(chatId, { image: buffer, caption: mediaData.caption || '' }, { quoted: message });
+        await sock.sendMessage(chatId, { 
+          image: buffer, 
+          caption: mediaData.caption || '' 
+        }, { quoted: message });
+
       } else if (quotedType === 'videoMessage') {
-        await sock.sendMessage(chatId, { video: buffer, caption: mediaData.caption || '' }, { quoted: message });
+        await sock.sendMessage(chatId, { 
+          video: buffer, 
+          caption: mediaData.caption || '' 
+        }, { quoted: message });
       }
 
     } catch (e) {
-      console.error('SW Download Error:', e);
-      await sock.sendMessage(chatId, { text: "❌ Failed to download status media." }, { quoted: message });
+      console.error('خطأ تحميل الحالة:', e);
+      await sock.sendMessage(chatId, { 
+        text: "❌ فشل في تحميل الحالة." 
+      }, { quoted: message });
     }
   }
 };

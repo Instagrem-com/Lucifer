@@ -31,11 +31,11 @@ function getQuotedMessage(message) {
 }
 
 module.exports = {
-  command: 'tourl',
-  aliases: ['mediaurl', 'upload'],
-  category: 'tools',
-  description: 'Upload media and get a URL.',
-  usage: '.tourl (reply to media or send media with caption)',
+  command: 'صوره_فيديو_لرابط', // الاسم بالعربي
+  aliases: ['mediaurl', 'upload', 'تورل'],
+  category: 'اوامـࢪ الاداوات',
+  description: 'ارفع الوسائط واحصل على رابط مباشر',
+  usage: '.رفع_رابط (رد على وسائط أو أرسل وسائط مع الكابتشن)',
 
   async handler(sock, message) {
     const chatId = message.key.remoteJid
@@ -59,24 +59,24 @@ module.exports = {
       if (!targetMsg) {
         return sock.sendMessage(
           chatId,
-          { text: 'Reply to a media or send media with `.tourl`' },
+          { text: '❌ من فضلك قم بالرد على وسائط أو أرسل وسائط مع `.رفع_رابط`' },
           { quoted: message }
         )
       }
 
       const buffer = await getMediaBuffer(targetMsg, sock)
-      if (!buffer) throw new Error('Failed to download media')
+      if (!buffer) throw new Error('فشل في تحميل الوسائط')
 
       if (buffer.length > 10 * 1024 * 1024) {
         return sock.sendMessage(
           chatId,
-          { text: '✴️ Media exceeds 10 MB limit.' },
+          { text: '✴️ حجم الوسائط يتجاوز 10 ميجابايت.' },
           { quoted: message }
         )
       }
 
       const type = await FileType.fromBuffer(buffer)
-      if (!type) throw new Error('Could not detect file type')
+      if (!type) throw new Error('تعذر التعرف على نوع الملف')
 
       const form = new FormData()
       form.append('reqtype', 'fileupload')
@@ -90,22 +90,22 @@ module.exports = {
 
       const url = res.data
       if (typeof url !== 'string' || !url.startsWith('https://')) {
-        throw new Error('Invalid upload URL')
+        throw new Error('الرابط المرفوع غير صالح')
       }
 
       const sizeMB = (buffer.length / 1024 / 1024).toFixed(2)
 
       await sock.sendMessage(
         chatId,
-        { text: `✅ Upload Successful\n🔗 ${url}\n💾 ${sizeMB} MB` },
+        { text: `✅ تم رفع الوسائط بنجاح!\n🔗 الرابط المباشر:\n${url}\n💾 الحجم: ${sizeMB} MB` },
         { quoted: message }
       )
 
     } catch (e) {
-      console.error('Catbox upload error:', e)
+      console.error('خطأ في رفع Catbox:', e)
       await sock.sendMessage(
         chatId,
-        { text: `❌ Upload failed: ${e.message}` },
+        { text: `❌ فشل رفع الوسائط: ${e.message}` },
         { quoted: message }
       )
     }

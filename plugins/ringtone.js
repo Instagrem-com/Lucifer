@@ -1,27 +1,11 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
-
 const axios = require('axios');
 
 module.exports = {
-  command: 'ringtone',
-  aliases: ['ring', 'tone'],
-  category: 'music',
-  description: 'Search and download ringtones',
-  usage: '.ringtone <search term>',
+  command: 'رنه', // بدل ringtone
+  aliases: ['رن', 'نغمة'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'ابحث وحمّل نغمات رنين',
+  usage: '.رنات <اسم النغمة>',
   
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -30,29 +14,29 @@ module.exports = {
     try {
       if (!searchQuery) {
         return await sock.sendMessage(chatId, {
-          text: "*Which ringtone do you want to search?*\nUsage: .ringtone <name>\n\nExample: .ringtone Nokia"
+          text: " قولّي تحب تدور على انهي رنه 👀❤️\nمثال 📝: .رنه نوكيا"
         }, { quoted: message });
       }
 
       await sock.sendMessage(chatId, {
-        text: "🔍 *Searching for ringtones...*"
+        text: " بدوّرلك على النغمات...🔍"
       }, { quoted: message });
 
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      // انتظار وهمي للتجربة
+      await new Promise(resolve => setTimeout(resolve, 5000));
 
       const searchUrl = `https://discardapi.dpdns.org/api/dl/ringtone?apikey=guru&title=${encodeURIComponent(searchQuery)}`;
       const response = await axios.get(searchUrl, { timeout: 30000 });
       
       if (!response.data?.result || response.data.result.length === 0) {
         return await sock.sendMessage(chatId, {
-          text: "❌ *No ringtones found!*\nTry a different search term."
+          text: "❌ مافيش نغمات متاحة! جرب اسم تاني."
         }, { quoted: message });
       }
 
       const ringtones = response.data.result;
       const totalFound = ringtones.length;
-
-      const limit = Math.min(2, totalFound);
+      const limit = Math.min(2, totalFound); // يبعت أول 2 بس
 
       for (let i = 0; i < limit; i++) {
         const audioUrl = ringtones[i].audio;
@@ -64,8 +48,8 @@ module.exports = {
             fileName: `${searchQuery}_${i + 1}.mp3`,
             contextInfo: {
               externalAdReply: {
-                title: `${searchQuery} Ringtone ${i + 1}`,
-                body: `Ringtone ${i + 1} of ${limit}`,
+                title: `${searchQuery} - نغمة ${i + 1}`,
+                body: `نغمة ${i + 1} من ${limit}`,
                 mediaType: 2,
                 thumbnail: null
               }
@@ -76,49 +60,31 @@ module.exports = {
             await new Promise(resolve => setTimeout(resolve, 2000));
           }
         } catch (sendError) {
-          console.error(`Failed to send ringtone ${i + 1}:`, sendError.message);
+          console.error(`فشل إرسال النغمة ${i + 1}:`, sendError.message);
           continue;
         }
       }
 
       await sock.sendMessage(chatId, {
-        text: `✅ *Sent ${limit} ringtones!*\n\n${totalFound > limit ? `📊 *${totalFound - limit} more available*\nUse the same command again for different results.` : ''}`
+        text: `✅ بعتلك ${limit} الرنه ✅\n\n${totalFound > limit ? `📊 فيه ${totalFound - limit} رنه تانية ممكن تجيبها\nكرر الأمر تاني علشان تشوفهم 👀❤️` : ''}`
       }, { quoted: message });
 
     } catch (error) {
-      console.error('Ringtone Command Error:', error);
+      console.error('خطأ في أمر النغمات:', error);
       
-      let errorMsg = "❌ *Search failed!*\n\n";
+      let errorMsg = "❌ فشل البحث!\n\n";
       
       if (error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED') {
-        errorMsg += "*Reason:* Connection timeout\nThe API took too long to respond.";
+        errorMsg += "الوقت خلص ياحب 👀❤️\nطولت ف الاختيار 😄";
       } else if (error.response) {
-        errorMsg += `*Status:* ${error.response.status}\n*Error:* ${error.response.statusText}`;
+        errorMsg += `📌 حالة: ${error.response.status}\nخطأ: ${error.response.statusText}`;
       } else {
-        errorMsg += `*Error:* ${error.message}`;
+        errorMsg += `📌 خطأ: ${error.message}`;
       }
       
-      errorMsg += "\n\nPlease try again later.";
+      errorMsg += "\n\nجرب تاني بعد شوية.";
 
-      await sock.sendMessage(chatId, {
-        text: errorMsg
-      }, { quoted: message });
+      await sock.sendMessage(chatId, { text: errorMsg }, { quoted: message });
     }
   }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-

@@ -3,11 +3,11 @@ const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-    command: 'setgpp',
+    command: 'غير_صوره_الجروب',
     aliases: ['setgpic', 'grouppp', 'setgrouppic'],
-    category: 'admin',
-    description: 'Change group profile picture',
-    usage: '.setgpp (reply to image)',
+    category: 'اوامـࢪ الـجـࢪوبـات',
+    description: 'غير صورة البروفايل بتاع الجروب',
+    usage: '.setgpp (رد على صورة)',
     groupOnly: true,
     adminOnly: true,
 
@@ -19,40 +19,34 @@ module.exports = {
 
         if (!imageMessage) {
             await sock.sendMessage(chatId, {
-                text: '❌ *Please reply to an image or sticker*\n\nUsage: Reply to an image with `.setgpp`'
+                text: '❌ يا عم لازم ترد على صورة أو ستيكر عشان تغير صورة الجروب!\n\nUsage: رد على صورة وبعدين اكتب `.setgpp`'
             }, { quoted: message });
             return;
         }
 
         try {
             const tmpDir = path.join(process.cwd(), 'tmp');
-            if (!fs.existsSync(tmpDir)) {
-                fs.mkdirSync(tmpDir, { recursive: true });
-            }
+            if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
             const stream = await downloadContentFromMessage(imageMessage, 'image');
             let buffer = Buffer.from([]);
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
-            }
+            for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
 
             const imgPath = path.join(tmpDir, `gpp_${Date.now()}.jpg`);
             fs.writeFileSync(imgPath, buffer);
 
             await sock.updateProfilePicture(chatId, { url: imgPath });
 
-            try {
-                fs.unlinkSync(imgPath);
-            } catch (e) {}
+            try { fs.unlinkSync(imgPath); } catch (e) {}
 
             await sock.sendMessage(chatId, {
-                text: '✅ *Group profile picture updated successfully!*'
+                text: '✅ تمام! صورة الجروب اتغيرت بنجاح 😎'
             }, { quoted: message });
 
         } catch (error) {
-            console.error('Error updating group photo:', error);
+            console.error('خطأ في تغيير صورة الجروب:', error);
             await sock.sendMessage(chatId, {
-                text: '❌ *Failed to update group profile picture*\n\nMake sure the bot is an admin and the image is valid.'
+                text: '❌ معلش 😔 مقدرتش أغير صورة الجروب\n\nاتأكد إن البوت مشرف والصورة سليمة.'
             }, { quoted: message });
         }
     }

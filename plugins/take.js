@@ -5,9 +5,9 @@ const webp = require('node-webpmux');
 const crypto = require('crypto');
 
 module.exports = {
-  command: 'take',
-  aliases: ['steal', 'wm'],
-  category: 'stickers',
+  command: 'خد_استيكر',
+  aliases: ['t', 'wm'],
+  category: 'اوامـࢪ الاداوات',
   description: 'Change sticker pack name',
   usage: '.take <packname> (reply to sticker)',
   

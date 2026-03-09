@@ -1,7 +1,7 @@
 module.exports = {
-  command: 'walink',
+  command: 'رابط_رقم',
   aliases: ['wa', 'waid'],
-  category: 'tools',
+  category: 'اوامـࢪ الاداوات',
   description: 'Generate a WhatsApp link from a phone number.',
   usage: '.walink <number> or reply to a user with .wa',
 
@@ -22,7 +22,7 @@ module.exports = {
         } else {
           return await sock.sendMessage(
             chatId,
-            { text: 'Please provide a number, reply to a user, or mention a user.' },
+            { text: 'اكتب الرقم ياحب 👀❤️' },
             { quoted: message }
           );
         }
@@ -30,21 +30,21 @@ module.exports = {
       if (!waNumber) {
         return await sock.sendMessage(
           chatId,
-          { text: '❌ Invalid WhatsApp number.' },
+          { text: 'ف مشكله 👀❤️' },
           { quoted: message }
         );
       }
       const waLink = `https://wa.me/${waNumber}`;
       await sock.sendMessage(
         chatId,
-        { text: `*WhatsApp Link:*\n${waLink}` },
+        { text: `*الرابط يا حب* 👀❤️\n${waLink} \n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪` },
         { quoted: message }
       );
     } catch (error) {
       console.error('WA COMMAND ERROR:', error);
       await sock.sendMessage(
         chatId,
-        { text: '❌ Failed to generate WhatsApp link.' },
+        { text: 'ف مشكله ياحب 👀❤️' },
         { quoted: message }
       );
     }

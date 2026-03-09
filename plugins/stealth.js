@@ -1,27 +1,27 @@
 const store = require('../lib/lightweight_store');
 
 module.exports = {
-    command: 'stealth',
-    aliases: ['alwaysonline', 'stealthmode'],
-    category: 'owner',
-    description: 'Toggle online status - bot will not send presence updates if off',
-    usage: '.stealth <on|off>',
-    ownerOnly: 'true',
+    command: 'وضع_التخفي',
+    aliases: ['stealth', 'وضع_التخفي'],
+    category: 'اوامـࢪ الـمـطـوࢪ',
+    description: 'تشغيل أو إيقاف وضع التخفي للبوت',
+    usage: '.التخفي <تشغيل|ايقاف>',
+    ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
         const { chatId } = context;
         
         const action = args[0]?.toLowerCase();
         
-        if (!action || !['on', 'off'].includes(action)) {
+        if (!action || !['تشغيل','ايقاف','on','off'].includes(action)) {
             const currentState = await store.getSetting('global', 'stealthMode');
-            const status = currentState?.enabled ? 'ON' : 'OFF';
+            const status = currentState?.enabled ? 'مفعل ✅' : 'متوقف ❌';
             
             let autotypingWarning = '';
             try {
                 const autotypingState = await store.getSetting('global', 'autotyping');
                 if (autotypingState?.enabled && currentState?.enabled) {
-                    autotypingWarning = '\n\n⚠️ *Autotyping is enabled* but will be blocked by stealth mode.';
+                    autotypingWarning = '\n\n⚠️ *الكتابة التلقائية مفعلة* لكنها لن تعمل مع وضع التخفي.';
                 }
             } catch (e) {}
 
@@ -29,16 +29,30 @@ module.exports = {
             try {
                 const autoreadState = await store.getSetting('global', 'autoread');
                 if (autoreadState?.enabled && currentState?.enabled) {
-                    autoreadWarning = '\n⚠️ *Autoread is enabled* but will be blocked by stealth mode.';
+                    autoreadWarning = '\n⚠️ *القراءة التلقائية مفعلة* لكنها لن تعمل مع وضع التخفي.';
                 }
             } catch (e) {}
             
             return await sock.sendMessage(chatId, { 
-                text: `👻 *Stealth Mode Status:* ${status}\n\n*Usage:* .stealth <on|off>\n\n*What it does:*\n• Blocks all presence updates (typing, online, last seen)\n• Makes the bot completely invisible\n\n*When enabled:*\n✓ No "typing..." indicator\n✓ No "online" status\n✓ Complete stealth mode${autotypingWarning}${autoreadWarning}` 
+                text: `👻 *حالة وضع التخفي:* ${status}
+
+*طريقة الاستخدام:*  
+.التخفي تشغيل  
+.التخفي ايقاف
+
+*ماذا يفعل؟*
+• يمنع حالة الكتابة
+• يمنع ظهور البوت أونلاين
+• يخفي آخر ظهور للبوت
+
+*عند التفعيل:*
+✓ لا يظهر "يكتب..."
+✓ لا يظهر "متصل"
+✓ البوت يعمل في وضع التخفي الكامل${autotypingWarning}${autoreadWarning}` 
             }, { quoted: message });
         }
 
-        const enabled = action === 'on';
+        const enabled = action === 'تشغيل' || action === 'on';
         await store.saveSetting('global', 'stealthMode', { enabled });
 
         let warnings = '';
@@ -48,15 +62,19 @@ module.exports = {
                 const autoreadState = await store.getSetting('global', 'autoread');
                 
                 if (autotypingState?.enabled || autoreadState?.enabled) {
-                    warnings = '\n\n*⚠️ Note:*\n';
-                    if (autotypingState?.enabled) warnings += '• Autotyping is enabled but will be blocked\n';
-                    if (autoreadState?.enabled) warnings += '• Autoread is enabled but will be blocked\n';
+                    warnings = '\n\n*⚠️ ملاحظة:*\n';
+                    if (autotypingState?.enabled) warnings += '• الكتابة التلقائية مفعلة لكنها لن تعمل\n';
+                    if (autoreadState?.enabled) warnings += '• القراءة التلقائية مفعلة لكنها لن تعمل\n';
                 }
             } catch (e) {}
         }
 
         await sock.sendMessage(chatId, { 
-            text: `👻 Stealth mode has been turned *${enabled ? 'ON' : 'OFF'}*\n\n${enabled ? '✓ Bot is now in complete stealth mode\n✓ No presence updates\n✓ No typing indicators' : '✓ Presence updates enabled\n✓ Typing indicators enabled (if autotyping is on)'}${warnings}` 
+            text: `👻 تم ${enabled ? 'تفعيل' : 'إيقاف'} *وضع التخفي*
+
+${enabled 
+? '✓ البوت الآن في وضع التخفي الكامل\n✓ لا يظهر متصل\n✓ لا يظهر يكتب...' 
+: '✓ تم تفعيل حالة الظهور\n✓ سيظهر يكتب إذا كانت الكتابة التلقائية مفعلة'}${warnings}` 
         }, { quoted: message });
     }
 };

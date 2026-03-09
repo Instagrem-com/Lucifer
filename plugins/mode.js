@@ -1,56 +1,66 @@
 const store = require('../lib/lightweight_store')
 
+/**
+ * Advanced bot mode system with multiple access control options
+ * Modes:
+ * - public: Everyone can use (groups + private)
+ * - private: Owner/sudo only
+ * - groups: Only works in groups (everyone in groups)
+ * - inbox: Only works in private chats (everyone in DM)
+ * - self: Owner/sudo only (alias for private)
+ */
 async function modeCommand(sock, message, args, context) {
     const { chatId, channelInfo } = context
+    
     const senderId = message.key.participant || message.key.remoteJid
     const isOwnerOrSudoCheck = message.key.fromMe || context.senderIsOwnerOrSudo || context.isOwnerOrSudoCheck
 
     if (!isOwnerOrSudoCheck) {
         return await sock.sendMessage(chatId, {
-            text: '❌ مسموح بس للمالك أو السوبر مالك يغير وضع البوت!',
+            text: '❌ Only the owner or sudo users can change bot mode!',
             ...channelInfo
         }, { quoted: message })
     }
 
     const subCommand = args[0]?.toLowerCase()
-    const currentMode = await store.getBotMode() || 'عام'
+    const currentMode = await store.getBotMode() || 'public'
 
-    if (!subCommand || subCommand === 'عرض' || subCommand === 'الحاله') {
+    if (!subCommand || subCommand === 'status' || subCommand === 'check') {
         const modeEmojis = {
-            عام: '🌍',
-            خاص: '🔒',
-            جروب: '👥',
-            شات: '💬',
-            نفسي: '👤'
+            public: '🌍',
+            private: '🔒',
+            groups: '👥',
+            inbox: '💬',
+            self: '👤'
         }
 
         const modeDescriptions = {
-            عام: 'الكل يقدر يستخدم البوت (جروبات وشات خاص) 👀❤️',
-            خاص: 'بس المالك والسوبر مالك يقدروا يستخدموا البوت 👀❤️',
-            جروب: 'بيشتغل بس في الجروبات (كل الناس في الجروب) 👀❤️',
-            شات: 'بيشتغل بس في الشات الخاص (كل الناس يقدروا يراسلوا البوت) 👀❤️',
-            نفسي: 'بس المالك والسوبر مالك (زي الخاص) 👀❤️'
+            public: 'Everyone can use bot (groups + private chats)',
+            private: 'Only owner and sudo users can use bot',
+            groups: 'Only works in group chats (everyone in groups)',
+            inbox: 'Only works in private chats (everyone in DMs)',
+            self: 'Owner and sudo only (same as private)'
         }
 
-        let statusText = `📊 *حالة وضع البوت* 📊\n\n`
-        statusText += `الوضع الحالي ⚙️ ${modeEmojis[currentMode]} *${currentMode.toUpperCase()}*\n`
-        statusText += `الوصف 📝 ${modeDescriptions[currentMode]}\n\n`
+        let statusText = `📊 *BOT MODE STATUS*\n\n`
+        statusText += `Current Mode: ${modeEmojis[currentMode]} *${currentMode.toUpperCase()}*\n`
+        statusText += `Description: ${modeDescriptions[currentMode]}\n\n`
         statusText += `━━━━━━━━━━━━━━━━━━━━\n\n`
-        statusText += `*الوضعيات المتاحة 👀❤️*\n\n`
+        statusText += `*Available Modes:*\n\n`
         
         Object.entries(modeDescriptions).forEach(([mode, desc]) => {
             const current = mode === currentMode ? '✓ ' : ''
             statusText += `${current}${modeEmojis[mode]} \`${mode}\`\n${desc}\n\n`
         })
 
-        statusText += ` 📝 *طريقة الاستخدام* : 📝\n`
-        statusText += `• \`.الوضع <mode>\` - لتغيير الوضع ❤️✨\n`
-        statusText += `• \`.الوضع عرض\` - لعرض الوضع الحالي ❤️✨\n\n`
-        statusText += `*أمثلة* : 📝\n`
-        statusText += `• \`.الوضع عام\` - البوت متاح للكل ❤️✨\n`
-        statusText += `• \`.الوضع جروب\` - البوت للجروبات بس ❤️✨\n`
-        statusText += `• \`.الوضع شات\` - البوت للشات الخاص بس ❤️✨\n`
-        statusText += `• \`.الوضع خاص\` - البوت للمالك والسوبر مالك فقط ❤️✨`
+        statusText += `*Usage:*\n`
+        statusText += `• \`.mode <mode>\` - Change mode\n`
+        statusText += `• \`.mode status\` - Show current mode\n\n`
+        statusText += `*Examples:*\n`
+        statusText += `• \`.mode public\` - Enable for everyone\n`
+        statusText += `• \`.mode groups\` - Groups only\n`
+        statusText += `• \`.mode inbox\` - Private chats only\n`
+        statusText += `• \`.mode private\` - Owner/sudo only`
 
         return await sock.sendMessage(chatId, {
             text: statusText,
@@ -58,11 +68,11 @@ async function modeCommand(sock, message, args, context) {
         }, { quoted: message })
     }
 
-    const validModes = ['عام', 'خاص', 'جروب', 'شات', 'نفسي']
+    const validModes = ['public', 'private', 'groups', 'inbox', 'self']
     
     if (!validModes.includes(subCommand)) {
         return await sock.sendMessage(chatId, {
-            text: ` الوضع مش صحيح 👀❤️ *${subCommand}*\nالوضعيات الصحيحة 📝: ${validModes.join(', ')}\n\nاستخدم \`.الوضع\` لمشاهدة كل الوضعيات. ❤️✨`,
+            text: `❌ Invalid mode: *${subCommand}*\n\nValid modes: ${validModes.join(', ')}\n\nUse \`.mode\` to see all available modes.`,
             ...channelInfo
         }, { quoted: message })
     }
@@ -70,33 +80,34 @@ async function modeCommand(sock, message, args, context) {
     await store.setBotMode(subCommand)
 
     const modeEmojis = {
-        عام: '🌍',
-        خاص: '🔒',
-        جروب: '👥',
-        شات: '💬',
-        نفسي: '👤'
+        public: '🌍',
+        private: '🔒',
+        groups: '👥',
+        inbox: '💬',
+        self: '👤'
     }
 
     const modeMessages = {
-        عام: 'الكل يقدر يستخدم البوت (جروبات وشات خاص) 👀❤️',
-            خاص: 'بس المالك والسوبر مالك يقدروا يستخدموا البوت 👀❤️',
-            جروب: 'بيشتغل بس في الجروبات (كل الناس في الجروب) 👀❤️',
-            شات: 'بيشتغل بس في الشات الخاص (كل الناس يقدروا يراسلوا البوت) 👀❤️',
-            نفسي: 'بس المالك والسوبر مالك (زي الخاص) 👀❤️'
-        }
+        public: 'Bot is now accessible to *everyone* in groups and private chats.',
+        private: 'Bot is now restricted to *owner and sudo users only*.',
+        groups: 'Bot now works *only in group chats* (all group members can use it).',
+        inbox: 'Bot now works *only in private chats* (all users can DM the bot).',
+        self: 'Bot is now restricted to *owner and sudo users only*.'
+    }
 
     await sock.sendMessage(chatId, {
-        text: `${modeEmojis[subCommand]} *تم تغيير الوضع إلى 👀❤️\n ${subCommand.toUpperCase()}*\n\n${modeMessages[subCommand]}\n\n_استخدم \`.الوضع عرض\` لمراجعة الوضع الحالي 😊❤️`,
+        text: `${modeEmojis[subCommand]} *Mode Changed to ${subCommand.toUpperCase()}*\n\n${modeMessages[subCommand]}\n\n_Use \`.mode status\` to check current mode._`,
         ...channelInfo
     }, { quoted: message })
 }
 
 module.exports = {
-    command: 'الوضع',
-    aliases: ['وضع', 'mode'],
-    category: 'اوامـࢪ الـمـطـوࢪ',
-    description: 'تحكم متقدم في استخدام البوت - من يقدر يستخدم البوت وفين',
-    usage: '.الوضع [عام|خاص|جروب|شات|نفسي|عرض]',
+    command: 'mode',
+    aliases: ['botmode', 'setmode'],
+    category: 'owner',
+    description: 'Advanced bot access control - Set who can use the bot and where',
+    usage: '.mode [public|private|groups|inbox|self|status]',
     ownerOnly: true,
     handler: modeCommand
 }
+

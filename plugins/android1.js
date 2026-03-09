@@ -1,52 +1,53 @@
-const axios = require('axios');
+const axios = require('axios')
 
 module.exports = {
   command: 'تطبيق',
-  aliases: ['apk', 'ابلكيشن'],
+  aliases: ['apk','برنامج'],
   category: 'اوامـࢪ الـتـحـمـيـل',
-  description: 'تنزيل برنامج أندرويد',
-  usage: '.تطبيق  <اسم البرنامج>',
+  description: 'تنزيل برنامج اندرويد',
+  usage: '.تطبيق <اسم البرنامج>',
 
   async handler(sock, message, args, context = {}) {
-    const chatId = context.chatId || message.key.remoteJid;
-    const query = args.join(' ');
+    const chatId = context.chatId || message.key.remoteJid
+    const query = args.join(" ")
 
     if (!query) {
-      return await sock.sendMessage(chatId, {
-        text: '📱 اكتب اسم البرنامج.\nمثال:\n.تطبيق whatsapp'
-      }, { quoted: message });
+      return sock.sendMessage(chatId,{
+        text: "📱 اكتب اسم البرنامج 📱\nمثال 📝 :\n.app whatsapp"
+      },{quoted:message})
     }
 
     try {
-      await sock.sendMessage(chatId, { text: '⏳ جاري البحث عن البرنامج...' }, { quoted: message });
 
-      const api = `https://api.akuari.my.id/search/apk?q=${encodeURIComponent(query)}`;
-      const { data } = await axios.get(api);
+      await sock.sendMessage(chatId,{text:" جاري البحث عن البرنامج..🔎."},{quoted:message})
 
-      if (!data?.hasil?.length) {
-        return await sock.sendMessage(chatId, {
-          text: '❌ مفيش برنامج بالاسم ده.'
-        }, { quoted: message });
+      const res = await axios.get(`https://ws75.aptoide.com/api/7/apps/search?query=${encodeURIComponent(query)}&limit=1`)
+      const app = res.data.datalist.list[0]
+
+      if (!app) {
+        return sock.sendMessage(chatId,{text:" لم يتم العثور على البرنامج ❌"},{quoted:message})
       }
 
-      const app = data.hasil[0];
+      const caption =
+`📦 الاسم: ${app.name}
+👨‍💻 المطور: ${app.store.name}
+⭐ التقييم: ${app.stats.rating.avg}
 
-      const caption = `📦 *${app.nama}*
-👨‍💻 المطور: ${app.developer}
-⭐ التقييم: ${app.rating}
-📥 التحميل:
-${app.link}`;
+⬇️ التحميل:
+${app.file.path}
 
-      await sock.sendMessage(chatId, {
-        image: { url: app.icon },
-        caption
-      }, { quoted: message });
+*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
+
+      await sock.sendMessage(chatId,{
+        image:{url:app.icon},
+        caption:caption
+      },{quoted:message})
 
     } catch (err) {
-      console.error(err);
-      await sock.sendMessage(chatId, {
-        text: '❌ حصل خطأ أثناء البحث عن البرنامج.'
-      }, { quoted: message });
+      console.log(err)
+      sock.sendMessage(chatId,{
+        text:"❌ حصل خطأ أثناء البحث"
+      },{quoted:message})
     }
   }
-};
+}

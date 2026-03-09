@@ -4,18 +4,19 @@ const path = require('path');
 const { uploadToCatbox } = require('../lib/uploaders');
 
 module.exports = {
-    command: 'catbox',
-    aliases: ['cb'],
-    category: 'upload',
-    description: 'Upload to Catbox.moe (200MB, permanent)',
-    usage: '.catbox (reply to media)',
+    command: 'صوره_فيديو_لرابط_2',
+    aliases: ['ulr'],
+    category: 'ااوامـࢪ الاداوات',
+    description: 'ارفع أي ميديا على Catbox.moe (200MB، رابط دائم)',
+    usage: '.كاتبوكس (رد على ميديا)',
+    
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
 
         try {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg) {
-                await sock.sendMessage(chatId, { text: '⚠️ Please reply to media!' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: '⚠️ من فضلك قم بالرد على صورة أو فيديو أو ستكر أو مستند!' }, { quoted: message });
                 return;
             }
 
@@ -23,11 +24,11 @@ module.exports = {
             const supportedTypes = ['imageMessage', 'videoMessage', 'stickerMessage', 'documentMessage'];
             
             if (!supportedTypes.includes(type)) {
-                await sock.sendMessage(chatId, { text: '⚠️ Unsupported type!' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: '⚠️ نوع الملف غير مدعوم!' }, { quoted: message });
                 return;
             }
 
-            await sock.sendMessage(chatId, { text: 'Uploading to Catbox...' }, { quoted: message });
+            await sock.sendMessage(chatId, { text: '⏳ جاري رفع الملف على Catbox...' }, { quoted: message });
 
             const mediaType = type === 'stickerMessage' ? 'sticker' : type.replace('Message', '');
             const stream = await downloadContentFromMessage(quotedMsg[type], mediaType);
@@ -53,14 +54,14 @@ module.exports = {
             const result = await uploadToCatbox(tempPath);
 
             await sock.sendMessage(chatId, { 
-                text: `✅ *Catbox Upload Success!*\n\n🔗 ${result.url}`
+                text: `✅ تم رفع الملف على Catbox بنجاح!\n\n🔗 الرابط: ${result.url}`
             }, { quoted: message });
 
             fs.unlinkSync(tempPath);
 
         } catch (error) {
             console.error('Catbox Error:', error);
-            await sock.sendMessage(chatId, { text: `❌ Error: ${error.message}` }, { quoted: message });
+            await sock.sendMessage(chatId, { text: `❌ فشل رفع الملف!\nالسبب: ${error.message}` }, { quoted: message });
         }
     }
 };

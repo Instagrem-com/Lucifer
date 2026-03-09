@@ -1,19 +1,3 @@
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-
-
 const store = require('../lib/lightweight_store');
 const fs = require('fs');
 const path = require('path');
@@ -56,48 +40,49 @@ async function deleteAllCloneSessions() {
 }
 
 module.exports = {
-    command: 'stoprent',
-    aliases: ['stopclone', 'delrent'],
-    category: 'owner',
-    description: 'Stop a specific sub-bot or all sub-bots',
-    usage: '.stoprent [number/all]',
-    ownerOnly: 'true',
+    command: 'ايقاف_ربط',
+    aliases: ['stoprent', 'حذف_بوت', 'ايقاف_بوت'],
+    category: 'اوامـࢪ الـمـطـوࢪ',
+    description: 'إيقاف بوت فرعي معين أو إيقاف كل البوتات الفرعية',
+    usage: '.ايقاف_تأجير [رقم/الكل]',
+    ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
         const { chatId } = context;
 
         if (!global.conns || global.conns.length === 0) {
             return await sock.sendMessage(chatId, { 
-                text: "❌ No sub-bots are currently running." 
+                text: "❌ لا يوجد أي بوتات فرعية تعمل حالياً." 
             }, { quoted: message });
         }
 
         if (!args[0]) {
             return await sock.sendMessage(chatId, { 
-                text: `❌ Please provide a number from the list or type 'all'.\nExample: \`.stoprent 1\`` 
+                text: `❌ اكتب رقم البوت من القائمة أو كلمة "الكل".\nمثال:\n.ايقاف_تأجير 1` 
             }, { quoted: message });
         }
 
-        if (args[0].toLowerCase() === 'all') {
+        if (args[0].toLowerCase() === 'all' || args[0] === 'الكل') {
+
             let stoppedCount = 0;
-            
+
             for (let conn of global.conns) {
                 try {
                     await conn.logout();
                     conn.end();
                     stoppedCount++;
                 } catch (e) {
-                    console.error('Error stopping clone:', e.message);
+                    console.error('خطأ أثناء إيقاف البوت:', e.message);
                 }
             }
-            
+
             global.conns = [];
-            
+
             if (HAS_DB) {
                 try {
                     await deleteAllCloneSessions();
                 } catch (e) {
-                    console.error('Error deleting clone sessions:', e.message);
+                    console.error('خطأ أثناء حذف الجلسات:', e.message);
                 }
             } else {
                 const clonesDir = path.join(process.cwd(), 'session', 'clones');
@@ -106,18 +91,19 @@ module.exports = {
                     fs.mkdirSync(clonesDir, { recursive: true });
                 }
             }
-            
+
             return await sock.sendMessage(chatId, { 
-                text: `✅ All sub-bots have been stopped and removed.\n\n` +
-                      `Stopped: ${stoppedCount}\n` +
-                      `Storage: ${HAS_DB ? 'Database cleared' : 'Files deleted'}` 
+                text: `✅ تم إيقاف وحذف كل البوتات الفرعية.\n\n` +
+                      `عدد البوتات التي توقفت: ${stoppedCount}\n` +
+                      `التخزين: ${HAS_DB ? 'تم تنظيف قاعدة البيانات' : 'تم حذف الملفات'}` 
             }, { quoted: message });
         }
 
         const index = parseInt(args[0]) - 1;
+
         if (isNaN(index) || !global.conns[index]) {
             return await sock.sendMessage(chatId, { 
-                text: "❌ Invalid index number. Check `.listrent` first." 
+                text: "❌ رقم غير صحيح. استخدم أمر `.listrent` أولاً." 
             }, { quoted: message });
         }
 
@@ -125,10 +111,10 @@ module.exports = {
             const target = global.conns[index];
             const targetJid = target.user.id;
             const targetNumber = targetJid.split(':')[0];
-            
+
             await target.logout();
             global.conns.splice(index, 1);
-            
+
             if (HAS_DB) {
                 const allSettings = await store.getAllSettings('clones') || {};
                 for (const [authId, data] of Object.entries(allSettings)) {
@@ -157,33 +143,19 @@ module.exports = {
                     }
                 }
             }
-            
+
             await sock.sendMessage(chatId, { 
-                text: `✅ Stopped and removed sub-bot: @${targetNumber}\n\n` +
-                      `Storage: ${HAS_DB ? 'Database cleared' : 'Files deleted'}`, 
+                text: `✅ تم إيقاف وحذف البوت الفرعي: @${targetNumber}\n\n` +
+                      `التخزين: ${HAS_DB ? 'تم تنظيف قاعدة البيانات' : 'تم حذف الملفات'}`, 
                 mentions: [targetJid] 
             }, { quoted: message });
+
         } catch (err) {
             console.error(err);
+
             await sock.sendMessage(chatId, { 
-                text: "❌ Error while stopping the sub-bot." 
+                text: "❌ حدث خطأ أثناء إيقاف البوت الفرعي." 
             }, { quoted: message });
         }
     }
 };
-
-/*****************************************************************************
- *                                                                           *
- *                     Developed By Qasim Ali                                *
- *                                                                           *
- *  🌐  GitHub   : https://github.com/GlobalTechInfo                         *
- *  ▶️  YouTube  : https://youtube.com/@GlobalTechInfo                       *
- *  💬  WhatsApp : https://whatsapp.com/channel/0029VagJIAr3bbVBCpEkAM07     *
- *                                                                           *
- *    © 2026 GlobalTechInfo. All rights reserved.                            *
- *                                                                           *
- *    Description: This file is part of the MEGA-MD Project.                 *
- *                 Unauthorized copying or distribution is prohibited.       *
- *                                                                           *
- *****************************************************************************/
-

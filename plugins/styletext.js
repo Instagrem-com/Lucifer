@@ -1,27 +1,31 @@
 const Qasim = require('api-qasim');
 
 module.exports = {
-  command: 'stext',
-  aliases: ['fancytext', 'textstyle', 'styletext'],
-  category: 'menu',
-  description: 'Style text in different fancy formats',
-  usage: '.stext <text>',
+  command: 'نص_مزخرف',
+  aliases: ['stext', 'fancytext', 'textstyle', 'styletext'],
+  category: 'اوامـࢪ الاداوات',
+  description: 'حول النص لأي ستايل مزخرف',
+  usage: '.نص_مزخرف <الكلام>',
+  
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
     const text = args.join(' ');
+
     try {
       if (!text || text.trim() === '') {
         await sock.sendMessage(chatId, { 
-          text: "*Please provide a text to style.*\nExample: .stext Hello" 
+          text: "*محتاج تكتب الكلام الأول 😅*\nمثال: .نص_مزخرف مرحبا" 
         }, { quoted: message });
         return;
       }
+
       const styledResult = await Qasim.styletext(text);
 
       if (!Array.isArray(styledResult) || styledResult.length === 0) {
         throw new Error('No styled text found.');
       }
-      let messageText = 'Reply with choosen number:\n\n';
+
+      let messageText = 'اختر رقم عشان تبعت النص المزخرف:\n\n';
       styledResult.forEach((item, index) => {
         const styledText = item.result || item;
         messageText += `*${index + 1}.* ${styledText}\n`;
@@ -63,7 +67,7 @@ module.exports = {
           sock.ev.off('messages.upsert', listener);
         } else {
           await sock.sendMessage(m.key.remoteJid, { 
-            text: `Invalid selection. Please choose a number between 1 and ${styledResult.length}.` 
+            text: `❌ رقم غلط! اختار رقم من 1 لـ ${styledResult.length}.` 
           }, { quoted: m });
         }
       };
@@ -71,9 +75,9 @@ module.exports = {
       sock.ev.on('messages.upsert', listener);
 
     } catch (error) {
-      console.error('Error in styleTextCommand:', error);
+      console.error('خطأ في أمر نص مزخرف:', error);
       await sock.sendMessage(chatId, { 
-        text: '❌ Failed to style the text. Please try again later.' 
+        text: '❌ فشل في زخرفة النص! جرب تاني.' 
       }, { quoted: message });
     }
   }

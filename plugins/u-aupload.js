@@ -4,18 +4,19 @@ const path = require('path');
 const { uploadFile } = require('../lib/uploaders');
 
 module.exports = {
-    command: 'aupload',
-    aliases: ['upall', 'aup', 'toall'],
-    category: 'upload',
-    description: 'Upload media to cloud and get URL',
-    usage: '.aupload (reply to image/video/gif/sticker)',
+    command: 'تحويل_اي_حاجه_لرابط',
+    aliases: ['aupload', 'upall', 'aup', 'toall'],
+    category: 'اوامـࢪ الاداوات',
+    description: 'ارفع أي ميديا للسيرفر واحصل على رابط',
+    usage: '.رفع_كامل (رد على صورة/فيديو/ستكر/مستند)',
+    
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
 
         try {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg) {
-                await sock.sendMessage(chatId, { text: '⚠️ Please reply to an image, video, GIF, or sticker!' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: '⚠️ من فضلك قم بالرد على صورة أو فيديو أو GIF أو ستكر أو مستند!' }, { quoted: message });
                 return;
             }
 
@@ -23,11 +24,11 @@ module.exports = {
             const supportedTypes = ['imageMessage', 'videoMessage', 'stickerMessage', 'documentMessage'];
             
             if (!supportedTypes.includes(type)) {
-                await sock.sendMessage(chatId, { text: '⚠️ Unsupported file type! Reply to image/video/gif/sticker/document' }, { quoted: message });
+                await sock.sendMessage(chatId, { text: '⚠️ نوع الملف غير مدعوم! يجب أن يكون صورة/فيديو/ستكر/مستند' }, { quoted: message });
                 return;
             }
 
-            await sock.sendMessage(chatId, { text: 'Uploading to cloud...' }, { quoted: message });
+            await sock.sendMessage(chatId, { text: '⏳ جاري رفع الملف للسيرفر...' }, { quoted: message });
 
             const mediaType = type === 'stickerMessage' ? 'sticker' : type.replace('Message', '');
             const stream = await downloadContentFromMessage(quotedMsg[type], mediaType);
@@ -57,11 +58,11 @@ module.exports = {
             const result = await uploadFile(tempPath);
 
             await sock.sendMessage(chatId, { 
-                text: `✅ *Upload Successful!*\n\n` +
-                      `📊 *Service:* ${result.service}\n` +
-                      `📦 *Size:* ${fileSizeMB} MB\n` +
-                      `🔗 *URL:* ${result.url}\n\n` +
-                      `_Click the link to view/download_`
+                text: `✅ تم رفع الملف بنجاح!\n\n` +
+                      `📊 *الخدمة:* ${result.service}\n` +
+                      `📦 *الحجم:* ${fileSizeMB} MB\n` +
+                      `🔗 *الرابط:* ${result.url}\n\n` +
+                      `_اضغط على الرابط للعرض أو التحميل_`
             }, { quoted: message });
 
             fs.unlinkSync(tempPath);
@@ -69,7 +70,7 @@ module.exports = {
         } catch (error) {
             console.error('Upload Error:', error);
             await sock.sendMessage(chatId, { 
-                text: `❌ Upload failed!\n\nError: ${error.message}` 
+                text: `❌ فشل رفع الملف!\n\nالسبب: ${error.message}` 
             }, { quoted: message });
         }
     }

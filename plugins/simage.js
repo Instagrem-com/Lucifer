@@ -12,26 +12,29 @@ const scheduleFileDeletion = (filePath) => {
     setTimeout(async () => {
         try {
             await fse.remove(filePath);
-            console.log(`File deleted: ${filePath}`);
+            console.log(`تم مسح الملف: ${filePath}`);
         } catch (error) {
-            console.error(`Failed to delete file:`, error);
+            console.error(`فشل مسح الملف:`, error);
         }
-    }, 10000); // 10 seconds
+    }, 10000); // 10 ثواني
 };
 
 module.exports = {
-    command: 's2img',
-    aliases: ['simage', 'stoimg'],
-    category: 'stickers',
-    description: 'Convert a sticker to an image',
-    usage: '.s2img (reply to a sticker)',
+    command: 'صوره_لستيكر',
+    aliases: ['simage', 'stoimg', 'صورة_لستيكر'],
+    category: 'اوامـࢪ الاداوات',
+    description: 'تحويل ستكر لصورة PNG',
+    usage: '.s2img (رد على ستكر)',
+    
     async handler(sock, message, args, context = {}) {
         const chatId = context.chatId || message.key.remoteJid;
 
         try {
             const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMessage?.stickerMessage) {
-                await sock.sendMessage(chatId, { text: '⚠️ Reply to a sticker with .simage to convert it.' }, { quoted: message });
+                await sock.sendMessage(chatId, { 
+                    text: '⚠️ رد على ستكر باستخدام .s2img عشان اتحول لصورة' 
+                }, { quoted: message });
                 return;
             }
 
@@ -46,14 +49,19 @@ module.exports = {
             await sharp(stickerFilePath).toFormat('png').toFile(outputImagePath);
 
             const imageBuffer = await fsPromises.readFile(outputImagePath);
-            await sock.sendMessage(chatId, { image: imageBuffer, caption: '✨ Here is the converted image!' }, { quoted: message });
+            await sock.sendMessage(chatId, { 
+                image: imageBuffer, 
+                caption: '✨ دي الصورة بعد ما اتحول الستكر!' 
+            }, { quoted: message });
 
             scheduleFileDeletion(stickerFilePath);
             scheduleFileDeletion(outputImagePath);
 
         } catch (error) {
-            console.error('SImage Command Error:', error);
-            await sock.sendMessage(chatId, { text: '❌ An error occurred while converting the sticker.' }, { quoted: message });
+            console.error('خطأ في أمر s2img:', error);
+            await sock.sendMessage(chatId, { 
+                text: '❌ حصل خطأ أثناء تحويل الستكر لصورة!' 
+            }, { quoted: message });
         }
     }
 };

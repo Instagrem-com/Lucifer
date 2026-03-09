@@ -1,9 +1,9 @@
 module.exports = {
-  command: 'resetlink',
-  aliases: ['revoke', 'newlink'],
-  category: 'admin',
-  description: 'Reset group invite link',
-  usage: '.resetlink',
+  command: 'تعيين_رابط_الجروب', // بدل resetlink
+  aliases: ['رابط', 'رابط_جديد'],
+  category: 'اوامـࢪ الـجـࢪوبـات',
+  description: 'إعادة إنشاء رابط الدعوة للجروب',
+  usage: '.اعادة_رابط',
   groupOnly: true,
   adminOnly: true,
   
@@ -14,14 +14,14 @@ module.exports = {
       const newCode = await sock.groupRevokeInvite(chatId);
       
       await sock.sendMessage(chatId, { 
-        text: `✅ Group link has been successfully reset\n\n🔗 New link:\nhttps://chat.whatsapp.com/${newCode}`,
+        text: ` تم إعادة إنشاء رابط الجروب بنجاح 👀❤️\n\n🔗 الرابط الجديد:\nhttps://chat.whatsapp.com/${newCode}`,
         ...channelInfo
       }, { quoted: message });
 
     } catch (error) {
-      console.error('Error in resetlink command:', error);
+      console.error('خطأ في أمر إعادة الرابط:', error);
       await sock.sendMessage(chatId, { 
-        text: 'Failed to reset group link!',
+        text: '❌ فشل في إعادة رابط الجروب!',
         ...channelInfo
       }, { quoted: message });
     }

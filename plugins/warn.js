@@ -45,9 +45,9 @@ async function saveWarnings(warnings) {
 }
 
 module.exports = {
-  command: 'warn',
+  command: 'تحذير',
   aliases: ['warning'],
-  category: 'admin',
+  category: 'اوامـࢪ الـجـࢪوبـات',
   description: 'Warn a user (auto-kick after 3 warnings)',
   usage: '.warn [@user] or reply to message',
   groupOnly: true,
@@ -71,7 +71,7 @@ module.exports = {
       
       if (!userToWarn) {
         await sock.sendMessage(chatId, { 
-          text: '❌ Error: Please mention the user or reply to their message to warn!',
+          text: 'اعمل ربلاي للشخص او منشن ياحب 👀❤️',
           ...channelInfo
         }, { quoted: message });
         return;
@@ -88,12 +88,12 @@ module.exports = {
         warnings[chatId][userToWarn]++;
         await saveWarnings(warnings);
 
-        const warningMessage = `*『 WARNING ALERT 』*\n\n` +
-          `👤 *Warned User:* @${userToWarn.split('@')[0]}\n` +
-          `⚠️ *Warning Count:* ${warnings[chatId][userToWarn]}/3\n` +
-          `👑 *Warned By:* @${senderId.split('@')[0]}\n` +
-          `🗄️ *Storage:* ${HAS_DB ? 'Database' : 'File System'}\n\n` +
-          `📅 *Date:* ${new Date().toLocaleString()}`;
+        const warningMessage = `*『 ☣️ تحذير ☣️ 』*\n\n` +
+          `👤 *التحذير ل* @${userToWarn.split('@')[0]}\n` +
+          `⚠️ *التحذير ✋🏼* ${warnings[chatId][userToWarn]}/3\n` +
+          `👑 *الي عمل التحذير* @${senderId.split('@')[0]}\n` +
+          `🗄️ *مكان التخزين ${HAS_DB ? 'Database' : 'ملفات النظام'}\n\n` +
+          `📅 *التاريخ* ${new Date().toLocaleString()}`;
 
         await sock.sendMessage(chatId, { 
           text: warningMessage,
@@ -108,8 +108,8 @@ module.exports = {
           delete warnings[chatId][userToWarn];
           await saveWarnings(warnings);
           
-          const kickMessage = `*『 AUTO-KICK 』*\n\n` +
-            `@${userToWarn.split('@')[0]} has been removed from the group after receiving 3 warnings! ⚠️`;
+          const kickMessage = `*『 ف علق خرج 😄❤️ 』*\n\n` +
+            `@${userToWarn.split('@')[0]} \n\nطردت العلق دا عشان 3 تحذير ليه 😊❤️`;
 
           await sock.sendMessage(chatId, { 
             text: kickMessage,
@@ -120,7 +120,7 @@ module.exports = {
       } catch (error) {
         console.error('Error in warn command:', error);
         await sock.sendMessage(chatId, { 
-          text: '❌ Failed to warn user!',
+          text: 'ف مشكله ياحب 👀,
           ...channelInfo
         }, { quoted: message });
       }
@@ -130,7 +130,7 @@ module.exports = {
         await new Promise(resolve => setTimeout(resolve, 2000));
         try {
           await sock.sendMessage(chatId, { 
-            text: '❌ Rate limit reached. Please try again in a few seconds.',
+            text: 'ف مشكله ياحب 👀',
             ...channelInfo
           }, { quoted: message });
         } catch (retryError) {
@@ -139,7 +139,7 @@ module.exports = {
       } else {
         try {
           await sock.sendMessage(chatId, { 
-            text: '❌ Failed to warn user. Make sure the bot is admin and has sufficient permissions.',
+            text: 'ف مشكله ياحب 👀',
             ...channelInfo
           }, { quoted: message });
         } catch (sendError) {

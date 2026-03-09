@@ -3,11 +3,11 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = {
-  command: 'terabox',
+  command: 'تيرا_بوكس',
   aliases: ['tera', 'tbox', 'tbdl'],
-  category: 'download',
-  description: 'Download files from TeraBox',
-  usage: '.terabox <terabox link>',
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'تحميل الملفات من تيرابوكس',
+  usage: '.terabox <رابط تيرابوكس>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
@@ -32,7 +32,7 @@ module.exports = {
 
           if (isRateLimited) {
             const delay = baseDelay * Math.pow(2, attempt - 1);
-            console.log(`Retrying in ${delay}ms... (${attempt}/${maxRetries})`);
+            console.log(`إعادة المحاولة بعد ${delay}ms... (${attempt}/${maxRetries})`);
             await wait(delay);
           } else {
             throw error;
@@ -47,8 +47,8 @@ module.exports = {
           const response = await axios({
             method: 'GET',
             url: url,
-            responseType: 'arraybuffer', // Changed to arraybuffer for better stability
-            timeout: 600000, // 10 minutes
+            responseType: 'arraybuffer',
+            timeout: 600000,
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
             headers: { 
@@ -62,15 +62,14 @@ module.exports = {
           fs.writeFileSync(filepath, response.data);
           return true;
         } catch (error) {
-          console.error(`Download attempt ${attempt} failed:`, error.message);
+          console.error(`فشل التحميل في المحاولة ${attempt}:`, error.message);
           
           if (attempt === maxRetries) {
             throw error;
           }
           
-          // Wait before retry
           const delay = 2000 * attempt;
-          console.log(`Retrying download in ${delay}ms...`);
+          console.log(`إعادة المحاولة في ${delay}ms...`);
           await wait(delay);
         }
       }
@@ -89,7 +88,7 @@ module.exports = {
       if (!url) {
         return await sock.sendMessage(
           chatId,
-          { text: '📦 *TeraBox Downloader*\n\nUsage:\n.terabox <terabox link>\n\nExample:\n.terabox https://1024terabox.com/s/xxxxx' },
+          { text: '📦 *محمل تيرابوكس*\n\nالاستخدام:\n.terabox <رابط>\n\nمثال:\n.terabox https://1024terabox.com/s/xxxxx' },
           { quoted: message }
         );
       }
@@ -97,25 +96,24 @@ module.exports = {
       if (!isValidTeraBoxUrl(url)) {
         return await sock.sendMessage(
           chatId,
-          { text: '❌ *Invalid TeraBox link!*\n\nPlease provide a valid TeraBox URL.' },
+          { text: '❌ *رابط تيرابوكس غير صالح!*\n\nمن فضلك أرسل رابط صحيح.' },
           { quoted: message }
         );
       }
 
       await sock.sendMessage(
         chatId,
-        { text: '⏳ *Processing TeraBox link...*\n\nPlease wait, fetching file information...' },
+        { text: '⏳ *جاري معالجة الرابط...*\n\nيرجى الانتظار، جاري جلب معلومات الملف...' },
         { quoted: message }
       );
 
-      // Fetch file information
       const apiUrl = `https://api.qasimdev.dpdns.org/api/terabox/download?apiKey=qasim-dev&url=${encodeURIComponent(url)}`;
       const apiResponse = await apiCallWithRetry(apiUrl, 3, 3000);
 
       if (!apiResponse.data?.success || !apiResponse.data?.data?.files || apiResponse.data.data.files.length === 0) {
         return await sock.sendMessage(
           chatId,
-          { text: '❌ *Download failed!*\n\nNo files found or invalid link.' },
+          { text: '❌ *فشل التحميل!*\n\nلم يتم العثور على ملفات أو الرابط غير صحيح.' },
           { quoted: message }
         );
       }
@@ -124,21 +122,18 @@ module.exports = {
       const files = fileData.files;
       const totalFiles = fileData.totalFiles;
 
-      // Process first file
       const file = files[0];
       const title = file.title;
       const size = file.size;
       const downloadUrl = file.downloadUrl;
       const fileType = file.type;
 
-      // Show file info without thumbnail to avoid issues
       await sock.sendMessage(
         chatId,
-        { text: `📦 *TeraBox File*\n\n📄 *Name:* ${title}\n📊 *Size:* ${size}\n📁 *Type:* ${fileType}\n📂 *Total Files:* ${totalFiles}\n\n⏳ *Downloading...*\nPlease wait, this may take a while for large files...` },
+        { text: `📦 *ملف تيرابوكس*\n\n📄 *الاسم:* ${title}\n📊 *الحجم:* ${size}\n📁 *النوع:* ${fileType}\n📂 *عدد الملفات:* ${totalFiles}\n\n⏳ *جاري التحميل...*\nقد يستغرق بعض الوقت إذا كان الملف كبير.` },
         { quoted: message }
       );
 
-      // Create temp directory
       const tempDir = path.join(__dirname, '../temp');
       if (!fs.existsSync(tempDir)) {
         fs.mkdirSync(tempDir, { recursive: true });
@@ -148,45 +143,39 @@ module.exports = {
       const filename = `${Date.now()}_${sanitizedTitle}`;
       const filePath = path.join(tempDir, filename);
 
-      // Download file
       await downloadFileWithProgress(downloadUrl, filePath);
 
-      // Check file size
       const stats = fs.statSync(filePath);
       const fileSizeInMB = stats.size / (1024 * 1024);
       
-      // WhatsApp has file size limits
       if (fileSizeInMB > 100) {
         fs.unlinkSync(filePath);
         return await sock.sendMessage(
           chatId,
-          { text: `❌ *File too large!*\n\n📄 *File:* ${title}\n📊 *Size:* ${size}\n\n⚠️ WhatsApp has a 100MB file limit.\nThis file is ${fileSizeInMB.toFixed(2)}MB.` },
+          { text: `❌ *الملف كبير جداً!*\n\n📄 *الملف:* ${title}\n📊 *الحجم:* ${size}\n\n⚠️ واتساب يسمح بحد أقصى 100MB.` },
           { quoted: message }
         );
       }
 
-      // Determine file type and send accordingly
       const fileExtension = title.split('.').pop().toLowerCase();
-      const videoExtensions = ['mp4', 'mkv', 'avi', 'mov', 'wmv', 'flv', 'webm', '3gp'];
-      const audioExtensions = ['mp3', 'wav', 'aac', 'flac', 'm4a', 'ogg', 'opus'];
-      const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+      const videoExtensions = ['mp4','mkv','avi','mov','wmv','flv','webm','3gp'];
+      const audioExtensions = ['mp3','wav','aac','flac','m4a','ogg','opus'];
+      const imageExtensions = ['jpg','jpeg','png','gif','bmp','webp'];
 
       const fileBuffer = fs.readFileSync(filePath);
 
       if (videoExtensions.includes(fileExtension)) {
-        // Send as video
         await sock.sendMessage(
           chatId,
           {
             video: fileBuffer,
             mimetype: 'video/mp4',
             fileName: title,
-            caption: `✅ *Download Complete!*\n\n📄 *File:* ${title}\n📊 *Size:* ${size}\n\n> *_Downloaded from TeraBox_*`
+            caption: `✅ *تم التحميل بنجاح!*\n\n📄 *الملف:* ${title}\n📊 *الحجم:* ${size}`
           },
           { quoted: message }
         );
       } else if (audioExtensions.includes(fileExtension)) {
-        // Send as audio
         await sock.sendMessage(
           chatId,
           {
@@ -197,44 +186,40 @@ module.exports = {
           },
           { quoted: message }
         );
-        
+
         await sock.sendMessage(
           chatId,
-          { text: `✅ *Download Complete!*\n\n📄 *File:* ${title}\n📊 *Size:* ${size}` },
+          { text: `✅ *تم التحميل بنجاح!*\n\n📄 *الملف:* ${title}\n📊 *الحجم:* ${size}` },
           { quoted: message }
         );
       } else if (imageExtensions.includes(fileExtension)) {
-        // Send as image
         await sock.sendMessage(
           chatId,
           {
             image: fileBuffer,
-            caption: `✅ *Download Complete!*\n\n📄 *File:* ${title}\n📊 *Size:* ${size}`
+            caption: `✅ *تم التحميل بنجاح!*\n\n📄 *الملف:* ${title}\n📊 *الحجم:* ${size}`
           },
           { quoted: message }
         );
       } else {
-        // Send as document
         await sock.sendMessage(
           chatId,
           {
             document: fileBuffer,
             mimetype: 'application/octet-stream',
             fileName: title,
-            caption: `✅ *Download Complete!*\n\n📄 *File:* ${title}\n📊 *Size:* ${size}\n\n> *_Downloaded from TeraBox_*`
+            caption: `✅ *تم التحميل بنجاح!*\n\n📄 *الملف:* ${title}\n📊 *الحجم:* ${size}`
           },
           { quoted: message }
         );
       }
 
-      // Clean up
       fs.unlinkSync(filePath);
 
-      // If there are multiple files, notify user
       if (totalFiles > 1) {
         await sock.sendMessage(
           chatId,
-          { text: `ℹ️ *Note:* This TeraBox link contains ${totalFiles} files.\nOnly the first file was downloaded.` },
+          { text: `ℹ️ *ملاحظة:* هذا الرابط يحتوي على ${totalFiles} ملفات.\nتم تحميل أول ملف فقط.` },
           { quoted: message }
         );
       }
@@ -242,23 +227,23 @@ module.exports = {
     } catch (error) {
       console.error('[TERABOX] Command Error:', error);
       
-      let errorMsg = "❌ *Download failed!*\n\n";
+      let errorMsg = "❌ *فشل التحميل!*\n\n";
       
       if (error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED') {
-        errorMsg += "*Reason:* Timeout - File might be too large or connection is slow";
-      } else if (error.code === 'ECONNRESET' || error.message?.includes('aborted')) {
-        errorMsg += "*Reason:* Connection reset - The download was interrupted\nPlease try again.";
+        errorMsg += "*السبب:* انتهت مهلة الاتصال، ربما الملف كبير.";
+      } else if (error.code === 'ECONNRESET') {
+        errorMsg += "*السبب:* انقطع الاتصال أثناء التحميل.";
       } else if (error.response?.status === 429) {
-        errorMsg += "*Reason:* Rate limit exceeded\nPlease wait a minute and try again.";
+        errorMsg += "*السبب:* تم تجاوز الحد المسموح للطلبات.";
       } else if (error.response?.status === 403) {
-        errorMsg += "*Reason:* Access forbidden - Link might be private or expired";
+        errorMsg += "*السبب:* الرابط خاص أو منتهي.";
       } else if (error.response?.status === 404) {
-        errorMsg += "*Reason:* File not found - Link might be invalid or deleted";
+        errorMsg += "*السبب:* الملف غير موجود.";
       } else {
-        errorMsg += `*Error:* ${error.message || 'Unknown error'}`;
+        errorMsg += `*خطأ:* ${error.message || 'خطأ غير معروف'}`;
       }
-      
-      errorMsg += "\n\n💡 *Tips:*\n- Make sure the link is public\n- Check if the link hasn't expired\n- Try with smaller files first\n- Wait 10-15 seconds between requests";
+
+      errorMsg += "\n\n💡 *نصائح:*\n- تأكد أن الرابط عام\n- تأكد أن الرابط لم ينته\n- جرب ملفات أصغر\n- انتظر قليلاً بين كل طلب";
 
       await sock.sendMessage(
         chatId,

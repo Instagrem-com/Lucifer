@@ -1,18 +1,20 @@
 const axios = require('axios');
 
 module.exports = {
-  command: 'reverse',
-  aliases: ['revt', 'reversetext'],
-  category: 'tools',
-  description: 'Reverse any text',
-  usage: '.reverse <text>',
+  command: 'اقلب_النص', // بدل reverse
+  aliases: ['قلب', 'اقلب_النص'],
+  category: 'اوامـࢪ الاداوات',
+  description: 'يقلب أي نص',
+  usage: '.اقلب <النص>',
 
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
     const textToReverse = args?.join(' ')?.trim();
 
     if (!textToReverse) {
-      return await sock.sendMessage(chatId, { text: 'Please provide text to reverse.\nExample: .reverse Hello World' }, { quoted: message });
+      return await sock.sendMessage(chatId, { 
+        text: ' اكتب النص اللي تحب تقلبه 👀❤️\nمثال 📝: .اقلب_النص مرحبا بالعالم' 
+      }, { quoted: message });
     }
 
     try {
@@ -20,20 +22,20 @@ module.exports = {
       const { data } = await axios.get(apiUrl, { timeout: 10000 });
 
       if (!data?.status || !data.result) {
-        return await sock.sendMessage(chatId, { text: '❌ Failed to reverse the text.' }, { quoted: message });
+        return await sock.sendMessage(chatId, { text: '❌ فشل في قلب النص، جرب تاني.' }, { quoted: message });
       }
 
-      const reply = `*Reversed:* ${data.result}`;
+      const reply = `🔄 *النص بعد قلبه* 🔄\n ${data.result}`;
 
       await sock.sendMessage(chatId, { text: reply }, { quoted: message });
 
     } catch (error) {
-      console.error('Reverse plugin error:', error);
+      console.error('خطأ في أمر قلب النص:', error);
 
       if (error.code === 'ECONNABORTED') {
-        await sock.sendMessage(chatId, { text: '❌ Request timed out. Please try again.' }, { quoted: message });
+        await sock.sendMessage(chatId, { text: '❌ انتهت المهلة، جرب تاني.' }, { quoted: message });
       } else {
-        await sock.sendMessage(chatId, { text: '❌ Failed to reverse the text.' }, { quoted: message });
+        await sock.sendMessage(chatId, { text: '❌ فشل في قلب النص، جرب تاني.' }, { quoted: message });
       }
     }
   }

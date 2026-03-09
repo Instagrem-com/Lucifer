@@ -1,9 +1,9 @@
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 module.exports = {
-  command: 'viewonce',
-  aliases: ['viewmedia', 'vv'],
-  category: 'general',
+  command: '👀',
+  aliases: ['❤️', 'vv'],
+  category: 'اوامـࢪ الـمـطـوࢪ',
   description: 'Re-send a view-once image or video.',
   usage: '.viewonce (reply to a view-once media)',
 
@@ -37,14 +37,14 @@ module.exports = {
       } 
       else {
         await sock.sendMessage(chatId, { 
-          text: '*Please reply to a view-once image or video.*' 
+          text: '🫪' 
         }, { quoted: message });
       }
 
     } catch (error) {
       console.error('Error in viewonceCommand:', error);
       await sock.sendMessage(chatId, { 
-        text: '❌ Failed to retrieve the view-once media. Please try again later.' 
+        text: '🫪' 
       }, { quoted: message });
     }
   }

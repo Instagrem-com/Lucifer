@@ -27,71 +27,46 @@ async function saveCloneSession(authId, data) {
         await store.saveSetting('clones', authId, data);
     } else {
         const sessionPath = path.join(process.cwd(), 'session', 'clones', authId);
-        if (!fs.existsSync(sessionPath)) {
-            fs.mkdirSync(sessionPath, { recursive: true });
-        }
+        if (!fs.existsSync(sessionPath)) fs.mkdirSync(sessionPath, { recursive: true });
         fs.writeFileSync(path.join(sessionPath, 'session.json'), JSON.stringify(data));
     }
 }
 
 async function getCloneSession(authId) {
-    if (HAS_DB) {
-        return await store.getSetting('clones', authId);
-    } else {
-        const sessionPath = path.join(process.cwd(), 'session', 'clones', authId, 'session.json');
-        if (fs.existsSync(sessionPath)) {
-            return JSON.parse(fs.readFileSync(sessionPath, 'utf-8'));
-        }
-        return null;
-    }
+    if (HAS_DB) return await store.getSetting('clones', authId);
+    const sessionPath = path.join(process.cwd(), 'session', 'clones', authId, 'session.json');
+    return fs.existsSync(sessionPath) ? JSON.parse(fs.readFileSync(sessionPath, 'utf-8')) : null;
 }
 
 async function deleteCloneSession(authId) {
-    if (HAS_DB) {
-        await store.saveSetting('clones', authId, null);
-    } else {
+    if (HAS_DB) await store.saveSetting('clones', authId, null);
+    else {
         const sessionPath = path.join(process.cwd(), 'session', 'clones', authId);
-        if (fs.existsSync(sessionPath)) {
-            fs.rmSync(sessionPath, { recursive: true, force: true });
-        }
-    }
-}
-
-async function getAllCloneSessions() {
-    if (HAS_DB) {
-        const settings = await store.getSetting('clones', 'all') || {};
-        return Object.keys(settings);
-    } else {
-        const clonesDir = path.join(process.cwd(), 'session', 'clones');
-        if (!fs.existsSync(clonesDir)) return [];
-        return fs.readdirSync(clonesDir);
+        if (fs.existsSync(sessionPath)) fs.rmSync(sessionPath, { recursive: true, force: true });
     }
 }
 
 module.exports = {
-    command: 'rentbot',
-    aliases: ['botclone', 'clonebot'],
-    category: 'owner',
-    description: 'Start a sub-bot clone via pairing code',
-    usage: '.rentbot 92305xxxxxxx',
-    ownerOnly: 'true',
+    command: 'ربط', // بدل rentbot
+    aliases: ['بوت_نسخة', 'clonebot'],
+    category: 'اوامـࢪ الـمـطـوࢪ',
+    description: 'ابدأ نسخة بوت فرعية عن طريق كود الربط',
+    usage: '.استاجر_بوت 92305xxxxxxx',
+    ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
         const { chatId } = context;
-        
+
         if (!args[0]) {
             return await sock.sendMessage(chatId, { 
-                text: `*Usage:* \`.rentbot 923051391xxx\`` 
+                text: '*استخدام الأمر* 📝👇🏼. :\n `.ربط 201501728150`' 
             }, { quoted: message });
         }
 
-        let userNumber = args[0].replace(/[^0-9]/g, '');
+        const userNumber = args[0].replace(/[^0-9]/g, '');
         const authId = crypto.randomBytes(4).toString('hex');
         const sessionPath = path.join(process.cwd(), 'session', 'clones', authId);
-
-        if (!HAS_DB && !fs.existsSync(sessionPath)) {
-            fs.mkdirSync(sessionPath, { recursive: true });
-        }
+        if (!HAS_DB && !fs.existsSync(sessionPath)) fs.mkdirSync(sessionPath, { recursive: true });
 
         async function startClone() {
             const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
@@ -122,34 +97,28 @@ module.exports = {
                     let code = await conn.requestPairingCode(userNumber);
                     code = code?.match(/.{1,4}/g)?.join("-") || code;
                     
-                    const pairingText = `*MEGA-MD CLONE SYSTEM*\n\n` +
-                                       `Code: *${code}*\n` +
-                                       `Storage: *${HAS_DB ? 'Database' : 'File System'}*\n\n` +
-                                       `1. Open WhatsApp Settings\n` +
-                                       `2. Tap Linked Devices > Link with Phone Number\n` +
-                                       `3. Enter the code above.\n\n` +
-                                       `*Tip:* If no popup appears, go to 'Link with phone number' on your phone and enter the code manually.`;
+                    const pairingText = 
+`*⚡ نظام نسخ البوت - ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪⚡*\n\n` +
+`كود الربط 💻 : *${code}*\n` +
+`التخزين ⚙️: *${HAS_DB ? 'Database' : 'ملفات'}*\n\n` +
+`1. افتح إعدادات واتساب\n` +
+`2. اضغط "الأجهزة المرتبطة" > "ربط برقم هاتف"\n` +
+`3. ادخل الكود اللي فوق.\n\n` +
+`💡 نصيحة: لو مظهرش أي PopUp، روح على "ربط برقم هاتف" وادخل الكود يدوي 💡`;
                     
                     await sock.sendMessage(chatId, { text: pairingText }, { quoted: message });
                 } catch (err) {
-                    console.error("Pairing Error:", err);
-                    await sock.sendMessage(chatId, { text: "❌ Failed to request code. Try again in 1 minute." });
+                    console.error("خطأ في طلب الكود:", err);
+                    await sock.sendMessage(chatId, { text: "❌ فشل في طلب الكود. جرب بعد دقيقة." });
                 }
             }
 
             conn.ev.on('creds.update', async () => {
                 await saveCreds();
-                
                 if (HAS_DB) {
                     try {
-                        await saveCloneSession(authId, {
-                            userNumber,
-                            createdAt: Date.now(),
-                            status: 'active'
-                        });
-                    } catch (e) {
-                        console.error("DB save error:", e.message);
-                    }
+                        await saveCloneSession(authId, { userNumber, createdAt: Date.now(), status: 'active' });
+                    } catch (e) { console.error("خطأ في حفظ DB:", e.message); }
                 }
             });
 
@@ -158,28 +127,19 @@ module.exports = {
 
                 if (connection === 'open') {
                     global.conns.push(conn);
-                    
-                    if (HAS_DB) {
-                        await saveCloneSession(authId, {
-                            userNumber,
-                            createdAt: Date.now(),
-                            status: 'online',
-                            connectedAt: Date.now()
-                        });
-                    }
-                    
+                    if (HAS_DB) await saveCloneSession(authId, { userNumber, createdAt: Date.now(), status: 'online', connectedAt: Date.now() });
+
                     await sock.sendMessage(chatId, { 
-                        text: `✅ Clone is now Online!\n\n` +
+                        text: `✅ النسخة شغالة دلوقتي ✅\n\n` +
                               `ID: ${authId}\n` +
-                              `Storage: ${HAS_DB ? 'Database' : 'File System'}` 
+                              `التخزين: ${HAS_DB ? 'Database' : 'ملفات'}`
                     }, { quoted: message });
                 }
 
                 if (connection === 'close') {
                     const code = lastDisconnect?.error?.output?.statusCode;
-                    if (code !== DisconnectReason.loggedOut) {
-                        startClone(); 
-                    } else {
+                    if (code !== DisconnectReason.loggedOut) startClone();
+                    else {
                         await deleteCloneSession(authId);
                         const index = global.conns.indexOf(conn);
                         if (index > -1) global.conns.splice(index, 1);
@@ -192,9 +152,7 @@ module.exports = {
                 conn.ev.on('messages.upsert', async (chatUpdate) => {
                     await handleMessages(conn, chatUpdate, true);
                 });
-            } catch (e) {
-                console.error("Handler linkage failed:", e.message);
-            }
+            } catch (e) { console.error("ربط الرسائل فشل:", e.message); }
 
             return conn;
         }
@@ -202,4 +160,3 @@ module.exports = {
         await startClone();
     }
 };
-
