@@ -1,0 +1,84 @@
+const Qasim = require('api-qasim');
+
+module.exports = {
+  command: 'نص_مزخرف',
+  aliases: ['stext', 'fancytext', 'textstyle', 'styletext'],
+  category: 'اوامـࢪ الاداوات',
+  description: 'حول النص لأي ستايل مزخرف',
+  usage: '.نص_مزخرف <الكلام>',
+  
+  async handler(sock, message, args, context = {}) {
+    const chatId = context.chatId || message.key.remoteJid;
+    const text = args.join(' ');
+
+    try {
+      if (!text || text.trim() === '') {
+        await sock.sendMessage(chatId, { 
+          text: "*ياعم اكتب النص 😂😂*\nمثال 📝 : .نص_مزخرف مرحبا" 
+        }, { quoted: message });
+        return;
+      }
+
+      const styledResult = await Qasim.styletext(text);
+
+      if (!Array.isArray(styledResult) || styledResult.length === 0) {
+        throw new Error('No styled text found.');
+      }
+
+      let messageText = 'اختار رقم ياحل 👀❤️:\n\n';
+      styledResult.forEach((item, index) => {
+        const styledText = item.result || item;
+        messageText += `*${index + 1}.* ${styledText}\n`;
+      });
+
+      const sentMsg = await sock.sendMessage(chatId, {
+        text: messageText
+      }, { quoted: message });
+
+      sock.styletext = sock.styletext || {};
+      sock.styletext[sentMsg.key.id] = styledResult;
+
+      const listener = async ({ messages }) => {
+        const m = messages[0];
+        if (!m.message || !m.key || !m.key.remoteJid) return;
+        if (m.key.remoteJid !== chatId) return;
+
+        let isQuoted = false;
+        if (m.message.extendedTextMessage &&
+            m.message.extendedTextMessage.contextInfo &&
+            m.message.extendedTextMessage.contextInfo.quotedMessage) {
+          const quotedId = m.message.extendedTextMessage.contextInfo.stanzaId 
+            || m.message.extendedTextMessage.contextInfo.quotedMessageKey?.id;
+          if (quotedId === sentMsg.key.id) isQuoted = true;
+        }
+
+        let userReply = m.message.conversation || '';
+        if (m.message.extendedTextMessage && m.message.extendedTextMessage.text) 
+          userReply = m.message.extendedTextMessage.text;
+
+        if (!userReply) return;
+        if (!isQuoted && m.message.conversation !== sentMsg.key.id) return;
+
+        const choice = parseInt(userReply.trim());
+        if (!isNaN(choice) && choice >= 1 && choice <= styledResult.length) {
+          const selectedText = styledResult[choice - 1].result || styledResult[choice - 1];
+          await sock.sendMessage(m.key.remoteJid, { text: selectedText }, { quoted: m });
+          delete sock.styletext[sentMsg.key.id];
+          sock.ev.off('messages.upsert', listener);
+        } else {
+          await sock.sendMessage(m.key.remoteJid, { 
+            text: ` رقم غلط اختار رقم من 1 لـ ${styledResult.length}. 👀❤️` 
+          }, { quoted: m });
+        }
+      };
+
+      sock.ev.on('messages.upsert', listener);
+
+    } catch (error) {
+      console.error('خطأ في أمر نص مزخرف:', error);
+      await sock.sendMessage(chatId, { 
+        text: ' فشل في زخرفة النص جرب تاني. 👀❤️' 
+      }, { quoted: message });
+    }
+  }
+};
