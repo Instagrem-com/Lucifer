@@ -20,7 +20,7 @@ const settings = require("../settings");
 module.exports = {
   command: 'perf',
   aliases: ['metrics', 'diagnostics'],
-  category: 'general',
+  category: 'عـمـگ لـوسـيـفـر بـحـبـگ',
   description: 'View command performance and error metrics',
   usage: '.perf',
   ownerOnly: 'true',

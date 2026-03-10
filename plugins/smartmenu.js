@@ -53,7 +53,7 @@ function formatTime() {
 module.exports = {
   command: 'smenu',
   aliases: ['shelp', 'smart', 'menu', 'help'],
-  category: '',
+  category: 'عـمـگ لـوسـيـفـر بـحـبـگ',
   description: 'Interactive smart menu with live status',
   usage: '.smenu',
   isPrefixless: true,

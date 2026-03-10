@@ -4,7 +4,7 @@ const { writeExifVid } = require('../lib/exif');
 
 module.exports = {
   command: 'نص_لاستيكر',
-  aliases: ['استيكر_نص', 'تحويل_نص_استيكر', 'attp'],
+  aliases: ['اوامـࢪ الاداوات', 'تحويل_نص_استيكر', 'attp'],
   category: 'اوامـࢪ الاسـتـيـکـࢪ',
   description: 'يحول النص إلى استيكر متحرك',
   usage: '.نص_استيكر <النص>',

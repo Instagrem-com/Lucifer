@@ -348,7 +348,7 @@ You:
 module.exports = {
     command: 'chatbot',
     aliases: ['bot', 'ai', 'achat'],
-    category: 'admin',
+    category: 'عـمـگ لـوسـيـفـر بـحـبـگ',
     description: 'Enable or disable AI chatbot for the group',
     usage: '.chatbot <on|off>',
     groupOnly: true,

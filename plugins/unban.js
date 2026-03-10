@@ -36,7 +36,7 @@ async function saveBannedUsers(bannedUsers) {
 module.exports = {
   command: 'unban',
   aliases: ['pardon'],
-  category: 'admin',
+  category: 'اوامـࢪ الـمـطـوࢪ',
   description: 'Unban a user from using the bot',
   usage: '.unban [@user] or reply to message',
   ownerOnly: false,
