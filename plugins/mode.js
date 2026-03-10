@@ -102,9 +102,9 @@ async function modeCommand(sock, message, args, context) {
 }
 
 module.exports = {
-    command: 'mode',
+    command: 'الوضع',
     aliases: ['botmode', 'setmode'],
-    category: 'owner',
+    category: 'اوامـࢪ الـمـطـوࢪ',
     description: 'Advanced bot access control - Set who can use the bot and where',
     usage: '.mode [public|private|groups|inbox|self|status]',
     ownerOnly: true,

@@ -6,7 +6,7 @@ const path = require('path');
 module.exports = {
   command: 'مزج_الإيموجي',
   aliases: ['mixemoji', 'emix'],
-  category: 'اوامـࢪ الاسـتـيـكـࢪ',
+  category: 'اوامـࢪ الاداوات',
   description: 'يمزج إيموجيين ويبعتهم على شكل ستكر',
   usage: '.مزج_الإيموجي 😎+🥰',
 
