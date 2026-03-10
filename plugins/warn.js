@@ -120,7 +120,7 @@ module.exports = {
       } catch (error) {
         console.error('Error in warn command:', error);
         await sock.sendMessage(chatId, { 
-          text: 'ف مشكله ياحب 👀,
+          text: 'ف مشكله ياحب 👀',
           ...channelInfo
         }, { quoted: message });
       }

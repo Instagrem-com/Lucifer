@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = {
   command: 'سبوتيفاي',
   aliases: ['sp', 'spotifydl', 'سبوتيفاي'],
-  category: اوامـࢪ الاداوات',
+  category: 'اوامـࢪ الاداوات',
   description: 'تحميل أغنية من سبوتيفاي',
   usage: '.spotify <اسم الأغنية أو الفنان>',
   
