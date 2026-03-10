@@ -51,9 +51,9 @@ function formatTime() {
 }
 
 module.exports = {
-  command: 'smenu',
+  command: '*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
   aliases: ['shelp', 'smart', 'menu', 'help'],
-  category: 'عـمـگ لـوسـيـفـر بـحـبـگ',
+  category: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
   description: 'Interactive smart menu with live status',
   usage: '.smenu',
   isPrefixless: true,
@@ -138,8 +138,8 @@ module.exports = {
           forwardingScore: 1,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363319098372999@newsletter',
-            newsletterName: settings.botName || 'MEGA MD',
+            newsletterJid: '120363425019719202@newsletter',
+            newsletterName: settings.botName || '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
             serverMessageId: -1
           }
         }

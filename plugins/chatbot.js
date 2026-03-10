@@ -346,9 +346,9 @@ You:
 }
 
 module.exports = {
-    command: 'chatbot',
+    command: 'ف_حـاجـات_عـظـمـة.⚡',
     aliases: ['bot', 'ai', 'achat'],
-    category: 'عـمـگ لـوسـيـفـر بـحـبـگ',
+    category: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
     description: 'Enable or disable AI chatbot for the group',
     usage: '.chatbot <on|off>',
     groupOnly: true,

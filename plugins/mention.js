@@ -179,9 +179,9 @@ async function setMentionCommand(sock, chatId, message, isOwner) {
 }
 
 module.exports = {
-    command: 'رد_عمنشن_تلقائي',
+    command: 'عـمـگ لـوسـيـفـر بـحـبـگ.💀🖤',
     aliases: ['اضبط_منشن', 'رد_منشن'],
-    category: 'عـمـگ لـوسـيـفـر بـحـبـگ',
+    category: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
     description: 'تشغيل أو ضبط رد المنشن المخصص',
     usage: '.منشن <on|off> أو .اضبط_منشن (رد على رسالة)',
     ownerOnly: true,

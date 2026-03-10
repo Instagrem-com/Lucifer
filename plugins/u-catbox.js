@@ -6,7 +6,7 @@ const { uploadToCatbox } = require('../lib/uploaders');
 module.exports = {
     command: 'صوره_فيديو_لرابط_2',
     aliases: ['ulr'],
-    category: 'ااوامـࢪ الاداوات',
+    category: 'اوامـࢪ الاداوات',
     description: 'ارفع أي ميديا على Catbox.moe (200MB، رابط دائم)',
     usage: '.كاتبوكس (رد على ميديا)',
     
