@@ -1,5 +1,3 @@
-import type { BotContext } from '../types.js';
-import { initConfig, saveConfig } from './autoreply.js';
 
 export default {
     command: 'حذف_رد_تلقائي',
