@@ -37,7 +37,7 @@ module.exports = {
 ▢ ${listAdmin}
 └───────────
 
-*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪
+*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪'
 `.trim();
 
       await sock.sendMessage(chatId, {
@@ -50,7 +50,7 @@ module.exports = {
     } catch (error) {
       console.error('خطأ في أمر المشرفين:', error);
       await sock.sendMessage(chatId, { 
-        text: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪,
+        text: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
         ...channelInfo
       }, { quoted: message });
     }
