@@ -51,9 +51,9 @@ function formatTime() {
 }
 
 module.exports = {
-  command: '*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
+  command: 'صـلـي_ع_الـنـبـي.❤️'✨,
   aliases: ['shelp', 'smart', 'menu', 'help'],
-  category: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
+  category: '',
   description: 'Interactive smart menu with live status',
   usage: '.smenu',
   isPrefixless: true,

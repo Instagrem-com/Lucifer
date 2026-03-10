@@ -87,7 +87,7 @@ async function handleTagDetection(sock, chatId, message, senderId) {
 module.exports = {
     command: 'اشـتـرك_ف_الـقـنـاة.❤️',
     aliases: ['ممنوع_المنشنات', 'antiat', 'tagblock'],
-    category: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
+    category: '',
     description: 'مانع منشن كل الأعضاء في الجروب',
     usage: '.ممنوع_المنشن <تفعيل|تعطيل|ضبط|عرض>',
     groupOnly: true,

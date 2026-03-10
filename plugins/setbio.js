@@ -104,7 +104,7 @@ function stopAutoBio() {
 module.exports = {
   command: 'اعـمـل_شـيـࢪ_يـحـب.😊❤️',
   aliases: ['autobio', 'bio'],
-  category: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
+  category: '',
   description: 'Set custom WhatsApp bio with random quotes',
   usage: '.setbio <on|off|set|reset>',
   ownerOnly: true,
