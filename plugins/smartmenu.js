@@ -51,7 +51,7 @@ function formatTime() {
 }
 
 module.exports = {
-  command: 'صـلـي_ع_الـنـبـي.❤️'✨,
+  command: 'smenu',
   aliases: ['shelp', 'smart', 'menu', 'help'],
   category: '',
   description: 'Interactive smart menu with live status',
