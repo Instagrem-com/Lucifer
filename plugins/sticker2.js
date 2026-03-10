@@ -7,7 +7,7 @@ const webp = require('node-webpmux');
 const crypto = require('crypto');
 
 module.exports = {
-  command: 'ملصق_2',
+  command: 'ملصق',
   aliases: ['sticker2', 's2', 'ستيكر2'],
   category: 'اوامـࢪ الاداوات',
   description: 'تحويل صورة أو فيديو إلى ملصق',
