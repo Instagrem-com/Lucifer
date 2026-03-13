@@ -141,8 +141,7 @@ const menuStyles = [
   }
 ];
 
-const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-const menuSong = "https://files.catbox.moe/1akwth.mp3"; // الأغنية
+const songPath = path.join(__dirname, '../assets/اغنيه.mp3'); // المسار المحلي للأغنية
 
 module.exports = {
   command: 'اوامر',
