@@ -194,10 +194,10 @@ module.exports = {
 
       // 🔹 إرسال الأغنية بعد تفاصيل الأمر
       await sock.sendMessage(chatId, {
-        audio: { url: menuSong },
-        mimetype: "audio/mp4",
-        ptt: true
-      }, { quoted: message });
+  document: { url: menuSong },
+  mimetype: "audio/mpeg",
+  fileName: "اغنية.mp3"
+}, { quoted: message });
 
       return;
     }
