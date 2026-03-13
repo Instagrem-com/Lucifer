@@ -193,12 +193,11 @@ module.exports = {
         await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
       }
 
-      // إرسال الأغنية كـ Voice Note (PTT)
+      // إرسال الأغنية كأغنية عادية (مش PTT)
       if (fs.existsSync(menuSong)) {
         await sock.sendMessage(chatId, {
           audio: { url: menuSong },
-mimetype: "audio/ogg; codecs=opus",
-ptt: true
+          mimetype: "audio/ogg; codecs=opus" // بدون ptt
         }, { quoted: message });
       }
 
@@ -230,13 +229,12 @@ ptt: true
       await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
     }
 
-    // إرسال الأغنية بعد القائمة كـ Voice Note
+    // إرسال الأغنية بعد القائمة كأغنية عادية (مش PTT)
     if (fs.existsSync(menuSong)) {
-  await sock.sendMessage(chatId, {
-    audio: { url: menuSong },
-    mimetype: "audio/ogg; codecs=opus",
-    ptt: true
-  }, { quoted: message });
+      await sock.sendMessage(chatId, {
+        audio: { url: menuSong },
+        mimetype: "audio/ogg; codecs=opus" // بدون ptt
+      }, { quoted: message });
     }
   }
 };
