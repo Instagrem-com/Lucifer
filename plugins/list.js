@@ -20,7 +20,7 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 // مسار الصورة وملف الأغنية المحلي
 const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-const menuSong = path.join(__dirname, '../assets/اغنيه.ogg'); // ضع هنا اسم الأغنية اللي عندك
+const menuSong = path.join(__dirname, '../assets/اغنيه.mp3'); // غيرنا للـ MP3
 
 // ************* كل ستايلات القائمة كما هي *************
 const menuStyles = [
@@ -193,11 +193,11 @@ module.exports = {
         await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
       }
 
-      // إرسال الأغنية كأغنية عادية (مش PTT)
+      // إرسال الأغنية كأغنية MP3 عادية
       if (fs.existsSync(menuSong)) {
         await sock.sendMessage(chatId, {
           audio: { url: menuSong },
-          mimetype: "audio/ogg; codecs=opus" // بدون ptt
+          mimetype: "audio/mpeg" // بدل ogg
         }, { quoted: message });
       }
 
@@ -229,11 +229,11 @@ module.exports = {
       await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
     }
 
-    // إرسال الأغنية بعد القائمة كأغنية عادية (مش PTT)
+    // إرسال الأغنية بعد القائمة كأغنية MP3 عادية
     if (fs.existsSync(menuSong)) {
       await sock.sendMessage(chatId, {
         audio: { url: menuSong },
-        mimetype: "audio/ogg; codecs=opus" // بدون ptt
+        mimetype: "audio/mpeg" // بدل ogg
       }, { quoted: message });
     }
   }
