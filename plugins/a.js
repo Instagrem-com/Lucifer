@@ -14,15 +14,11 @@ module.exports = {
         const metadata = await sock.groupMetadata(chatId);
         const participants = metadata.participants || [];
 
-        // استخراج رقم البوت الحقيقي
-        const botNumber = sock.user.id.split('@')[0].split(':')[0];
+        const botJid = sock.user.id;
+        const sender = message.key.participant || message.key.remoteJid;
 
-        // فلترة الأعضاء (عدم طرد البوت)
         const users = participants
-        .filter(p => {
-            const memberNumber = p.id.split('@')[0].split(':')[0];
-            return memberNumber !== botNumber;
-        })
+        .filter(p => p.id !== botJid && p.id !== sender)
         .map(p => p.id);
 
         if (users.length === 0) {
