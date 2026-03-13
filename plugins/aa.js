@@ -1,10 +1,11 @@
 module.exports = {
     command: 'طرد_الكل_معادا_الادمن',
-    aliases: ['طرد_الاعضاء],
+    aliases: ['طرد_الاعضاء'],
     category: 'اوامـࢪ الـجـࢪوبـات',
     description: 'يطرد كل الأعضاء إلا الأدمن',
     groupOnly: true,
     adminOnly: true,
+    ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
 
