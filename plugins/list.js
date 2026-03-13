@@ -20,8 +20,9 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 // مسار الصورة وملف الأغنية المحلي
 const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-const menuSong = path.join(__dirname, '../assets/اغنيه.mp3'); // الأغنية المحلية
+const menuSong = path.join(__dirname, '../assets/اغنيه.ogg'); // ضع هنا اسم الأغنية اللي عندك
 
+// ************* كل ستايلات القائمة كما هي *************
 const menuStyles = [
   {
     render({ title, info, categories, prefix }) {
@@ -31,7 +32,6 @@ const menuStyles = [
       t += `┃ 📦 *الإضافات: ${info.total}*\n`;
       t += `┃ 💎 *الإصدار: ${info.version}*\n`;
       t += `┃ ⏰ *الوقت: ${info.time}*\n`;
-
       for (const [cat, cmds] of categories) {
         t += `┃━━━ *${cat.toUpperCase()}* ━✦\n`;
         for (const c of cmds)
@@ -49,7 +49,6 @@ const menuStyles = [
       t += `◈├• 🍫 *الإضافات: ${info.total}*\n`;
       t += `◈├• 💎 *الإصدار: ${info.version}*\n`;
       t += `◈├• ⏰ *الوقت: ${info.time}*\n`;
-
       for (const [cat, cmds] of categories) {
         t += `◈├─❍「 *${cat.toUpperCase()}* 」❍\n`;
         for (const c of cmds)
@@ -67,7 +66,6 @@ const menuStyles = [
       t += `┃• *الإضافات: ${info.total}*\n`;
       t += `┃• *الإصدار: ${info.version}*\n`;
       t += `┃• *الوقت: ${info.time}*\n`;
-
       for (const [cat, cmds] of categories) {
         t += `┃━━━━ *${cat.toUpperCase()}* ━━◆\n`;
         for (const c of cmds)
@@ -85,7 +83,6 @@ const menuStyles = [
       t += `║✦ *الإضافات: ${info.total}*\n`;
       t += `║✦ *الإصدار: ${info.version}*\n`;
       t += `║✦ *الوقت: ${info.time}*\n`;
-
       for (const [cat, cmds] of categories) {
         t += `║══ *${cat.toUpperCase()}* ══✧\n`;
         for (const c of cmds)
@@ -103,7 +100,6 @@ const menuStyles = [
       t += `┃❀ *الإضافات: ${info.total}*\n`;
       t += `┃❀ *الإصدار: ${info.version}*\n`;
       t += `┃❀ *الوقت: ${info.time}*\n`;
-
       for (const [cat, cmds] of categories) {
         t += `┃━━━〔 *${cat.toUpperCase()}* 〕━❀\n`;
         for (const c of cmds)
@@ -148,6 +144,7 @@ const menuStyles = [
     }
   }
 ];
+// ************* نهاية قوائم القائمة *************
 
 module.exports = {
   command: 'اوامر',
@@ -196,12 +193,12 @@ module.exports = {
         await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
       }
 
-      // إرسال الأغنية كملف محلي
+      // إرسال الأغنية كـ Voice Note (PTT)
       if (fs.existsSync(menuSong)) {
         await sock.sendMessage(chatId, {
-          document: fs.readFileSync(menuSong),
-          mimetype: "audio/mpeg",
-          fileName: "اغنيه.mp3"
+          audio: { url: menuSong },
+mimetype: "audio/ogg; codecs=opus",
+ptt: true
         }, { quoted: message });
       }
 
@@ -233,13 +230,13 @@ module.exports = {
       await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
     }
 
-    // إرسال الأغنية بعد القائمة
+    // إرسال الأغنية بعد القائمة كـ Voice Note
     if (fs.existsSync(menuSong)) {
-      await sock.sendMessage(chatId, {
-        document: fs.readFileSync(menuSong),
-        mimetype: "audio/mpeg",
-        fileName: "اغنيه.mp3"
-      }, { quoted: message });
+  await sock.sendMessage(chatId, {
+    audio: { url: menuSong },
+    mimetype: "audio/ogg; codecs=opus",
+    ptt: true
+  }, { quoted: message });
     }
   }
 };
