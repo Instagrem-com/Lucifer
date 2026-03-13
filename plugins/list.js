@@ -3,6 +3,7 @@ const commandHandler = require('../lib/commandHandler');
 const path = require('path');
 const fs = require('fs');
 
+// دالة الوقت
 function formatTime() {
     const now = new Date();
     const options = { 
@@ -13,6 +14,13 @@ function formatTime() {
     };
     return now.toLocaleTimeString('en-US', options);
 }
+
+// دالة pick لاختيار ستايل عشوائي
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+// مسار الصورة وملف الأغنية المحلي
+const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+const menuSong = path.join(__dirname, '../assets/اغنيه.mp3'); // الأغنية المحلية
 
 const menuStyles = [
   {
@@ -141,8 +149,6 @@ const menuStyles = [
   }
 ];
 
-const songPath = path.join(__dirname, '../assets/اغنيه.mp3'); // المسار المحلي للأغنية
-
 module.exports = {
   command: 'اوامر',
   aliases: ['m', 'y', 'lucifer', 'l'],
@@ -153,7 +159,6 @@ module.exports = {
   async handler(sock, message, args, context) {
     const { chatId, channelInfo } = context;
     const prefix = settings.prefixes[0];
-    const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
 
     if (args.length) {
       const searchTerm = args[0].toLowerCase();
@@ -191,12 +196,14 @@ module.exports = {
         await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
       }
 
-      // 🔹 إرسال الأغنية بعد تفاصيل الأمر
-      await sock.sendMessage(chatId, {
-  document: { url: menuSong },
-  mimetype: "audio/mpeg",
-  fileName: "اغنية.mp3"
-}, { quoted: message });
+      // إرسال الأغنية كملف محلي
+      if (fs.existsSync(menuSong)) {
+        await sock.sendMessage(chatId, {
+          document: fs.readFileSync(menuSong),
+          mimetype: "audio/mpeg",
+          fileName: "اغنيه.mp3"
+        }, { quoted: message });
+      }
 
       return;
     }
@@ -226,11 +233,13 @@ module.exports = {
       await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
     }
 
-    // 🔹 إرسال الأغنية بعد القائمة
-    await sock.sendMessage(chatId, {
-      audio: { url: menuSong },
-      mimetype: "audio/mp4",
-      ptt: true
-    }, { quoted: message });
+    // إرسال الأغنية بعد القائمة
+    if (fs.existsSync(menuSong)) {
+      await sock.sendMessage(chatId, {
+        document: fs.readFileSync(menuSong),
+        mimetype: "audio/mpeg",
+        fileName: "اغنيه.mp3"
+      }, { quoted: message });
+    }
   }
 };
