@@ -5,6 +5,7 @@ module.exports = {
     description: 'رفض كل طلبات الانضمام',
     groupOnly: true,
     adminOnly: true,
+    ownerOnly: true,
 
     async handler(sock, message, args, context = {}) {
 
