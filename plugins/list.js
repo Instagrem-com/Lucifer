@@ -3,238 +3,76 @@ const commandHandler = require('../lib/commandHandler');
 const path = require('path');
 const fs = require('fs');
 
-// دالة الوقت
 function formatTime() {
-    const now = new Date();
-    const options = { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false,
-        timeZone: settings.timeZone || 'UTC'
-    };
-    return now.toLocaleTimeString('en-US', options);
+  const now = new Date();
+  const options = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: settings.timeZone || 'UTC' };
+  return now.toLocaleTimeString('en-US', options);
 }
 
-// دالة pick لاختيار ستايل عشوائي
-const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-
-// مسار الصورة وملف الأغنية المحلي
 const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-const menuSong = path.join(__dirname, '../assets/اغنيه.mp3'); // غيرنا للـ MP3
-
-// ************* كل ستايلات القائمة كما هي *************
-const menuStyles = [
-  {
-    render({ title, info, categories, prefix }) {
-      let t = `┃━━『 *قـائـمـة الاوامـࢪ* 』━⬣\n`;
-      t += `┃ ✨ *بوت: ${info.bot}*\n`;
-      t += `┃ 🔧 *بادئة الأوامر: ${info.prefix}*\n`;
-      t += `┃ 📦 *الإضافات: ${info.total}*\n`;
-      t += `┃ 💎 *الإصدار: ${info.version}*\n`;
-      t += `┃ ⏰ *الوقت: ${info.time}*\n`;
-      for (const [cat, cmds] of categories) {
-        t += `┃━━━ *${cat.toUpperCase()}* ━✦\n`;
-        for (const c of cmds)
-          t += `┃ ★ ${prefix}${c}\n`;
-      }
-      t += `━━━━━━━━━━━━━⬣`;
-      return t;
-    }
-  },
-  {
-    render({ title, info, categories, prefix }) {
-      let t = `◈├─❍「 *قـائـمـة الاوامـࢪ* 」❍\n`;
-      t += `◈├• 🌟 *بوت: ${info.bot}*\n`;
-      t += `◈├• ⚙️ *بادئة الأوامر: ${info.prefix}*\n`;
-      t += `◈├• 🍫 *الإضافات: ${info.total}*\n`;
-      t += `◈├• 💎 *الإصدار: ${info.version}*\n`;
-      t += `◈├• ⏰ *الوقت: ${info.time}*\n`;
-      for (const [cat, cmds] of categories) {
-        t += `◈├─❍「 *${cat.toUpperCase()}* 」❍\n`;
-        for (const c of cmds)
-          t += `◈├• ${prefix}${c}\n`;
-      }
-      t += `────★─☆──♪♪─❍`;
-      return t;
-    }
-  },
-  {
-    render({ title, info, categories, prefix }) {
-      let t = `┃━━━━ *قـائـمـة الاوامـࢪ* ━━━\n`;
-      t += `┃• *بوت: ${info.bot}*\n`;
-      t += `┃• *بادئات الأوامر: ${info.prefix}*\n`;
-      t += `┃• *الإضافات: ${info.total}*\n`;
-      t += `┃• *الإصدار: ${info.version}*\n`;
-      t += `┃• *الوقت: ${info.time}*\n`;
-      for (const [cat, cmds] of categories) {
-        t += `┃━━━━ *${cat.toUpperCase()}* ━━◆\n`;
-        for (const c of cmds)
-          t += `┃ ✌︎ ${prefix}${c}\n`;
-      }
-      t += `━━━━━━━━━━━━━━━━`;
-      return t;
-    }
-  },
-  {
-    render({ title, info, categories, prefix }) {
-      let t = `✦═══ *قـائـمـة الاوامـࢪ* ═══✦\n`;
-      t += `║✦ *بوت: ${info.bot}*\n`;
-      t += `║✦ *بادئات الأوامر: ${info.prefix}*\n`;
-      t += `║✦ *الإضافات: ${info.total}*\n`;
-      t += `║✦ *الإصدار: ${info.version}*\n`;
-      t += `║✦ *الوقت: ${info.time}*\n`;
-      for (const [cat, cmds] of categories) {
-        t += `║══ *${cat.toUpperCase()}* ══✧\n`;
-        for (const c of cmds)
-          t += `║ ✦ ${prefix}${c}\n`;
-      }
-      t += `✦══════════════✦`;
-      return t;
-    }
-  },
-  {
-    render({ title, info, categories, prefix }) {
-      let t = `❀━━━ *قـائـمـة الاوامـࢪ* ━━━❀\n`;
-      t += `┃❀ *بوت: ${info.bot}*\n`;
-      t += `┃❀ *بادئات الأوامر: ${info.prefix}*\n`;
-      t += `┃❀ *الإضافات: ${info.total}*\n`;
-      t += `┃❀ *الإصدار: ${info.version}*\n`;
-      t += `┃❀ *الوقت: ${info.time}*\n`;
-      for (const [cat, cmds] of categories) {
-        t += `┃━━━〔 *${cat.toUpperCase()}* 〕━❀\n`;
-        for (const c of cmds)
-          t += `┃❀ ${prefix}${c}\n`;
-      }
-      t += `❀━━━━━━━━━━━━━━❀`;
-      return t;
-    }
-  },
-  {
-    render({ title, info, categories, prefix }) {
-      let t = `◆━━━ *قـائـمـة الاوامـࢪ* ━━━◆\n`;
-      t += `┃ ¤ *بوت: ${info.bot}*\n`;
-      t += `┃ ¤ *بادئات الأوامر: ${info.prefix}*\n`;
-      t += `┃ ¤ *الإضافات: ${info.total}*\n`;
-      t += `┃ ¤ *الإصدار: ${info.version}*\n`;
-      t += `┃ ¤ *الوقت: ${info.time}*\n`;
-      for (const [cat, cmds] of categories) {
-        t += `┃━━ *${cat.toUpperCase()}* ━━◆◆\n`;
-        for (const c of cmds)
-          t += `┃ ¤ ${prefix}${c}\n`;
-      }
-      t += `◆━━━━━━━━━━━━━━━━◆`;
-      return t;
-    }
-  },
-  {
-    render({ title, info, categories, prefix }) {
-      let t = `────⬣ *قـائـمـة الاوامـࢪ* ──⬣\n`;
-      t += ` | ● *بوت: ${info.bot}*\n`;
-      t += ` | ● *بادئات الأوامر: ${info.prefix}*\n`;
-      t += ` | ● *الإضافات: ${info.total}*\n`;
-      t += ` | ● *الإصدار: ${info.version}*\n`;
-      t += ` | ● *الوقت: ${info.time}*\n`;
-      for (const [cat, cmds] of categories) {
-        t += ` |───⬣ *${cat.toUpperCase()}* ──⬣\n`;
-        for (const c of cmds)
-          t += ` | ● ${prefix}${c}\n`;
-      }
-      t += `───────────⬣`;
-      return t;
-    }
-  }
-];
-// ************* نهاية قوائم القائمة *************
+const menuSong = path.join(__dirname, '../assets/اغنيه.mp3');
 
 module.exports = {
   command: 'اوامر',
   aliases: ['m', 'y', 'lucifer', 'l'],
   category: 'اوامـࢪ الـبـوت',
-  description: 'Show all commands',
-  usage: '.اوامر ',
+  description: 'Show interactive menu with categories',
+  usage: '.اوامر',
 
   async handler(sock, message, args, context) {
     const { chatId, channelInfo } = context;
     const prefix = settings.prefixes[0];
 
+    // لو المستخدم ضغط على فئة معينة
     if (args.length) {
-      const searchTerm = args[0].toLowerCase();
-      let cmd = commandHandler.commands.get(searchTerm);
-      if (!cmd && commandHandler.aliases.has(searchTerm)) {
-        const mainCommand = commandHandler.aliases.get(searchTerm);
-        cmd = commandHandler.commands.get(mainCommand);
-      }
-      if (!cmd) {
-        return sock.sendMessage(chatId, { 
-          text: `الامر دا "${args[0]}" مش موجود ف الاوامر.\n\n ${prefix} شوف الاوامر تاني 👀❤️`,
-          ...channelInfo
-        }, { quoted: message });
+      const arg = args.join('_').toLowerCase();
+
+      if (arg === 'رجوع') {
+        return module.exports.handler(sock, message, [], context); // ارجع للمنيو الرئيسي
       }
 
-      const text = 
-`━━━━━━━━━━━━━━⬣
-┃ 📌 *معلومات الأمر*
-┃
-┃ ⚡ *الأمر:* ${prefix}${cmd.command}
-┃ 📝 *الوصف:* ${cmd.description || 'لا يوجد وصف'}
-┃ 📖 *طريقة الاستخدام:* ${cmd.usage || `${prefix}${cmd.command}`}
-┃ 🏷️ *الفئة:* ${cmd.category || 'عام'}
-┃ 🔖 *الأسماء المستعارة:* ${cmd.aliases?.length ? cmd.aliases.map(a => prefix + a).join(', ') : 'لا يوجد'}
-┃
-━━━━━━━━━━━━━━⬣`;
-
-      if (fs.existsSync(imagePath)) {
-        await sock.sendMessage(chatId, {
-          image: { url: imagePath },
-          caption: text,
-          ...channelInfo
-        }, { quoted: message });
-      } else {
-        await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
+      const category = [...commandHandler.categories.keys()].find(c => c.toLowerCase() === arg);
+      if (!category) {
+        return sock.sendMessage(chatId, { text: `الفئة "${args[0]}" مش موجودة. اختار من الأزرار 👀`, ...channelInfo }, { quoted: message });
       }
 
-      // إرسال الأغنية كأغنية MP3 عادية
-      if (fs.existsSync(menuSong)) {
-        await sock.sendMessage(chatId, {
-          audio: { url: menuSong },
-          mimetype: "audio/mpeg" // بدل ogg
-        }, { quoted: message });
-      }
+      const cmds = commandHandler.categories.get(category);
+      const text = `📂 *أوامر فئة: ${category}*\n\n` + cmds.map(c => `• ${prefix}${c}`).join('\n');
 
-      return;
+      const buttons = [{ buttonId: `${prefix}اوامر رجوع`, buttonText: { displayText: 'رجوع للمنيو' }, type: 1 }];
+      return sock.sendMessage(chatId, { text, ...channelInfo, buttons, headerType: 1 }, { quoted: message });
     }
 
-    const style = pick(menuStyles);
+    // إنشاء أزرار لكل فئة
+    const buttons = [...commandHandler.categories.keys()].map(cat => ({
+      buttonId: `${prefix}اوامر ${cat}`,
+      buttonText: { displayText: cat },
+      type: 1
+    }));
 
-    const text = style.render({
-      title: settings.botName,
-      prefix,
-      info: {
-        bot: settings.botName,
-        prefix: settings.prefixes.join(', '),
-        total: commandHandler.commands.size,
-        version: settings.version || "5.0.0",
-        time: formatTime()
-      },
-      categories: commandHandler.categories
-    });
-
+    // إرسال المنيو الرئيسي
+    const caption = `✨ *بوت: ${settings.botName}*\n💎 الإصدار: ${settings.version || '5.0.0'}\n⏰ الوقت: ${formatTime()}\n\nاختر الفئة من الزرار تحت 👇`;
+    
     if (fs.existsSync(imagePath)) {
       await sock.sendMessage(chatId, {
         image: { url: imagePath },
-        caption: text,
-        ...channelInfo
+        caption,
+        ...channelInfo,
+        buttons,
+        headerType: 4
       }, { quoted: message });
     } else {
-      await sock.sendMessage(chatId, { text, ...channelInfo }, { quoted: message });
+      await sock.sendMessage(chatId, {
+        text: caption,
+        ...channelInfo,
+        buttons,
+        headerType: 1
+      }, { quoted: message });
     }
 
-    // إرسال الأغنية بعد القائمة كأغنية MP3 عادية
+    // إرسال الأغنية بعد المنيو
     if (fs.existsSync(menuSong)) {
-      await sock.sendMessage(chatId, {
-        audio: { url: menuSong },
-        mimetype: "audio/mpeg" // بدل ogg
-      }, { quoted: message });
+      await sock.sendMessage(chatId, { audio: { url: menuSong }, mimetype: "audio/mpeg" }, { quoted: message });
     }
   }
 };
