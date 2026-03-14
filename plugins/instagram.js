@@ -1,91 +1,120 @@
-const axios = require("axios")
+const { igdl } = require('ruhend-scraper');
+
+const processedMessages = new Set();
+
+function extractUniqueMedia(mediaData = []) {
+  const seen = new Set();
+  return mediaData.filter(m => {
+    if (!m?.url || seen.has(m.url)) return false;
+    seen.add(m.url);
+    return true;
+  });
+}
 
 module.exports = {
-command: "انستا",
-aliases: ["ig","insta","igdl"],
-category: "اوامـࢪ الـتـحـمـيـل",
-description: "تحميل من انستجرام",
-usage: ".انستا <رابط>",
+  command: 'انستا',
+  aliases: ['ig', 'igdl', 'insta'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'Download Instagram posts, reels & videos',
+  usage: '.ig <instagram link>',
 
-async handler(sock,message,args,context={}){
+  async handler(sock, message, args, context = {}) {
+    const chatId = context.chatId || message.key.remoteJid;
+    const text =
+      args.join(' ') ||
+      message.message?.conversation ||
+      message.message?.extendedTextMessage?.text;
 
-const chatId = context.chatId || message.key.remoteJid
-const url = args.join(" ")
+    try {
+      if (processedMessages.has(message.key.id)) return;
+      processedMessages.add(message.key.id);
+      setTimeout(() => processedMessages.delete(message.key.id), 5 * 60 * 1000);
 
-if(!url){
-return sock.sendMessage(chatId,{
-text:"📥 ابعت رابط انستجرام"
-},{quoted:message})
-}
+      if (!text) {
+        return await sock.sendMessage(
+          chatId,
+          { text: '📸 *Instagram Downloader*\n\nUsage:\n.ig <post | reel | video link>' },
+          { quoted: message }
+        );
+      }
+        
+      const igRegex =
+        /https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/(p|reel|tv)\//i;
 
-if(!/instagram\.com/i.test(url)){
-return sock.sendMessage(chatId,{
-text:"❌ ده مش رابط انستجرام"
-},{quoted:message})
-}
+      if (!igRegex.test(text)) {
+        return await sock.sendMessage(
+          chatId,
+          { text: '❌ Invalid Instagram link.\nPlease send a valid post, reel, or video URL.' },
+          { quoted: message }
+        );
+      }
+      await sock.sendMessage(chatId, {
+        react: { text: '🔄', key: message.key }
+      });
 
-await sock.sendMessage(chatId,{react:{text:"⏳",key:message.key}})
+      const res = await igdl(text);
 
-let media = null
+      if (!res?.data?.length) {
+        return await sock.sendMessage(
+          chatId,
+          { text: '❌ No media found.\nThe post may be private or unavailable.' },
+          { quoted: message }
+        );
+      }
 
-const apis = [
+      const mediaList = extractUniqueMedia(res.data).slice(0, 20);
 
-`https://vihangayt.me/download/instagram?url=${encodeURIComponent(url)}`,
+      if (!mediaList.length) {
+        return await sock.sendMessage(
+          chatId,
+          { text: '❌ No downloadable media found.' },
+          { quoted: message }
+        );
+      }
 
-`https://api.akuari.my.id/downloader/ig?link=${encodeURIComponent(url)}`,
+      for (let i = 0; i < mediaList.length; i++) {
+        const media = mediaList[i];
+        const url = media.url;
 
-`https://api.betabotz.eu.org/api/download/ig?url=${encodeURIComponent(url)}`
+        const isVideo =
+          media.type === 'video' ||
+          /\.(mp4|mov|webm|mkv)$/i.test(url) ||
+          text.includes('/reel/') ||
+          text.includes('/tv/');
 
-]
+        if (isVideo) {
+          await sock.sendMessage(
+            chatId,
+            {
+              video: { url },
+              mimetype: 'video/mp4',
+              caption: '📥 *Downloaded by MEGA-MD*'
+            },
+            { quoted: message }
+          );
+        } else {
+          await sock.sendMessage(
+            chatId,
+            {
+              image: { url },
+              caption: '📥 *Downloaded by MEGA-MD*'
+            },
+            { quoted: message }
+          );
+        }
 
-for(const api of apis){
+        if (i < mediaList.length - 1) {
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      }
 
-try{
-
-const res = await axios.get(api,{timeout:20000})
-
-media =
-res?.data?.data ||
-res?.data?.result ||
-res?.data?.url
-
-if(media) break
-
-}catch{}
-
-}
-
-if(!media){
-
-return sock.sendMessage(chatId,{
-text:"❌ مقدرتش أحمل من انستجرام"
-},{quoted:message})
-
-}
-
-if(Array.isArray(media)){
-
-for(const m of media){
-
-if(m.includes(".mp4")){
-await sock.sendMessage(chatId,{video:{url:m}},{quoted:message})
-}else{
-await sock.sendMessage(chatId,{image:{url:m}},{quoted:message})
-}
-
-}
-
-}else{
-
-if(media.includes(".mp4")){
-await sock.sendMessage(chatId,{video:{url:media}},{quoted:message})
-}else{
-await sock.sendMessage(chatId,{image:{url:media}},{quoted:message})
-}
-
-}
-
-await sock.sendMessage(chatId,{react:{text:"✅",key:message.key}})
-
-}
-}
+    } catch (err) {
+      console.error('Instagram plugin error:', err);
+      await sock.sendMessage(
+        chatId,
+        { text: '❌ Failed to download Instagram media. Please try again later.' },
+        { quoted: message }
+      );
+    }
+  }
+};

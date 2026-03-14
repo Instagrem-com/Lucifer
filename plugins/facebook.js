@@ -1,93 +1,79 @@
-const axios = require("axios")
+const axios = require('axios');
+
+const AXIOS_DEFAULTS = {
+  timeout: 60000,
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+    'Accept': 'application/json, text/plain, */*'
+  }
+};
 
 module.exports = {
-command: "فيسبوك",
-aliases: ["fb","fbdl"],
-category: "اوامـࢪ الـتـحـمـيـل",
-description: "تحميل فيديوهات فيسبوك",
-usage: ".فيسبوك <رابط>",
+  command: 'فيسبوك',
+  aliases: ['fb', 'fbdl'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'Download Facebook videos',
+  usage: '.fb <facebook video link>',
 
-async handler(sock,message,args,context={}){
+  async handler(sock, message, args, context = {}) {
+    const chatId = context.chatId || message.key.remoteJid;
+    const url =
+      args.join(' ') ||
+      message.message?.conversation ||
+      message.message?.extendedTextMessage?.text;
 
-let chatId = context.chatId || message.key.remoteJid
-let url = args.join(" ")
+    try {
+      if (!url) {
+        return await sock.sendMessage(chatId, { text: '📘 *Facebook Downloader*\n\nUsage:\n.fb <facebook video link>' }, { quoted: message });
+      }
 
-if(!url){
-return sock.sendMessage(chatId,{
-text:"📥 ابعت رابط فيديو فيسبوك"
-},{quoted:message})
-}
+      if (!/facebook\.com|fb\.watch/i.test(url)) {
+        return await sock.sendMessage(
+          chatId,
+          { text: '❌ Invalid Facebook link.\nPlease send a valid Facebook video URL.' },
+          { quoted: message }
+        );
+      }
 
-if(!/facebook\.com|fb\.watch/i.test(url)){
-return sock.sendMessage(chatId,{
-text:"❌ ده مش رابط فيسبوك"
-},{quoted:message})
-}
+      await sock.sendMessage(chatId, {
+        react: { text: '🔄', key: message.key }
+      });
 
-await sock.sendMessage(chatId,{react:{text:"⏳",key:message.key}})
+      const apiUrl = `https://gtech-api-xtp1.onrender.com/api/download/fb?url=${encodeURIComponent(
+        url
+      )}&apikey=APIKEY`;
 
-/*
-تحويل share link
-*/
+      const res = await axios.get(apiUrl, AXIOS_DEFAULTS);
 
-try{
-if(url.includes("facebook.com/share")){
-const r = await axios.get(url)
-url = r.request.res.responseUrl || url
-}
-}catch{}
+      const videos = res?.data?.data?.data;
+      if (!res?.data?.status || !Array.isArray(videos) || !videos.length) {
+        throw new Error('No downloadable video found');
+      }
 
-/*
-قائمة APIs
-*/
+      const sorted = videos.sort((a, b) => {
+        const qa = parseInt(a.resolution) || 0;
+        const qb = parseInt(b.resolution) || 0;
+        return qb - qa;
+      });
 
-const apis = [
+      const selected = sorted[0];
+      const videoUrl = selected.url.startsWith('http')
+        ? selected.url
+        : `https://gtech-api-xtp1.onrender.com${selected.url}`;
 
-`https://vihangayt.me/download/facebook?url=${encodeURIComponent(url)}`,
+      const caption = `📘 *Facebook Downloader*
+🎞 Quality: *${selected.resolution || 'Unknown'}*
 
-`https://api.akuari.my.id/downloader/fb?link=${encodeURIComponent(url)}`,
+> *_Downloaded by MEGA-MD_*`;
 
-`https://api.betabotz.eu.org/api/download/fb?url=${encodeURIComponent(url)}`
+      await sock.sendMessage(chatId, { video: { url: videoUrl }, mimetype: 'video/mp4', caption }, { quoted: message });
 
-]
-
-let video = null
-
-for(const api of apis){
-
-try{
-
-const res = await axios.get(api,{timeout:20000})
-
-video =
-res?.data?.data?.hd ||
-res?.data?.data?.sd ||
-res?.data?.result?.HD ||
-res?.data?.result?.SD ||
-res?.data?.respon?.url
-
-if(video) break
-
-}catch{}
-
-}
-
-if(!video){
-
-return sock.sendMessage(chatId,{
-text:"❌ مقدرتش أحمل الفيديو\nجرب فيديو تاني"
-},{quoted:message})
-
-}
-
-await sock.sendMessage(chatId,{
-video:{url:video},
-caption:`🔥 الفيديو وصل يا كبير
-
-✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
-},{quoted:message})
-
-await sock.sendMessage(chatId,{react:{text:"✅",key:message.key}})
-
-}
-}
+    } catch (err) {
+      console.error('Facebook downloader error:', err);
+      await sock.sendMessage(
+        chatId,
+        { text: '❌ Failed to download Facebook video. Please try again later.' },
+        { quoted: message });
+    }
+  }
+};
