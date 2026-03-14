@@ -1,64 +1,78 @@
-const { default: getFBInfo } = require("@xaviabot/fb-downloader")
+const axios = require('axios');
+
+const AXIOS_DEFAULTS = {
+  timeout: 60000,
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+    'Accept': 'application/json, text/plain, */*'
+  }
+};
 
 module.exports = {
+  command: 'فيسبوك',
+  aliases: ['fb', 'fbdl'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'Download Facebook videos',
+  usage: '.فيسبوك <اللينك>',
 
-command: "فيسبوك",
-aliases: ["fb","fbdl"],
-category: "اوامـࢪ الـتـحـمـيـل",
+  async handler(sock, message, args, context = {}) {
+    const chatId = context.chatId || message.key.remoteJid;
+    const url =
+      args.join(' ') ||
+      message.message?.conversation ||
+      message.message?.extendedTextMessage?.text;
 
-async handler(sock,message,args,context={}){
+    try {
+      if (!url) {
+        return await sock.sendMessage(chatId, { text: '📘 *لتنزيل فيديو فيسبوك* 📘\n\nالاسنخدام 📝 :\n\n.فيسبوك <اللينك>' }, { quoted: message });
+      }
 
-const chatId = context.chatId || message.key.remoteJid
+      if (!/facebook\.com|fb\.watch/i.test(url)) {
+        return await sock.sendMessage(
+          chatId,
+          { text: 'ابعت لينك فيس بوك ياشق 👀❤️' },
+          { quoted: message }
+        );
+      }
 
-const url =
-args.join(" ") ||
-message.message?.conversation ||
-message.message?.extendedTextMessage?.text
+      await sock.sendMessage(chatId, {
+        react: { text: '🔄', key: message.key }
+      });
 
-if(!url){
-return sock.sendMessage(chatId,{
-text:"📘 ابعت رابط فيديو فيسبوك"
-},{quoted:message})
-}
+      const apiUrl = `https://gtech-api-xtp1.onrender.com/api/download/fb?url=${encodeURIComponent(
+        url
+      )}&apikey=APIKEY`;
 
-if(!/facebook\.com|fb\.watch/i.test(url)){
-return sock.sendMessage(chatId,{
-text:"الرابط مش من فيسبوك ❌"
-},{quoted:message})
-}
+      const res = await axios.get(apiUrl, AXIOS_DEFAULTS);
 
-try{
+      const videos = res?.data?.data?.data;
+      if (!res?.data?.status || !Array.isArray(videos) || !videos.length) {
+        throw new Error('No downloadable video found');
+      }
 
-await sock.sendMessage(chatId,{
-react:{text:"⏳",key:message.key}
-})
+      const sorted = videos.sort((a, b) => {
+        const qa = parseInt(a.resolution) || 0;
+        const qb = parseInt(b.resolution) || 0;
+        return qb - qa;
+      });
 
-const data = await getFBInfo(url)
+      const selected = sorted[0];
+      const videoUrl = selected.url.startsWith('http')
+        ? selected.url
+        : `https://gtech-api-xtp1.onrender.com${selected.url}`;
 
-let video = data?.hd || data?.sd
+      const caption = `⚡ *جبتلك الفيديو ياحب* ⚡\n\n الجودة 🎞 : *${selected.resolution || 'غير معروف'}*
 
-if(!video){
-throw "no video"
-}
+> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*`;
 
-await sock.sendMessage(chatId,{
-video:{url:video},
-mimetype:"video/mp4",
-caption:`📘 Facebook Downloader
+      await sock.sendMessage(chatId, { video: { url: videoUrl }, mimetype: 'video/mp4', caption }, { quoted: message });
 
-العنوان: ${data.title || "فيديو"}`
-},{quoted:message})
-
-}catch(err){
-
-console.log("FB ERROR:",err)
-
-await sock.sendMessage(chatId,{
-text:"❌ مقدرتش احمل الفيديو"
-},{quoted:message})
-
-}
-
-}
-
-}
+    } catch (err) {
+      console.error('Facebook downloader error:', err);
+      await sock.sendMessage(
+        chatId,
+        { text: 'مقدرتش اجيب الفيديو ياشق يا رابط مش مدعوم يا الفيديو برايفت جرب غيرو 🙂❤️' },
+        { quoted: message });
+    }
+  }
+};

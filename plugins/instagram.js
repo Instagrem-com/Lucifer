@@ -1,66 +1,120 @@
-const axios = require("axios")
+const { igdl } = require('ruhend-scraper');
+
+const processedMessages = new Set();
+
+function extractUniqueMedia(mediaData = []) {
+  const seen = new Set();
+  return mediaData.filter(m => {
+    if (!m?.url || seen.has(m.url)) return false;
+    seen.add(m.url);
+    return true;
+  });
+}
 
 module.exports = {
-command: "انستا",
-aliases: ["ig","instagram","insta"],
-category: "اوامـࢪ الـتـحـمـيـل",
-description: "تحميل من انستجرام",
-usage: ".انستا <الرابط>",
+  command: 'انستا',
+  aliases: ['ig', 'igdl', 'insta'],
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  description: 'تحميل من انستجرام',
+  usage: '.انستا <اللينك>',
 
-async handler(sock,message,args,context={}){
+  async handler(sock, message, args, context = {}) {
+    const chatId = context.chatId || message.key.remoteJid;
+    const text =
+      args.join(' ') ||
+      message.message?.conversation ||
+      message.message?.extendedTextMessage?.text;
 
-const chatId = context.chatId || message.key.remoteJid
+    try {
+      if (processedMessages.has(message.key.id)) return;
+      processedMessages.add(message.key.id);
+      setTimeout(() => processedMessages.delete(message.key.id), 5 * 60 * 1000);
 
-const url =
-args.join(" ") ||
-message.message?.conversation ||
-message.message?.extendedTextMessage?.text
+      if (!text) {
+        return await sock.sendMessage(
+          chatId,
+          { text: '📸 *تنزيل انستا* 📸\n\nالاستخدام 👀 :\n.انستا <اللينك>' },
+          { quoted: message }
+        );
+      }
+        
+      const igRegex =
+        /https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/(p|reel|tv)\//i;
 
-if(!url){
-return sock.sendMessage(chatId,{
-text:"⚠️ ابعت رابط بوست من انستجرام"
-},{quoted:message})
-}
+      if (!igRegex.test(text)) {
+        return await sock.sendMessage(
+          chatId,
+          { text: 'ابعتلي لينك فيديو انستا ياحب 👀❤️' },
+          { quoted: message }
+        );
+      }
+      await sock.sendMessage(chatId, {
+        react: { text: '🔄', key: message.key }
+      });
 
-if(!/instagram\.com/i.test(url)){
-return sock.sendMessage(chatId,{
-text:"❌ الرابط لازم يكون من انستجرام"
-},{quoted:message})
-}
+      const res = await igdl(text);
 
-try{
+      if (!res?.data?.length) {
+        return await sock.sendMessage(
+          chatId,
+          { text: 'اللينك مش مدعوم يا اللينك غلك يا الفيديو برايفت 👀❤️' },
+          { quoted: message }
+        );
+      }
 
-await sock.sendMessage(chatId,{
-react:{text:"⏳",key:message.key}
-})
+      const mediaList = extractUniqueMedia(res.data).slice(0, 20);
 
-const api = `https://api.davidcyriltech.my.id/instagram?url=${encodeURIComponent(url)}`
+      if (!mediaList.length) {
+        return await sock.sendMessage(
+          chatId,
+          { text: 'مش لاقي فيديو انزلو ياحب 🙂❤️.' },
+          { quoted: message }
+        );
+      }
 
-const {data} = await axios.get(api)
+      for (let i = 0; i < mediaList.length; i++) {
+        const media = mediaList[i];
+        const url = media.url;
 
-if(!data?.success || !data?.downloadUrl){
-throw "no media"
-}
+        const isVideo =
+          media.type === 'video' ||
+          /\.(mp4|mov|webm|mkv)$/i.test(url) ||
+          text.includes('/reel/') ||
+          text.includes('/tv/');
 
-await sock.sendMessage(chatId,{
-video:{url:data.downloadUrl},
-mimetype:"video/mp4",
-caption:"📥 *Powered by Lucifer Bot*"
-},{quoted:message})
+        if (isVideo) {
+          await sock.sendMessage(
+            chatId,
+            {
+              video: { url },
+              mimetype: 'video/mp4',
+              caption: '> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*'
+            },
+            { quoted: message }
+          );
+        } else {
+          await sock.sendMessage(
+            chatId,
+            {
+              image: { url },
+              caption: '> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*'
+            },
+            { quoted: message }
+          );
+        }
 
-await sock.sendMessage(chatId,{
-react:{text:"✅",key:message.key}
-})
+        if (i < mediaList.length - 1) {
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      }
 
-}catch(err){
-
-console.log("Instagram Downloader Error:",err)
-
-await sock.sendMessage(chatId,{
-text:"❌ حصل خطأ أثناء تحميل الفيديو"
-},{quoted:message})
-
-}
-
-}
-}
+    } catch (err) {
+      console.error('Instagram plugin error:', err);
+      await sock.sendMessage(
+        chatId,
+        { text: 'اللينك مش مدعوم يا اللينك غلك يا الفيديو برايفت 👀❤️' },
+        { quoted: message }
+      );
+    }
+  }
+};
