@@ -1,58 +1,58 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenerativeAI } = require("@google/generative-ai")
 
-// ضع مفتاح الـ API الخاص بك هنا
-const API_KEY = "AIzaSyBvGPz3B0SgiV301nNlhWDlWWwA0gbEF-k"; 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const API_KEY = "AIzaSyBvGPz3B0SgiV301nNlhWDlWWwA0gbEF-k"
+
+const genAI = new GoogleGenerativeAI(API_KEY)
 
 module.exports = {
-  command: 'جيميناي',
-  aliases: ['gemini', 'ذكاء', 'ai'],
-  category: 'الـذكـاء الاصـطـنـاعـي',
-  description: 'التحدث مع الذكاء الاصطناعي Gemini 🤖',
-  usage: '.جيميناي <سؤالك>',
+command: "جيميناي",
+aliases: ["gemini","ai"],
+category: "اوامـر الـذكاء",
+description: "اسأل Gemini AI",
+usage: ".جيميناي <سؤال>",
 
-  async handler(sock, message, args, context = {}) {
-    const chatId = context.chatId || message.key.remoteJid;
-    const prompt = args.join(" ");
+async handler(sock,message,args,context={}){
 
-    // 1. التأكد أن المستخدم كتب سؤال
-    if (!prompt) {
-      return sock.sendMessage(chatId, {
-        text: 'يا هلا! أنا جيميناي.. اسألني أي سؤال، مثلاً:\n.جيميناي كيف أتعلم البرمجة؟'
-      }, { quoted: message });
-    }
+const chatId = context.chatId || message.key.remoteJid
+const question = args.join(" ")
 
-    try {
-      // 2. إظهار رد فعل "جاري الكتابة" أو "تفاعل"
-      await sock.sendMessage(chatId, { react: { text: '🤔', key: message.key } });
+try{
 
-      // 3. إعداد الموديل (استخدام gemini-1.5-flash لأنه الأسرع)
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+if(!question){
+return sock.sendMessage(chatId,{
+text:`اكتب سؤالك كده:
 
-      // 4. إرسال الطلب للذكاء الاصطناعي
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+.جيميناي مين اخترع الانترنت`
+},{quoted:message})
+}
 
-      // 5. إرسال الإجابة للمستخدم
-      await sock.sendMessage(chatId, {
-        text: text.trim() + '\n\n*Powered by Gemini 1.5 Flash ⚡*'
-      }, { quoted: message });
+await sock.sendMessage(chatId,{
+react:{text:"🤖",key:message.key}
+})
 
-      // 6. تفاعل بالنجاح
-      await sock.sendMessage(chatId, { react: { text: '✨', key: message.key } });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
-    } catch (err) {
-      console.error("Gemini Error:", err);
-      
-      // التعامل مع الأخطاء الشائعة (مثل انتهاء الكوتا أو مفتاح غلط)
-      let errorMessage = 'للأسف حصل مشكلة في الاتصال بالذكاء الاصطناعي. حاول تاني كمان شوية! 🛠️';
-      
-      if (err.message.includes('API_KEY_INVALID')) {
-        errorMessage = 'خطأ: مفتاح الـ API غير صحيح. يرجى التأكد منه في الكود.';
-      }
+const result = await model.generateContent(question)
 
-      await sock.sendMessage(chatId, { text: errorMessage }, { quoted: message });
-    }
-  }
-};
+const reply = result.response.text()
+
+await sock.sendMessage(chatId,{
+text:`🤖 *Gemini AI*
+
+${reply}
+
+> ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
+},{quoted:message})
+
+}catch(err){
+
+console.log(err)
+
+await sock.sendMessage(chatId,{
+text:"❌ حصل خطأ في Gemini"
+},{quoted:message})
+
+}
+
+}
+}
