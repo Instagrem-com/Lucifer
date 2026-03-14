@@ -32,7 +32,6 @@
   "author": "GlobalTechInfo",
   "dependencies": {
     "@google/generative-ai": "^0.17.0",
-    "@xct007/frieren-scraper": "^1.0.0",
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^7.0.0-rc.9",
     "acrcloud": "^1.4.0",
