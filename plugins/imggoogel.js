@@ -1,64 +1,70 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-
-const lastSearch = {}; // لتخزين حالة البحث لكل كلمه
+const axios = require("axios")
 
 module.exports = {
-    command: 'صوره',
-    aliases: ['صور', 'googleimg'],
-    category: 'اوامـࢪ الـتـحـمـيـل',
-    description: 'جيبلك صور من جوجل 😎',
-    usage: '.صوره <اسم الصورة>',
+command: "صوره",
+aliases: ["صور","img"],
+category: "اوامـࢪ الاداوات",
 
-    async handler(sock, message, args, context = {}) {
-        const chatId = context.chatId || message.key.remoteJid;
-        const query = args.join(" ");
+async handler(sock,message,args,context={}){
 
-        if (!query) {
-            return sock.sendMessage(chatId, { 
-                text: "📸 اكتب اسم الصورة عشان أجيبلك صور من جوجل 😎\nمثال: `.صوره نانسي عجرم`" 
-            }, { quoted: message });
-        }
+const chatId = context.chatId || message.key.remoteJid
+const query = args.join(" ")
 
-        try {
-            await sock.sendMessage(chatId, { text: `⏳ بدورلك على صور "${query}" ...` }, { quoted: message });
+if(!query){
+return sock.sendMessage(chatId,{
+text:"📸 اكتب اسم الصورة\nمثال: .صوره قطة"
+},{quoted:message})
+}
 
-            // جلب صفحة البحث عن الصور
-            const res = await axios.get(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-                }
-            });
+try{
 
-            const $ = cheerio.load(res.data);
-            const images = [];
-            $('img').each((i, el) => {
-                const src = $(el).attr('src');
-                if (src && src.startsWith('http')) images.push(src);
-            });
+await sock.sendMessage(chatId,{
+text:`🔎 بدور على صور "${query}" ...`
+},{quoted:message})
 
-            if (!images.length) {
-                return sock.sendMessage(chatId, { text: `😕 ملقتش صور "${query}"` }, { quoted: message });
-            }
+const res = await axios.get(
+`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`,{
+headers:{
+"User-Agent":"Mozilla/5.0",
+"Accept-Language":"en-US,en;q=0.9"
+}
+})
 
-            // ترتيب عشوائي مع التغيير لو نفس البحث
-            if (!lastSearch[query]) lastSearch[query] = 0;
-            const start = lastSearch[query];
-            const selected = images.slice(start, start + 5);
-            lastSearch[query] = (start + 5) % images.length;
+const html = res.data
 
-            for (let i = 0; i < selected.length; i++) {
-                await sock.sendMessage(chatId, {
-                    image: { url: selected[i] },
-                    caption: `صورة ${i+1} من البحث عن "${query}"\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
-                }, { quoted: message });
+const links = [...html.matchAll(/"ou":"(.*?)"/g)]
+.map(x=>x[1])
 
-                await new Promise(r => setTimeout(r, 1000)); // وقت بسيط بين الصور
-            }
+.filter(x=>x.startsWith("http"))
 
-        } catch (err) {
-            console.error(err);
-            await sock.sendMessage(chatId, { text: '❌ حصل غلطة في جلب الصور، جرب تاني 😢' }, { quoted: message });
-        }
-    }
-};
+if(!links.length){
+return sock.sendMessage(chatId,{
+text:"ملقتش صور 😄❤️"
+},{quoted:message})
+}
+
+const images = links.slice(0,5)
+
+for(let i=0;i<images.length;i++){
+
+await sock.sendMessage(chatId,{
+image:{url:images[i]},
+caption:`🖼️ صورة ${i+1} لـ "${query}"\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
+},{quoted:message})
+
+await new Promise(r=>setTimeout(r,800))
+
+}
+
+}catch(e){
+
+console.log(e)
+
+sock.sendMessage(chatId,{
+text:"ف مشكله ياحب 😄"
+},{quoted:message})
+
+}
+
+}
+}

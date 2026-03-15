@@ -1,46 +1,36 @@
 module.exports = {
-  command: 'منشن_للادمن',
-  aliases: ['tagmembers', 'tagnon'],
-  category: 'اوامـࢪ الـجـࢪوبـات',
-  description: 'Tag all non-admin members in the group',
-  usage: '.tagnotadmin',
-  groupOnly: true,
-  adminOnly: true,
-  
-  async handler(sock, message, args, context) {
-    const { chatId, channelInfo } = context;
-    
-    try {
-      const groupMetadata = await sock.groupMetadata(chatId);
-      const participants = groupMetadata.participants || [];
+command: "منشن_الادمن",
+aliases: ["ادمن","admins"],
+category: "اوامـࢪ الـجـࢪوبـات",
+description: "منشن كل الادمن",
 
-      const nonAdmins = participants.filter(p => !p.admin).map(p => p.id);
-      
-      if (nonAdmins.length === 0) {
-        await sock.sendMessage(chatId, { 
-          text: 'No non-admin members to tag.',
-          ...channelInfo
-        }, { quoted: message });
-        return;
-      }
+async execute(sock,m,args){
 
-      let text = 'ࢪدو ع عـمـگـم لـوسـفـر 💀🖤\n\nالـي مـش هـيـࢪد امـو ࢪقـاصـةو 😂💃🏼\n\n';
-      nonAdmins.forEach(jid => {
-        text += `@${jid.split('@')[0]}\n`;
-      });
+try{
 
-      await sock.sendMessage(chatId, { 
-        text, 
-        mentions: nonAdmins,
-        ...channelInfo
-      }, { quoted: message });
-      
-    } catch (error) {
-      console.error('Error in tagnotadmin command:', error);
-      await sock.sendMessage(chatId, { 
-        text: 'Failed to tag non-admin members.',
-        ...channelInfo
-      }, { quoted: message });
-    }
-  }
-};
+const group = await sock.groupMetadata(m.chat)
+
+const admins = group.participants
+.filter(p => p.admin !== null)
+.map(p => p.id)
+
+let text = "ࢪدو ع عـمـگـم لـوسـفـر 💀🖤\n\nالـي مـش هـيـࢪد امـو ࢪقـاصـة 😂💃🏼\n\n"
+
+for(let admin of admins){
+text += `@${admin.split("@")[0]}\n`
+}
+
+await sock.sendMessage(m.chat,{
+text,
+mentions: admins
+},{quoted:m})
+
+}catch(e){
+
+console.log(e)
+m.reply("❌ الأمر ده للجروبات بس")
+
+}
+
+}
+}

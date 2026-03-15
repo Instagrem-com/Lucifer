@@ -4,7 +4,7 @@ const settings = require("../settings");
 
 module.exports = {
   command: 'تيست',
-  aliases: ['شغال', 'بوت'],
+  aliases: ['شغال'],
   category: 'اوامـࢪ الـبـوت',
   description: 'لـمـعࢪفـه الـبوت شـغال او لا 👀❤️ ',
   usage: '.تيست',
@@ -39,13 +39,13 @@ module.exports = {
       const nodeVersion = process.version;
 
       const text =
-        `*بـوت ${settings.botName} شـغال يـحب 🥂❤️*\n\n` +
         `*اصداࢪ ⚙️ :* ${settings.version}\n` +
         `*الـوقـت ⏱️⚡:* ${uptimeText}\n` +
         `*الـࢪمـات 👀💻 :* ${usedMem} MB / ${totalMem} MB\n` +
         `*الـسـبـي :* ${cpuLoad}\n` +
         `*محاكي 🔥 :* ${platform} (${arch})\n` +
-        `*اصـداࢪ المكاتب 💀 :* ${nodeVersion}\n`;
+        `*اصـداࢪ المكاتب 💀 :* ${nodeVersion}\n` +
+         '⚡ الـبوت شـغـال طـلـقـة ⚡\n\n اشـتـࢪگ ف الـقـنـاة يـحـب 😊❤️';
 
       await sock.sendMessage(chatId, {
         text,
