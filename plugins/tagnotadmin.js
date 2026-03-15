@@ -1,36 +1,44 @@
 module.exports = {
-command: "منشن_الادمن",
-aliases: ["ادمن","admins"],
-category: "اوامـࢪ الـجـࢪوبـات",
-description: "منشن كل الادمن",
+  command: 'منشن_الادمن',
+  aliases: ['ادمن','admins'],
+  category: 'اوامـࢪ الـجـࢪوبـات',
+  description: 'منشن كل الأدمن في الجروب',
 
-async execute(sock,m,args){
+  async handler(sock, message, args, context) {
+    const { chatId } = context;
+    
+    try {
+      const groupMetadata = await sock.groupMetadata(chatId);
+      const participants = groupMetadata.participants || [];
 
-try{
+      // ناخد كل الادمنين
+      const admins = participants.filter(p => p.admin !== null).map(p => p.id);
+      
+      if (admins.length === 0) {
+        await sock.sendMessage(chatId, { 
+          text: '💀 مفيش أدمنين في الجروب 😅'
+        }, { quoted: message });
+        return;
+      }
 
-const group = await sock.groupMetadata(m.chat)
+      let text = '🔥 يلا يا كووول 👑\nمنشن لكل الأدمنين: \n\n';
 
-const admins = group.participants
-.filter(p => p.admin !== null)
-.map(p => p.id)
+      admins.forEach(jid => {
+        text += `@${jid.split('@')[0]} 😎\n`;
+      });
 
-let text = "ࢪدو ع عـمـگـم لـوسـفـر 💀🖤\n\nالـي مـش هـيـࢪد امـو ࢪقـاصـة 😂💃🏼\n\n"
+      text += '\n💀 اللي مش هيجاوب يبقا معمول له بلوك 😂';
 
-for(let admin of admins){
-text += `@${admin.split("@")[0]}\n`
-}
-
-await sock.sendMessage(m.chat,{
-text,
-mentions: admins
-},{quoted:m})
-
-}catch(e){
-
-console.log(e)
-m.reply("❌ الأمر ده للجروبات بس")
-
-}
-
-}
-}
+      await sock.sendMessage(chatId, { 
+        text, 
+        mentions: admins
+      }, { quoted: message });
+      
+    } catch (error) {
+      console.log('حصل خطأ في منشن الأدمن:', error);
+      await sock.sendMessage(chatId, { 
+        text: '❌ يا معلم حصل خطأ، جرب تاني'
+      }, { quoted: message });
+    }
+  }
+};

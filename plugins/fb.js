@@ -7,7 +7,7 @@ module.exports = {
   description: "تحميل فيديو من فيسبوك",
   usage: ".فيسبوك <رابط>",
 
-  async execute(sock, m, args) {
+  async handler(sock, m, args) {
 
     if (!args[0]) {
       return m.reply("ابعت رابط فيديو فيسبوك يا علـق 😂")
@@ -21,13 +21,11 @@ module.exports = {
 
       let video
 
-      // API الأول
       try {
         const res = await axios.get(`https://arslan-apis.vercel.app/download/fbdown?url=${url}`)
         video = res.data.data?.hd || res.data.data?.sd
       } catch {}
 
-      // لو الأول فشل يجرب الثاني
       if (!video) {
         const res2 = await axios.get(`https://apiskeith.top/download/fbdown?url=${url}`)
         video = res2.data.result?.url || res2.data.result?.sd

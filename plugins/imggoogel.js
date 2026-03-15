@@ -4,6 +4,7 @@ module.exports = {
 command: "صوره",
 aliases: ["صور","img"],
 category: "اوامـࢪ الاداوات",
+description: "البحث عن صور",
 
 async handler(sock,message,args,context={}){
 
@@ -22,37 +23,24 @@ await sock.sendMessage(chatId,{
 text:`🔎 بدور على صور "${query}" ...`
 },{quoted:message})
 
-const res = await axios.get(
-`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`,{
-headers:{
-"User-Agent":"Mozilla/5.0",
-"Accept-Language":"en-US,en;q=0.9"
-}
-})
+const res = await axios.get(`https://api.siputzx.my.id/api/search/image?query=${encodeURIComponent(query)}`)
 
-const html = res.data
+const images = res.data.data.slice(0,5)
 
-const links = [...html.matchAll(/"ou":"(.*?)"/g)]
-.map(x=>x[1])
-
-.filter(x=>x.startsWith("http"))
-
-if(!links.length){
+if(!images.length){
 return sock.sendMessage(chatId,{
 text:"ملقتش صور 😄❤️"
 },{quoted:message})
 }
 
-const images = links.slice(0,5)
-
 for(let i=0;i<images.length;i++){
 
 await sock.sendMessage(chatId,{
 image:{url:images[i]},
-caption:`🖼️ صورة ${i+1} لـ "${query}"\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
+caption:`🖼️ صورة ${i+1} لـ "${query}"\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
 },{quoted:message})
 
-await new Promise(r=>setTimeout(r,800))
+await new Promise(r=>setTimeout(r,700))
 
 }
 
@@ -61,7 +49,7 @@ await new Promise(r=>setTimeout(r,800))
 console.log(e)
 
 sock.sendMessage(chatId,{
-text:"ف مشكله ياحب 😄"
+text:"❌ حصل مشكلة في جلب الصور"
 },{quoted:message})
 
 }

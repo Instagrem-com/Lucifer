@@ -4,7 +4,7 @@ module.exports = {
 command: "بوت",
 aliases: ["ai","gpt"],
 category: "اوامـࢪ الـAI",
-description: "اسأل الذكاء الاصطناعي أي حاجة بالعربي والمصري",
+description: "اسأل الذكاء الاصطناعي أي حاجة",
 
 async handler(sock,message,args,context={}){
 
@@ -13,34 +13,44 @@ const question = args.join(" ");
 
 if(!question){
 return sock.sendMessage(chatId,{
-text:"🤖 اسألني أي حاجة 🤖 \nمثال 📝 :\n.بوت عامل ايه"
+text:`🤖 اسألني أي حاجة يا معلم
+
+مثال :
+.بوت ازاي اتعلم برمجة
+.بوت احكيلي نكتة
+.بوت عامل ايه`
 },{quoted:message});
 }
 
 try{
 
 await sock.sendMessage(chatId,{
-text:" بفكر شوية...🧠😂"
+text:"🧠 بفكر شوية كده استنى..."
 },{quoted:message});
 
-// استخدم API مجاني شغال (ChatGPT lite بالعربي)
-const res = await axios.post("https://api.akuari.my.id/ai", {
-prompt: question
-});
+// API قوي
+const res = await axios.get(`https://api.siputzx.my.id/api/ai/gpt4?prompt=${encodeURIComponent(question)}`);
 
-// الرد من الذكاء الاصطناعي
-const reply = res.data.result || " معرفتش أرد دلوقتي 😄";
+let reply = res.data.data;
+
+if(!reply){
+reply = "مش عارف أرد دلوقتي جرب تاني 😂";
+}
 
 await sock.sendMessage(chatId,{
-text:`🤖 ${reply}`
+text:`🤖 الرد :
+
+${reply}`
 },{quoted:message});
 
-}catch(e){
+}catch(err){
 
-console.log(e);
+console.log(err);
 
 sock.sendMessage(chatId,{
-text:"حصل خطأ في الذكاء الاصطناعي، جرب تاني 👀"
+text:`❌ حصل مشكلة في الذكاء الاصطناعي
+
+جرب تاني بعد شوية`
 },{quoted:message});
 
 }

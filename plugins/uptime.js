@@ -32,11 +32,11 @@ module.exports = {
     const commandCount = commandHandler.commands.size;
 
     const text =
-      `🐉 *✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪* 🐉\n\n` +
       ` الـوقـت ⏱ : ${formatUptime(uptimeMs)}\n` +
       ` شـغـال 🚀: ${startedAt}\n` +
       `عـدد الاوامـر 📦 : ${commandCount}\n` +
-      ` الـرامـات 💾 : ${ramMb} MB`;
+      ` الـرامـات 💾 : ${ramMb} MB`
+       'الـبوت شـغـال طـلـقـة ⚡\n\n اشـتـࢪگ ف الـقـنـاة يـحـب 😊❤️';
 
     await sock.sendMessage(chatId, { text });
   }
