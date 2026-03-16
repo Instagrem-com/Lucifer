@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const settings = {
   // Array fallback: splits string by comma, or uses default array
-  prefixes: process.env.PREFIXES ? process.env.PREFIXES.split(',') : ['.', '،', '*', ' '],
+  prefixes: process.env.PREFIXES ? process.env.PREFIXES.split(',') : ['.', '،', ',', '⚡'],
   
   packname: process.env.PACKNAME || '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
   author: process.env.AUTHOR || '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
