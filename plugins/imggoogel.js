@@ -10,42 +10,39 @@ module.exports = {
     const chatId = context.chatId || message.key.remoteJid;
     const query = args.join(' ').trim();
 
-    if(!query){
-      return sock.sendMessage(chatId,{
-        text:"📸 اكتب اسم الصورة\nمثال: .صوره قطة"
-      },{quoted:message});
+    if (!query) {
+      return sock.sendMessage(chatId, {
+        text: "📸 اكتب اسم الصورة\nمثال: .صوره قطة"
+      }, { quoted: message });
     }
 
-    try{
-      await sock.sendMessage(chatId,{
-        text:`🔎 بدور على صور "${query}" ...`
-      },{quoted:message});
+    try {
+      await sock.sendMessage(chatId, {
+        text: `🔎 بدور على صور "${query}" ...`
+      }, { quoted: message });
 
       const images = [];
-      // نجيب 5 صور مختلفة باستخدام Unsplash random
-      for(let i=0;i<5;i++){
-        const res = await axios.get(`https://source.unsplash.com/800x600/?${encodeURIComponent(query)}&sig=${Math.random()}`, {
-          maxRedirects: 0, // عشان نجيب الرابط النهائي مباشرة
-          validateStatus: null
-        });
-        // Unsplash بيرجع redirect مباشرة للرابط النهائي
-        images.push(res.headers.location || res.request.res.responseUrl);
+
+      for (let i = 0; i < 5; i++) {
+        // نسمح للaxios يتبع redirect
+        const url = `https://source.unsplash.com/800x600/?${encodeURIComponent(query)}&sig=${Math.random()}`;
+        images.push(url);
       }
 
-      for(let i=0;i<images.length;i++){
-        await sock.sendMessage(chatId,{
-          image:{ url: images[i] },
-          caption:`🖼️ صورة ${i+1} لـ "${query}"\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
-        },{quoted:message});
+      for (let i = 0; i < images.length; i++) {
+        await sock.sendMessage(chatId, {
+          image: { url: images[i] },
+          caption: `🖼️ صورة ${i + 1} لـ "${query}"\n\n*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
+        }, { quoted: message });
 
-        await new Promise(r=>setTimeout(r,700)); // لتجنب سبام الواتساب
+        await new Promise(r => setTimeout(r, 700));
       }
 
-    }catch(e){
+    } catch (e) {
       console.log(e);
-      await sock.sendMessage(chatId,{
-        text:"❌ حصلت مشكلة في جلب الصور"
-      },{quoted:message});
+      await sock.sendMessage(chatId, {
+        text: "❌ حصلت مشكلة في جلب الصور"
+      }, { quoted: message });
     }
   }
-}
+        }
