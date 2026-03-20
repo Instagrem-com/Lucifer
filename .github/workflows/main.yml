@@ -8,12 +8,11 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 */6 * * *'  
+    - cron: '0 */6 * * *'
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04   # 👈 غيرنا دي
 
     strategy:
       matrix:
@@ -28,16 +27,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
-      run: npm install
+    - name: Update apt
+      run: sudo apt-get update
 
     - name: Install FFmpeg
       run: sudo apt-get install -y ffmpeg
 
+    - name: Install dependencies
+      run: npm install
+
     - name: Start application with timeout
-      run: |
-        timeout 21590s npm start  # Limite l'exécution à 5h 59m 50s
+      run: timeout 21590s npm start
 
     - name: Save state (Optional)
-      run: |
-        ./save_state.sh
+      run: ./save_state.sh
