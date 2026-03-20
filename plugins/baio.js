@@ -16,7 +16,8 @@ module.exports = {
     }
 
     try {
-      await sock.setStatus(text); // دي بتغير البايو
+      // استخدام الدالة الصحيحة لتغيير البايو
+      await sock.updateProfileStatus(text); 
       await sock.sendMessage(chatId, {
         text: `✅ البايو اتغير ياحبيب قلبي 😎\nالآن البايو: "${text}"`
       }, { quoted: message });
