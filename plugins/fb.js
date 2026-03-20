@@ -10,14 +10,18 @@ module.exports = {
   async handler(sock, m, args) {
 
     if (!args[0]) {
-      return m.reply("ابعت رابط فيديو فيسبوك يا علـق 😂")
+      return await sock.sendMessage(m.chat, {
+        text: "ابعت رابط فيديو فيسبوك يا علـق 😂"
+      }, { quoted: m })
     }
 
     const url = args[0]
 
     try {
 
-      m.reply("⏳ جارِ تحميل الفيديو...")
+      await sock.sendMessage(m.chat, {
+        text: "⏳ جارِ تحميل الفيديو..."
+      }, { quoted: m })
 
       let video
 
@@ -32,7 +36,9 @@ module.exports = {
       }
 
       if (!video) {
-        return m.reply("مقدرتش احمل الفيديو 🙂")
+        return await sock.sendMessage(m.chat, {
+          text: "مقدرتش احمل الفيديو 🙂"
+        }, { quoted: m })
       }
 
       await sock.sendMessage(m.chat, {
@@ -42,7 +48,9 @@ module.exports = {
 
     } catch (err) {
       console.log(err)
-      m.reply("❌ حصل خطأ في التحميل")
+      await sock.sendMessage(m.chat, {
+        text: "❌ حصل خطأ في التحميل"
+      }, { quoted: m })
     }
 
   }

@@ -36,9 +36,8 @@ module.exports = {
 
             const getSt = (val) => val ? '✅' : '❌';
 
-            let menuText = `╭━〔 *إعدادات MEGA* 〕━┈\n┃\n`;
+            let menuText = `━〔 *إعدادات لوسيفر* 〕━┈\n┃\n`;
             menuText += `┃ 👤 *المستخدم:* @${cleanJid(senderId)}\n`;
-            menuText += `┃ 🤖 *وضع البوت:* ${botMode.toUpperCase()}\n`;
             menuText += `┃\n┣━〔 *الإعدادات العامة* 〕━┈\n`;
             menuText += `┃ ${getSt(autoStatus?.enabled)} *حالة تلقائية* 👀❤️\n`;
             menuText += `┃ ${getSt(autoread?.enabled)} *قراءة تلقائية* 👀❤️\n`;
@@ -69,7 +68,7 @@ module.exports = {
                 menuText += `┃ 💡 *ملاحظة:* _استخدم الأمر داخل الجروب عشان تشوف إعدادات الجروب._\n`;
             }
 
-            menuText += `┃\n╰━━━━━━━━━━━━━━━━┈`;
+            menuText += `┃\n━━━━━━━━━━━━━━━━┈`;
 
             await sock.sendMessage(chatId, { 
                 text: menuText,
