@@ -44,7 +44,6 @@ module.exports = {
         react: { text: '🔄', key: message.key }
       });
 
-      // 🔥 API REQUEST
       const apiUrl = `https://api.qasimdev.dpdns.org/api/instagram/download?url=${encodeURIComponent(text)}&apikey=qasim-dev`;
 
       const { data } = await axios.get(apiUrl);
@@ -58,10 +57,12 @@ module.exports = {
       }
 
       const mediaList = data.data;
+      let sentAny = false;
 
       for (let media of mediaList) {
-        // لو النوع مش صورة نتجاهل
-        if (media.type !== 'image') continue;
+        if (!media.url) continue;
+
+        sentAny = true;
 
         await sock.sendMessage(
           chatId,
@@ -72,8 +73,15 @@ module.exports = {
           { quoted: message }
         );
 
-        // تأخير بسيط بين الصور
         await new Promise(r => setTimeout(r, 1000));
+      }
+
+      if (!sentAny) {
+        await sock.sendMessage(
+          chatId,
+          { text: 'للأسف، البوست ده مش صور أو الصور مش مدعومة 👀❤️' },
+          { quoted: message }
+        );
       }
 
     } catch (err) {
