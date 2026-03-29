@@ -1,7 +1,7 @@
 const axios = require("axios")
 
 module.exports = {
-  command: "انستا",
+  command: "انستجرام",
   aliases: ["ig", "insta", "igdl"],
   category: "اوامـࢪ الـتـحـمـيـل",
   description: "تحميل كل حاجة من انستجرام 🔥",

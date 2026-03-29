@@ -9,15 +9,19 @@ module.exports = {
 
   async handler(sock, m, args) {
 
+    // 💀 حل مشكلة m.reply
+    const reply = (text) => sock.sendMessage(m.chat, { text }, { quoted: m })
+
     if (!args[0]) {
-      return m.reply("هات لينك فيسبوك يا علـق 😂")
+      return reply("هات لينك فيسبوك يا علـق 😂")
     }
 
     const url = args[0]
     let video = null
 
     try {
-      m.reply("⏳ بحاول أجيب الفيديو بأعلى جودة...")
+
+      await reply("⏳ بحاول أجيب الفيديو بأعلى جودة...")
 
       // API 1 🔥
       try {
@@ -41,7 +45,7 @@ module.exports = {
         } catch {}
       }
 
-      // API 4 🔥 (قوي)
+      // API 4 🔥
       if (!video) {
         try {
           const r4 = await axios.get(`https://api.betabotz.eu.org/api/download/fbdown?url=${url}`)
@@ -50,7 +54,7 @@ module.exports = {
       }
 
       if (!video) {
-        return m.reply("💀 الفيديو ده مش راضي يتحمل\nيا إما خاص أو السيرفرات نايمة")
+        return reply("💀 الفيديو ده مش راضي يتحمل\nيا إما خاص أو السيرفرات نايمة")
       }
 
       await sock.sendMessage(m.chat, {
@@ -60,7 +64,7 @@ module.exports = {
 
     } catch (err) {
       console.log(err)
-      m.reply("❌ حصلت مشكله جامده ف التحميل")
+      reply("❌ حصلت مشكله جامده ف التحميل")
     }
 
   }

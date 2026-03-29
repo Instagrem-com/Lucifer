@@ -13,7 +13,7 @@ function extractUniqueMedia(mediaData = []) {
 }
 
 module.exports = {
-  command: 'انستا',
+  command: 'انستجرام_2',
   aliases: ['ig', 'igdl', 'insta'],
   category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'تحميل من انستجرام (نسخة برو)',
