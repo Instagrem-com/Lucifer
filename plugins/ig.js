@@ -3,8 +3,8 @@ const axios = require('axios');
 const processedMessages = new Set();
 
 module.exports = {
-  command: 'انستجرام_2',
-  aliases: ['ig', 'igdl', 'insta'],
+  command: 'انستجرام',
+  aliases: ['ig', 'igdl', 'انستا'],
   category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'تحميل من انستجرام',
   usage: '.انستا <اللينك>',

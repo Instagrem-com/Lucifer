@@ -9,7 +9,7 @@ const AXIOS_DEFAULTS = {
 };
 
 module.exports = {
-  command: 'فيسبوك_2',
+  command: 'فيسبوك',
   aliases: ['fb','fbdl'],
   category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'تحميل فيديوهات فيسبوك',
@@ -43,38 +43,78 @@ module.exports = {
 
       /*
       ========================
-      API 1
+      ✅ API QASIM (أساسي)
       ========================
       */
 
       try {
 
-        const api1 = `https://gtech-api-xtp1.onrender.com/api/download/fb?url=${encodeURIComponent(url)}&apikey=APIKEY`
+        const apiQasim = `https://api.qasimdev.dpdns.org/api/facebook/download?url=${encodeURIComponent(url)}&apikey=qasim-dev`
 
-        const res1 = await axios.get(api1,AXIOS_DEFAULTS)
+        const res = await axios.get(apiQasim, AXIOS_DEFAULTS)
 
-        const vids = res1?.data?.data?.data
+        const data = res?.data
 
-        if (Array.isArray(vids) && vids.length) {
+        if (data?.data?.length) {
 
+          const vids = data.data
+
+          // نختار أعلى جودة
           const sorted = vids.sort((a,b)=>{
-            const qa = parseInt(a.resolution)||0
-            const qb = parseInt(b.resolution)||0
+            const qa = parseInt(a.quality)||0
+            const qb = parseInt(b.quality)||0
             return qb-qa
           })
 
           const selected = sorted.find(v=>v.url) || sorted[0]
 
           videoUrl = selected.url
-          quality = selected.resolution || quality
+          quality = selected.quality || quality
 
         }
 
-      } catch {}
+      } catch (e) {
+        console.log('Qasim API Failed');
+      }
 
       /*
       ========================
-      API 2 (backup)
+      🔁 API 1 (backup)
+      ========================
+      */
+
+      if (!videoUrl) {
+
+        try {
+
+          const api1 = `https://gtech-api-xtp1.onrender.com/api/download/fb?url=${encodeURIComponent(url)}&apikey=APIKEY`
+
+          const res1 = await axios.get(api1,AXIOS_DEFAULTS)
+
+          const vids = res1?.data?.data?.data
+
+          if (Array.isArray(vids) && vids.length) {
+
+            const sorted = vids.sort((a,b)=>{
+              const qa = parseInt(a.resolution)||0
+              const qb = parseInt(b.resolution)||0
+              return qb-qa
+            })
+
+            const selected = sorted.find(v=>v.url) || sorted[0]
+
+            videoUrl = selected.url
+            quality = selected.resolution || quality
+
+          }
+
+        } catch {}
+
+      }
+
+      /*
+      ========================
+      🔁 API 2 (backup)
       ========================
       */
 
@@ -101,7 +141,7 @@ module.exports = {
 
       /*
       ========================
-      لو كل API فشل
+      ❌ لو كله فشل
       ========================
       */
 

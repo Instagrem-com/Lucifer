@@ -1,71 +1,139 @@
-const axios = require("axios")
+const axios = require('axios');
+
+const AXIOS_DEFAULTS = {
+timeout: 60000,
+headers: {
+'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+'Accept': 'application/json, text/plain, /'
+}
+};
 
 module.exports = {
-  command: "فيسبوك",
-  aliases: ["fb","fbdl","fbpro"],
-  category: "اوامـࢪ الـتـحـمـيـل",
-  description: "تحميل فيديوهات فيسبوك (نسخة برو)",
-  usage: ".فيسبوك <رابط>",
+command: 'فيسبوك_2',
+aliases: ['fb','fbdl'],
+category: 'اوامـࢪ الـتـحـمـيـل',
+description: 'تحميل فيديوهات فيسبوك',
+usage: '.فيسبوك <رابط فيديو فيسبوك>',
 
-  async handler(sock, m, args) {
+async handler(sock, message, args, context = {}) {
 
-    // 💀 حل مشكلة m.reply
-    const reply = (text) => sock.sendMessage(m.chat, { text }, { quoted: m })
+const chatId = context.chatId || message.key.remoteJid  
+const url = args.join(" ")  
 
-    if (!args[0]) {
-      return reply("هات لينك فيسبوك يا علـق 😂")
-    }
+try {  
 
-    const url = args[0]
-    let video = null
+  if (!url) {  
+    return await sock.sendMessage(chatId,{  
+      text:'💻 *تحميل فيديو من فيسبوك* 💻\n\nالاستخدام:\n.فيسبوك <رابط>'  
+    },{quoted:message})  
+  }  
 
-    try {
+  if (!/facebook\.com|fb\.watch/i.test(url)) {  
+    return await sock.sendMessage(chatId,{  
+      text:'الرابط غير صالح 👀'  
+    },{quoted:message})  
+  }  
 
-      await reply("⏳ بحاول أجيب الفيديو بأعلى جودة...")
+  await sock.sendMessage(chatId,{  
+    react:{ text:'🔄', key:message.key }  
+  })  
 
-      // API 1 🔥
-      try {
-        const r1 = await axios.get(`https://api.akuari.my.id/downloader/fb?link=${url}`)
-        video = r1.data.respon?.hd || r1.data.respon?.sd
-      } catch {}
+  let videoUrl = null  
+  let quality = "غير معروفة"  
 
-      // API 2 🔥
-      if (!video) {
-        try {
-          const r2 = await axios.get(`https://vihangayt.me/download/fb?url=${url}`)
-          video = r2.data.data?.hd || r2.data.data?.sd
-        } catch {}
-      }
+  /*  
+  ========================  
+  API 1  
+  ========================  
+  */  
 
-      // API 3 🔥
-      if (!video) {
-        try {
-          const r3 = await axios.get(`https://xzn.wtf/api/fbdl?url=${url}`)
-          video = r3.data.result?.url
-        } catch {}
-      }
+  try {  
 
-      // API 4 🔥
-      if (!video) {
-        try {
-          const r4 = await axios.get(`https://api.betabotz.eu.org/api/download/fbdown?url=${url}`)
-          video = r4.data.result?.HD || r4.data.result?.SD
-        } catch {}
-      }
+    const api1 = `https://gtech-api-xtp1.onrender.com/api/download/fb?url=${encodeURIComponent(url)}&apikey=APIKEY`  
 
-      if (!video) {
-        return reply("💀 الفيديو ده مش راضي يتحمل\nيا إما خاص أو السيرفرات نايمة")
-      }
+    const res1 = await axios.get(api1,AXIOS_DEFAULTS)  
 
-      await sock.sendMessage(m.chat, {
-        video: { url: video },
-        caption: "⚡ تم التحميل بنجاح 😎🔥\n\n✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪"
-      }, { quoted: m })
+    const vids = res1?.data?.data?.data  
 
-    } catch (err) {
-      console.log(err)
-      reply("❌ حصلت مشكله جامده ف التحميل")
-    }
+    if (Array.isArray(vids) && vids.length) {  
 
-  }
+      const sorted = vids.sort((a,b)=>{  
+        const qa = parseInt(a.resolution)||0  
+        const qb = parseInt(b.resolution)||0  
+        return qb-qa  
+      })  
+
+      const selected = sorted.find(v=>v.url) || sorted[0]  
+
+      videoUrl = selected.url  
+      quality = selected.resolution || quality  
+
+    }  
+
+  } catch {}  
+
+  /*  
+  ========================  
+  API 2 (backup)  
+  ========================  
+  */  
+
+  if (!videoUrl) {  
+
+    try {  
+
+      const api2 = `https://api.vreden.my.id/api/fbdl?url=${encodeURIComponent(url)}`  
+
+      const res2 = await axios.get(api2,AXIOS_DEFAULTS)  
+
+      const vid = res2?.data?.result?.urls?.[0]  
+
+      if (vid?.hd || vid?.sd) {  
+
+        videoUrl = vid.hd || vid.sd  
+        quality = vid.hd ? "HD" : "SD"  
+
+      }  
+
+    } catch {}  
+
+  }  
+
+  /*  
+  ========================  
+  لو كل API فشل  
+  ========================  
+  */  
+
+  if (!videoUrl) {  
+    throw new Error("All APIs failed")  
+  }  
+
+  const caption =
+
+`🥂 الفيديو يا حب 🥂
+
+الجودة 💻 : ${quality}
+
+> BY ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
+
+
+
+await sock.sendMessage(chatId,{  
+    video:{ url:videoUrl },  
+    mimetype:'video/mp4',  
+    caption  
+  },{quoted:message})  
+
+} catch(err) {  
+
+  console.log(err)  
+
+  await sock.sendMessage(chatId,{  
+    text:'❌ فشل تحميل الفيديو. جرب رابط تاني 😄'  
+  },{quoted:message})  
+
+}
+
+}
 }
