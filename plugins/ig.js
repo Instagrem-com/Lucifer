@@ -49,7 +49,7 @@ module.exports = {
 
       const { data } = await axios.get(apiUrl);
 
-      if (!data || !data.data || !data.data.length) {
+      if (!data || !data.data || !data.data.results) {
         return await sock.sendMessage(
           chatId,
           { text: 'اللينك مش مدعوم او البوست برايفت 👀❤️' },
@@ -57,40 +57,49 @@ module.exports = {
         );
       }
 
-      const mediaList = data.data;
+      const mediaList = data.data.results;
 
-      for (let i = 0; i < mediaList.length; i++) {
-        const media = mediaList[i];
+      for (let media of mediaList) {
         const url = media.url;
-
         const isVideo =
-          media.type === 'video' ||
-          /\.(mp4|mov|webm|mkv)$/i.test(url);
+          media.type.toLowerCase() === 'hd' || /\.(mp4|mov|webm|mkv)$/i.test(url);
 
         if (isVideo) {
-          await sock.sendMessage(
-            chatId,
-            {
-              video: { url },
+          try {
+            // جلب الفيديو كـ Buffer
+            const videoBuffer = await axios.get(url, {
+              responseType: 'arraybuffer',
+              headers: { 'User-Agent': 'Mozilla/5.0' }
+            });
+
+            // إرسال الفيديو كـ video
+            await sock.sendMessage(chatId, {
+              video: videoBuffer.data,
               mimetype: 'video/mp4',
               caption: '> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*'
-            },
-            { quoted: message }
-          );
-        } else {
-          await sock.sendMessage(
-            chatId,
-            {
-              image: { url },
+            }, { quoted: message });
+
+          } catch (err) {
+            console.log('فشل إرسال الفيديو كـ video، نجرب document...');
+
+            // إرسال الفيديو كـ document كحل احتياطي
+            await sock.sendMessage(chatId, {
+              document: videoBuffer.data,
+              mimetype: 'video/mp4',
+              fileName: 'instagram.mp4',
               caption: '> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*'
-            },
-            { quoted: message }
-          );
+            }, { quoted: message });
+          }
+        } else {
+          // ارسال الصور
+          await sock.sendMessage(chatId, {
+            image: { url },
+            caption: '> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*'
+          }, { quoted: message });
         }
 
-        if (i < mediaList.length - 1) {
-          await new Promise(r => setTimeout(r, 1000));
-        }
+        // تأخير بسيط بين كل ميديا
+        await new Promise(r => setTimeout(r, 1000));
       }
 
     } catch (err) {
