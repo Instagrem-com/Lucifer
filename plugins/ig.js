@@ -46,10 +46,11 @@ module.exports = {
 
       // 🔥 API REQUEST
       const apiUrl = `https://api.qasimdev.dpdns.org/api/instagram/download?url=${encodeURIComponent(text)}&apikey=qasim-dev`;
-
       const { data } = await axios.get(apiUrl);
 
-      if (!data || !data.data || !data.data.results) {
+      // دعم اختلاف هيكل JSON
+      const mediaList = data.data?.results || data.results;
+      if (!mediaList || !mediaList.length) {
         return await sock.sendMessage(
           chatId,
           { text: 'اللينك مش مدعوم او البوست برايفت 👀❤️' },
@@ -57,16 +58,14 @@ module.exports = {
         );
       }
 
-      const mediaList = data.data.results;
-
       for (let media of mediaList) {
         const url = media.url;
-        const isVideo =
-          media.type.toLowerCase() === 'hd' || /\.(mp4|mov|webm|mkv)$/i.test(url);
+        const type = (media.type || '').toLowerCase();
+
+        const isVideo = type.includes('video') || /\.(mp4|mov|webm|mkv)$/i.test(url);
 
         if (isVideo) {
           try {
-            // جلب الفيديو كـ Buffer
             const videoBuffer = await axios.get(url, {
               responseType: 'arraybuffer',
               headers: { 'User-Agent': 'Mozilla/5.0' }
@@ -90,21 +89,20 @@ module.exports = {
               caption: '> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*'
             }, { quoted: message });
           }
+
         } else {
-          // ارسال الصور
+          // إرسال الصور
           await sock.sendMessage(chatId, {
             image: { url },
             caption: '> *_BY_   ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪*'
           }, { quoted: message });
         }
 
-        // تأخير بسيط بين كل ميديا
         await new Promise(r => setTimeout(r, 1000));
       }
 
     } catch (err) {
       console.error('Instagram API error:', err);
-
       await sock.sendMessage(
         chatId,
         { text: 'حصل مشكلة في التحميل 😢 جرب تاني بعد شوية' },
