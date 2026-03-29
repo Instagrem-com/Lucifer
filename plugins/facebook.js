@@ -1,103 +1,94 @@
 const axios = require('axios');
 
-const AXIOS_DEFAULTS = {
-  timeout: 60000,
-  headers: {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-    'Accept': '*/*'
-  }
-};
-
 module.exports = {
   command: 'فيسبوك',
   aliases: ['fb','fbdl'],
-  category: 'اوامـࢪ الـتـحـمـيـل',
+  category: 'اوامر التحميل',
   description: 'تحميل فيديوهات فيسبوك',
   usage: '.فيسبوك <رابط فيديو فيسبوك>',
 
-  async handler(sock, message, args, context = {}) {
-
-    const chatId = context.chatId || message.key.remoteJid;
+  async handler(sock, message, args) {
+    const chatId = message.key.remoteJid;
     const url = args.join(" ");
 
     try {
-
+      // ❌ مفيش رابط
       if (!url) {
-        return await sock.sendMessage(chatId,{
-          text:'💻 *تحميل فيديو من فيسبوك* 💻\n\nالاستخدام:\n.فيسبوك <رابط>'
-        },{quoted:message});
+        return await sock.sendMessage(chatId, {
+          text: '💻 *تحميل فيديو من فيسبوك* 💻\n\nالاستخدام:\n.فيسبوك <رابط>'
+        }, { quoted: message });
       }
 
+      // ❌ رابط غلط
       if (!/facebook\.com|fb\.watch/i.test(url)) {
-        return await sock.sendMessage(chatId,{
-          text:'الرابط غير صالح 👀'
-        },{quoted:message});
+        return await sock.sendMessage(chatId, {
+          text: '❌ الرابط غير صالح'
+        }, { quoted: message });
       }
 
-      await sock.sendMessage(chatId,{
-        react:{ text:'🔄', key:message.key }
+      // 🔄 رياكشن تحميل
+      await sock.sendMessage(chatId, {
+        react: { text: '🔄', key: message.key }
       });
 
-      /*
-      ========================
-      🔥 API QASIM
-      ========================
-      */
+      // 🌐 طلب API
+      const api = `https://api.qasimdev.dpdns.org/api/facebook/download?url=${encodeURIComponent(url)}&apikey=qasim-dev`;
+      const res = await axios.get(api);
 
-      const apiUrl = `https://api.qasimdev.dpdns.org/api/facebook/download?url=${encodeURIComponent(url)}&apikey=qasim-dev`;
+      const data = res?.data?.data;
+      const results = data?.results;
 
-      const res = await axios.get(apiUrl, AXIOS_DEFAULTS);
-
-      const data = res?.data;
-
-      if (!data || !data.data || !data.data.length) {
-        throw new Error('No video found');
+      if (!results || !results.length) {
+        throw new Error("مفيش نتائج");
       }
 
-      // اختيار أعلى جودة
-      const vids = data.data.sort((a,b)=>{
-        const qa = parseInt(a.quality) || 0;
-        const qb = parseInt(b.quality) || 0;
-        return qb - qa;
-      });
+      // 🎯 نختار أعلى جودة
+      let selected = results.find(v => v.type === 'HD') || results[0];
 
-      const selected = vids[0];
       const videoUrl = selected.url;
-      const quality = selected.quality || "غير معروفة";
+      const quality = selected.quality
+        .replace(/\s+Download/g, '')
+        .trim();
 
-      /*
-      ========================
-      ⚡ تحميل كـ Buffer (حل المشكلة)
-      ========================
-      */
+      if (!videoUrl) {
+        throw new Error("مفيش لينك فيديو");
+      }
 
+      // ⬇️ تحميل الفيديو كـ Buffer
       const videoBuffer = await axios.get(videoUrl, {
         responseType: 'arraybuffer',
-        ...AXIOS_DEFAULTS
+        headers: {
+          'User-Agent': 'Mozilla/5.0'
+        }
       });
 
-      const caption =
-`🥂 *الفيديو يا حب* 🥂
-
-الجودة 💻 : *${quality}*
-
-> *BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`;
-
-      await sock.sendMessage(chatId,{
+      // 📩 إرسال الفيديو
+      await sock.sendMessage(chatId, {
         video: videoBuffer.data,
-        mimetype:'video/mp4',
-        caption
-      },{quoted:message});
+        mimetype: 'video/mp4',
+        caption:
+`🥂 *الفيديو وصل يا معلم* 🥂
 
-    } catch(err) {
+🎥 الجودة: *${quality}*
 
-      console.log('FB ERROR:', err);
+> BY ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
+      }, { quoted: message });
 
-      await sock.sendMessage(chatId,{
-        text:'❌ فشل تحميل الفيديو. جرب رابط تاني 😄'
-      },{quoted:message});
+      // ✅ رياكشن نجاح
+      await sock.sendMessage(chatId, {
+        react: { text: '✅', key: message.key }
+      });
 
+    } catch (err) {
+      console.log(err);
+
+      await sock.sendMessage(chatId, {
+        text: '❌ فشل تحميل الفيديو. جرب رابط تاني 😄'
+      }, { quoted: message });
+
+      await sock.sendMessage(chatId, {
+        react: { text: '❌', key: message.key }
+      });
     }
-
   }
 };
