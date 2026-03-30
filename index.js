@@ -390,51 +390,56 @@ async function startQasimDev() {
         };
 
         QasimDev.public = true;
-        QasimDev.serializeM = (m) => smsg(QasimDev, m, store);
+QasimDev.serializeM = (m) => smsg(QasimDev, m, store);
 
-        const isRegistered = state.creds?.registered === true;
-        
-        if (pairingCode && !isRegistered) {
+const isRegistered = state.creds?.registered === true;
+
+if (pairingCode && !isRegistered) {
     if (useMobile) throw new Error('Cannot use pairing code with mobile api');
 
-    // ✅ إضافة الكود هنا
     try {
         let number = phoneNumber.replace(/[^0-9]/g, '');
-        let code = await sock.requestPairingCode(number);
-        code = code.match(/.{1,4}/g).join("-");
+        // ✅ استخدم QasimDev بدل sock
+        let code = await QasimDev.requestPairingCode(number);
+        code = code?.match(/.{1,4}/g)?.join("-") || code;
         console.log("\n🔥 كود الربط:");
         console.log(code);
     } catch (e) {
         console.log("❌ Error:", e.message);
     }
+} else if (isRegistered) {
+    // هنا الكود بتاع لما يكون مسجل مسبقًا
+    printLog('info', 'Session already registered. No pairing code needed.');
 }
 
-            printLog('warning', 'Session not registered. Pairing code required');
+// الكود اللي بعد كده
+printLog('warning', 'Session not registered. Pairing code required');
 
-            let phoneNumberInput;
-            if (!!global.phoneNumber) {
-                phoneNumberInput = global.phoneNumber;
-            } else if (process.env.PAIRING_NUMBER) {
-                phoneNumberInput = process.env.PAIRING_NUMBER;
-                printLog('info', `Using phone number from environment: ${phoneNumberInput}`);
-            } else if (rl && !rl.closed) {
-                phoneNumberInput = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFormat: 201501728150 (without + or spaces) : `)));
-            } else {
-                phoneNumberInput = phoneNumber;
-                printLog('info', `Using default phone number: ${phoneNumberInput}`);
-            }
+let phoneNumberInput;
+if (!!global.phoneNumber) {
+    phoneNumberInput = global.phoneNumber;
+} else if (process.env.PAIRING_NUMBER) {
+    phoneNumberInput = process.env.PAIRING_NUMBER;
+    printLog('info', `Using phone number from environment: ${phoneNumberInput}`);
+} else if (rl && !rl.closed) {
+    phoneNumberInput = await question(chalk.bgBlack(chalk.greenBright(
+        `Please type your WhatsApp number 😍\nFormat: 201501728150 (without + or spaces) : `
+    )));
+} else {
+    phoneNumberInput = phoneNumber;
+    printLog('info', `Using default phone number: ${phoneNumberInput}`);
+}
 
-            phoneNumberInput = phoneNumberInput.replace(/[^0-9]/g, '');
+phoneNumberInput = phoneNumberInput.replace(/[^0-9]/g, '');
 
-            const pn = require('awesome-phonenumber');
-            if (!pn('+' + phoneNumberInput).isValid()) {
-                printLog('error', 'Invalid phone number format');
-                
-                if (rl && !rl.closed) {
-                    rl.close();
-                }
-                process.exit(1);
-            }
+const pn = require('awesome-phonenumber');
+if (!pn('+' + phoneNumberInput).isValid()) {
+    printLog('error', 'Invalid phone number format');
+    if (rl && !rl.closed) {
+        rl.close();
+    }
+    process.exit(1);
+}
 
             setTimeout(async () => {
                 try {
