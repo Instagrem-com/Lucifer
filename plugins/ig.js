@@ -3,8 +3,8 @@ const axios = require('axios');
 const processedMessages = new Set();
 
 module.exports = {
-  command: 'انستجرام',
-  aliases: ['ig', 'igdl', 'انستا'],
+  command: 'انستجرام_3',
+  aliases: ['ig', 'igdl', 'انستا_3'],
   category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'تحميل فيديو من انستجرام',
   usage: '.انستا <اللينك>',
@@ -39,7 +39,7 @@ module.exports = {
 
       if (!data || !data.data || !data.data.length) {
         return sock.sendMessage(chatId, {
-          text: '❌ اللينك مش شغال او برايفت'
+          text: '> *~اللينك مش شغال او برايفت جرب غيرو~* 👀❤️'
         }, { quoted: message });
       }
 
@@ -50,7 +50,7 @@ module.exports = {
 
       if (!videoItem) {
         return sock.sendMessage(chatId, {
-          text: '❌ مفيش فيديو في البوست ده'
+          text: '> *~مفيش فيديو في البوست ده يحب~* 👀❤️'
         }, { quoted: message });
       }
 
@@ -62,8 +62,8 @@ module.exports = {
         {
           document: { url: videoUrl },
           mimetype: 'video/mp4',
-          fileName: 'instagram.mp4',
-          caption: '> ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪'
+          fileName: 'Lucifer.mp4',
+          caption: '> BY ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪'
         },
         { quoted: message }
       );

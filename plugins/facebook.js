@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = {
   command: 'فيسبوك',
   aliases: ['fb','fbdl'],
-  category: 'اوامر التحميل',
+  category: 'اوامـࢪ الـتـحـمـيـل',
   description: 'تحميل فيديوهات فيسبوك',
   usage: '.فيسبوك <رابط فيديو فيسبوك>',
 
