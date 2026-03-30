@@ -30,7 +30,7 @@ module.exports = {
     }
 
     try {
-      const apiUrl = `https://discardapi.dpdns.org/api/tools/ssweb?apikey=guru&url=${encodeURIComponent(url)}`;
+      const apiUrl = `https://api.qasimdev.dpdns.org/api/screenshot/take?url=${encodeURIComponent(url)}&apikey=qasim-dev`;
 
       const { data } = await axios.get(apiUrl, {
         responseType: 'arraybuffer',
