@@ -390,74 +390,40 @@ async function startQasimDev() {
         };
 
         QasimDev.public = true;
-QasimDev.serializeM = (m) => smsg(QasimDev, m, store);
+        QasimDev.serializeM = (m) => smsg(QasimDev, m, store);
 
-const isRegistered = state.creds?.registered === true;
+        const isRegistered = state.creds?.registered === true;
+        
+        if (pairingCode && !isRegistered) {
+            if (useMobile) throw new Error('Cannot use pairing code with mobile api');
 
-// ==== خطوة 1: التحقق من الجلسة / pairing code ====
-if (isRegistered) {
-    printLog('info', 'Session already registered. No pairing code needed.');
-} else if (pairingCode && !isRegistered) {
-    if (useMobile) throw new Error('Cannot use pairing code with mobile api');
+            printLog('warning', 'Session not registered. Pairing code required');
 
-    let number = phoneNumber.replace(/[^0-9]/g, '');
-    try {
-        let code = await QasimDev.requestPairingCode(number);
-        code = code?.match(/.{1,4}/g)?.join("-") || code;
-        console.log("\n🔥 كود الربط:");
-        console.log(code);
-        printLog('success', 'Pairing code generated successfully');
-    } catch (e) {
-        printLog('error', `Failed to generate pairing code: ${e.message}`);
-    }
-} else {
-    printLog('warning', 'Session not registered. Pairing code required');
-}
-
-// ==== خطوة 2: الحصول على رقم الهاتف الفعلي ====
-let phoneNumberInput;
-if (!!global.phoneNumber) {
-    phoneNumberInput = global.phoneNumber;
-} else if (process.env.PAIRING_NUMBER) {
-    phoneNumberInput = process.env.PAIRING_NUMBER;
-    printLog('info', `Using phone number from environment: ${phoneNumberInput}`);
-} else if (rl && !rl.closed) {
-    phoneNumberInput = await question(chalk.bgBlack(chalk.greenBright(
-        `Please type your WhatsApp number 😍\nFormat: 201501728150 (without + or spaces) : `
-    )));
-} else {
-    phoneNumberInput = phoneNumber;
-    printLog('info', `Using default phone number: ${phoneNumberInput}`);
-}
-
-phoneNumberInput = phoneNumberInput.replace(/[^0-9]/g, '');
-
-// ==== خطوة 3: التحقق من صحة الرقم ====
-const pn = require('awesome-phonenumber');
-if (!pn('+' + phoneNumberInput).isValid()) {
-    printLog('error', 'Invalid phone number format');
-    if (rl && !rl.closed) rl.close();
-    process.exit(1);
-}
-
-// ==== خطوة 4: طلب كود الربط لو مش مسجل ====
-if (!isRegistered) {
-    setTimeout(async () => {
-        try {
-            let code = await QasimDev.requestPairingCode(phoneNumberInput);
-            code = code?.match(/.{1,4}/g)?.join("-") || code;
-            console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)));
-            printLog('success', `Pairing code generated: ${code}`);
-
-            if (rl && !rl.closed) {
-                rl.close();
-                rl = null;
+            let phoneNumberInput;
+            if (!!global.phoneNumber) {
+                phoneNumberInput = global.phoneNumber;
+            } else if (process.env.PAIRING_NUMBER) {
+                phoneNumberInput = process.env.PAIRING_NUMBER;
+                printLog('info', `Using phone number from environment: ${phoneNumberInput}`);
+            } else if (rl && !rl.closed) {
+                phoneNumberInput = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFormat: 201501728150 (without + or spaces) : `)));
+            } else {
+                phoneNumberInput = phoneNumber;
+                printLog('info', `Using default phone number: ${phoneNumberInput}`);
             }
-        } catch (error) {
-            printLog('error', `Failed to get pairing code: ${error.message}`);
-        }
-    }, 3000);
-}
+
+            phoneNumberInput = phoneNumberInput.replace(/[^0-9]/g, '');
+
+            const pn = require('awesome-phonenumber');
+            if (!pn('+' + phoneNumberInput).isValid()) {
+                printLog('error', 'Invalid phone number format');
+                
+                if (rl && !rl.closed) {
+                    rl.close();
+                }
+                process.exit(1);
+            }
+
             setTimeout(async () => {
                 try {
                     let code = await QasimDev.requestPairingCode(phoneNumberInput);
