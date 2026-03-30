@@ -12,7 +12,12 @@ module.exports = {
             const chatId = message.from;
             const text = args.join(" ");
 
-            if (!text) return message.reply("❌ اكتب كلامك أو سؤالك يا كينج");
+            if (!text) {
+                return await client.sendMessage(chatId, 
+                    { text: "❌ اكتب كلامك أو سؤالك يا كينج" },
+                    { quoted: message }
+                );
+            }
 
             await client.sendMessage(chatId, { react: { text: "🧠", key: message.key } });
 
@@ -25,7 +30,7 @@ module.exports = {
 
         } catch (err) {
             console.error(err);
-            message.reply("❌ حصل خطأ غير متوقع");
+            await client.sendMessage(message.from, { text: "❌ حصل خطأ غير متوقع" }, { quoted: message });
         }
     }
 };
