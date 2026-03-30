@@ -16,12 +16,12 @@ module.exports = {
 
       if (!link) {
         return await sock.sendMessage(chatId, { 
-          text: `❌ *Missing Link!*\n\nExample: .gitclone2 https://github.com/GlobalTechInfo/MEGA-MD` 
+          text: `يعم ابعت لينك عشان انزلو ومتتعبناش 😂❤️` 
         }, { quoted: message });
       }
 
       if (!regex.test(link)) {
-        return await sock.sendMessage(chatId, { text: '⚠️ *Invalid GitHub link!*' }, { quoted: message });
+        return await sock.sendMessage(chatId, { text: 'ابعت لينك جيت هاب ياعم 👀' }, { quoted: message });
       }
 
       let [_, user, repo] = link.match(regex) || [];
@@ -45,12 +45,12 @@ module.exports = {
         document: { url: url },
         fileName: filename,
         mimetype: 'application/zip',
-        caption: `📦 *Repository:* ${user}/${repo}\n✨ *Cloned by MEGA-MD*`
+        caption: `*الملف 📦 :* ${user}/${repo}\n *BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪`
       }, { quoted: message });
 
     } catch (err) {
       console.error('Gitclone Error:', err);
-      await sock.sendMessage(chatId, { text: '❌ *Failed to download the repository.* Make sure it is public.' }, { quoted: message });
+      await sock.sendMessage(chatId, { text: 'ف مشكله او اللينك معمول خاص 👀' }, { quoted: message });
     }
   }
 };

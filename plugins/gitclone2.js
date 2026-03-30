@@ -10,7 +10,7 @@ module.exports = {
 
     if (!args || args.length === 0) {
       return sock.sendMessage(chatId, {
-        text: '*🌟 Please provide a GitHub URL or username and repository name.*\n\n*Example usage:*\n\n.clone https://github.com/GlobalTechInfo/MEGA-MD\n\n.clone GlobalTechInfo MEGA-MD'
+        text: 'ابعت لينك جيت هاب ياعم ومتتعبناش 😂❤️'
       });
     }
 
@@ -31,11 +31,11 @@ module.exports = {
       url = `https://github.com/${username}/${repo}/archive/refs/heads/main.zip`;
     } else {
       return sock.sendMessage(chatId, {
-        text: '*Missing repository info.*\n\n*Example usage:*\n\n.clone https://github.com/GlobalTechInfo/MEGA-MD\n\n.clone GlobalTechInfo MEGA-MD'
+        text: 'ابعت لينك جيت هاب يعم 👀'
       });
     }
 
-    await sock.sendMessage(chatId, { text: '⏱️ Preparing repository zip...' });
+    await sock.sendMessage(chatId, { text: 'جاري تنزيل الملف مضغوط...⏱️' });
 
     try {
       await sock.sendMessage(chatId, {
@@ -46,7 +46,7 @@ module.exports = {
     } catch (e) {
       console.error(e);
       await sock.sendMessage(chatId, {
-        text: '❌ Failed to fetch the repository. Please make sure the repository exists and try again.'
+        text: 'ف مشكله او اللينك خاص 👀❤️'
       });
     }
   }
