@@ -5,7 +5,8 @@ const processedMessages = new Set();
 module.exports = {
   command: 'انستجرام',
   aliases: ['ig', 'igdl', 'انستا'],
-
+  category: 'اوامـࢪ الـتـحـمـيـل',
+  
   async handler(sock, message, args, context = {}) {
     const chatId = context.chatId || message.key.remoteJid;
     const text = args.join(' ');

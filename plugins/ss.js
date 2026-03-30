@@ -13,7 +13,7 @@ module.exports = {
 
     if (!url) {
       return await sock.sendMessage(chatId, { 
-        text: '🌐 اكتب رابط الموقع.\nمثال:\n.screenshot https://github.com' 
+        text: '🌐 اكتب رابط الموقع.\nمثال:\n.تصوير_موقع https://github.com' 
       }, { quoted: message });
     }
 
@@ -30,32 +30,28 @@ module.exports = {
     }
 
     try {
+      // رسالة الانتظار
+      await sock.sendMessage(chatId, { text: '🌐 جاري التقاط صورة الموقع… انتظر شوية' }, { quoted: message });
+
+      // طلب الـ API
       const apiUrl = `https://api.qasimdev.dpdns.org/api/screenshot/take?url=${encodeURIComponent(url)}&apikey=qasim-dev`;
+      const { data } = await axios.get(apiUrl);
 
-      const { data } = await axios.get(apiUrl, {
-        responseType: 'arraybuffer',
-        timeout: 10000,
-      });
+      if (!data?.success || !data?.data?.screenshotUrl) {
+        return await sock.sendMessage(chatId, { text: '❌ حصلت مشكلة، مش قادر أجيب صورة الموقع' }, { quoted: message });
+      }
 
-      const caption = `*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪\n${url}`;
+      const imageUrl = data.data.screenshotUrl;
 
+      // نبعت الصورة على الشات
       await sock.sendMessage(chatId, { 
-        image: { buffer: data }, 
-        caption 
+        image: { url: imageUrl }, 
+        caption: `*BY* ✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪\n${url}`
       }, { quoted: message });
 
     } catch (error) {
       console.error('خطأ في أمر screenshot:', error);
-
-      if (error.code === 'ECONNABORTED') {
-        await sock.sendMessage(chatId, { 
-          text: ' ف مشكله ياحب 😄❤️.' 
-        }, { quoted: message });
-      } else {
-        await sock.sendMessage(chatId, { 
-          text: 'ف مشكله ياحب 😄❤️' 
-        }, { quoted: message });
-      }
+      await sock.sendMessage(chatId, { text: '❌ حصلت مشكلة أثناء محاولة التقاط الصورة' }, { quoted: message });
     }
   }
 };

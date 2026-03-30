@@ -56,7 +56,7 @@ module.exports = {
       console.log('SIZE:', sizeMB, 'MB');
 
       // ✅ لو الفيديو صغير (< 50MB) نبعته فيديو
-      if (sizeMB && sizeMB < 300) {
+      if (sizeMB && sizeMB < 50) {
 
         const res = await axios.get(videoUrl, {
           responseType: 'arraybuffer'
