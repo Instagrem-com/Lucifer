@@ -395,7 +395,19 @@ async function startQasimDev() {
         const isRegistered = state.creds?.registered === true;
         
         if (pairingCode && !isRegistered) {
-            if (useMobile) throw new Error('Cannot use pairing code with mobile api');
+    if (useMobile) throw new Error('Cannot use pairing code with mobile api');
+
+    // ✅ إضافة الكود هنا
+    try {
+        let number = phoneNumber.replace(/[^0-9]/g, '');
+        let code = await sock.requestPairingCode(number);
+        code = code.match(/.{1,4}/g).join("-");
+        console.log("\n🔥 كود الربط:");
+        console.log(code);
+    } catch (e) {
+        console.log("❌ Error:", e.message);
+    }
+}
 
             printLog('warning', 'Session not registered. Pairing code required');
 
