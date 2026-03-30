@@ -1,0 +1,68 @@
+const os = require("os");
+const process = require("process");
+const settings = require("../settings");
+
+module.exports = {
+  command: 'تيست',
+  aliases: ['شغال'],
+  category: 'اوامـࢪ الـبـوت',
+  description: 'لـمـعࢪفـه الـبوت شـغال او لا 👀❤️ ',
+  usage: '.تيست',
+  isPrefixless: true,
+
+  async handler(sock, message, args, context = {}) {
+    const chatId = context.chatId || message.key.remoteJid;
+
+    try {
+      let uptime = Math.floor(process.uptime());
+
+      const days = Math.floor(uptime / 86400);
+      uptime %= 86400;
+      const hours = Math.floor(uptime / 3600);
+      uptime %= 3600;
+      const minutes = Math.floor(uptime / 60);
+      const seconds = uptime % 60;
+
+      const uptimeParts = [];
+      if (days) uptimeParts.push(`${days}d`);
+      if (hours) uptimeParts.push(`${hours}h`);
+      if (minutes) uptimeParts.push(`${minutes}m`);
+      if (seconds || uptimeParts.length === 0) uptimeParts.push(`${seconds}s`);
+
+      const uptimeText = uptimeParts.join(' ');
+      const totalMem = (os.totalmem() / 1024 / 1024).toFixed(2);
+      const freeMem = (os.freemem() / 1024 / 1024).toFixed(2);
+      const usedMem = (totalMem - freeMem).toFixed(2);
+      const cpuLoad = os.loadavg()[0].toFixed(2);
+      const platform = os.platform();
+      const arch = os.arch();
+      const nodeVersion = process.version;
+
+      const text =
+        `*اصداࢪ ⚙️ :* ${settings.version}\n` +
+        `*الـوقـت ⏱️⚡:* ${uptimeText}\n` +
+        `*الـࢪمـات 👀💻 :* ${usedMem} MB / ${totalMem} MB\n` +
+        `*الـسـبـي :* ${cpuLoad}\n` +
+        `*محاكي 🔥 :* ${platform} (${arch})\n` +
+        `*اصـداࢪ المكاتب 💀 :* ${nodeVersion}\n` +
+         '\n\nالـبوت شـغـال طـلـقـة ⚡\n\n اشـتـࢪگ ف الـقـنـاة يـحـب 😊❤️';
+
+      await sock.sendMessage(chatId, {
+        text,
+        contextInfo: {
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363425019719202@newsletter',
+            newsletterName: '✪『𝙇𝙐𝘾𝙄𝙁𝙀𝙍』✪',
+            serverMessageId: -1
+          }
+        }
+      }, { quoted: message });
+
+    } catch (error) {
+      console.error('ف مشكلة ياحب جرب تاني 👀❤️', error);
+      await sock.sendMessage(chatId, { text: 'الـبوت شـغـال يـا حـب 👀❤️' }, { quoted: message });
+    }
+  }
+};
