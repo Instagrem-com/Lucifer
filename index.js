@@ -394,27 +394,27 @@ QasimDev.serializeM = (m) => smsg(QasimDev, m, store);
 
 const isRegistered = state.creds?.registered === true;
 
-if (pairingCode && !isRegistered) {
+// ==== خطوة 1: التحقق من الجلسة / pairing code ====
+if (isRegistered) {
+    printLog('info', 'Session already registered. No pairing code needed.');
+} else if (pairingCode && !isRegistered) {
     if (useMobile) throw new Error('Cannot use pairing code with mobile api');
 
+    let number = phoneNumber.replace(/[^0-9]/g, '');
     try {
-        let number = phoneNumber.replace(/[^0-9]/g, '');
-        // ✅ استخدم QasimDev بدل sock
         let code = await QasimDev.requestPairingCode(number);
         code = code?.match(/.{1,4}/g)?.join("-") || code;
         console.log("\n🔥 كود الربط:");
         console.log(code);
+        printLog('success', 'Pairing code generated successfully');
     } catch (e) {
-        console.log("❌ Error:", e.message);
+        printLog('error', `Failed to generate pairing code: ${e.message}`);
     }
-} else if (isRegistered) {
-    // هنا الكود بتاع لما يكون مسجل مسبقًا
-    printLog('info', 'Session already registered. No pairing code needed.');
+} else {
+    printLog('warning', 'Session not registered. Pairing code required');
 }
 
-// الكود اللي بعد كده
-printLog('warning', 'Session not registered. Pairing code required');
-
+// ==== خطوة 2: الحصول على رقم الهاتف الفعلي ====
 let phoneNumberInput;
 if (!!global.phoneNumber) {
     phoneNumberInput = global.phoneNumber;
@@ -432,15 +432,32 @@ if (!!global.phoneNumber) {
 
 phoneNumberInput = phoneNumberInput.replace(/[^0-9]/g, '');
 
+// ==== خطوة 3: التحقق من صحة الرقم ====
 const pn = require('awesome-phonenumber');
 if (!pn('+' + phoneNumberInput).isValid()) {
     printLog('error', 'Invalid phone number format');
-    if (rl && !rl.closed) {
-        rl.close();
-    }
+    if (rl && !rl.closed) rl.close();
     process.exit(1);
 }
 
+// ==== خطوة 4: طلب كود الربط لو مش مسجل ====
+if (!isRegistered) {
+    setTimeout(async () => {
+        try {
+            let code = await QasimDev.requestPairingCode(phoneNumberInput);
+            code = code?.match(/.{1,4}/g)?.join("-") || code;
+            console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)));
+            printLog('success', `Pairing code generated: ${code}`);
+
+            if (rl && !rl.closed) {
+                rl.close();
+                rl = null;
+            }
+        } catch (error) {
+            printLog('error', `Failed to get pairing code: ${error.message}`);
+        }
+    }, 3000);
+}
             setTimeout(async () => {
                 try {
                     let code = await QasimDev.requestPairingCode(phoneNumberInput);
